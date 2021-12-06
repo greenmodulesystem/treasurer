@@ -1,0 +1,20 @@
+/* Custom CSS for DataTables of health cards */
+
+tfoot input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+tfoot {
+    display: table-header-group;
+}
+
+td.details-control{
+    background: url('../img/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+
+tr.shown td.details-control{
+    background: url('../img/details_close.png') no-repeat center center;
+}
