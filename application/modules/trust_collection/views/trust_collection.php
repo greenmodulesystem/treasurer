@@ -19,8 +19,6 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><i class="fa fa-money"></i> City Treasurer's Office</li>
-            <li>Collection</li>
-            <li class="active">Trust Collection</li>
         </ol><br>
     </section>
     <section class="content">
@@ -87,9 +85,14 @@
                                             <label style="font: bold 25px Bookman Old Style;">SubTotal:</label>                                                        
                                             <label style="margin-top: 0%; color: red; font: bold 25px Bookman Old Style;" id="subtotal"></label> 
                                         </div>
-                                        <div class="col-md-5">
-                                            <label style="font: bold 25px Bookman Old Style;">OR No: </label>
-                                            <label id="t_or_numbers" style="margin-top: 0%; color: red; font: bold 25px Bookman Old Style;"></label>
+                                        <div class="col-md-7">
+                                            <div class="col-sm-4">
+                                                <label style="font: bold 25px Bookman Old Style;">OR No: </label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input type="number" id="t_or_numbers" class="form-control input-sm" style="color: red; font: bold 25px Bookman Old Style;">
+                                            </div>
+                                            <!-- <label id="t_or_numbers" style="margin-top: 0%; color: red; font: bold 25px Bookman Old Style;"></label> -->
                                         </div>
                                     </div><br>
                                     <div class="row">
@@ -328,6 +331,7 @@
                 <table class="table table-hover table-bordered">
                     <thead>
                         <th> Option </th>
+                        <th> Group </th>
                         <th> Particular </th>                                             
                     </thead>
                     <tbody id="load-particular-trust">                                

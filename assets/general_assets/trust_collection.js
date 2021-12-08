@@ -37,11 +37,15 @@ $(document).on('click', '.add-part-trust', function() {
 });
 
 $(document).on('click', '#trust-add-particu-inpt', function() {
+    create_trust_particular();
+    update_data_key();
+});
+
+var create_trust_particular = () => {
     $('#trust-load-del-btn').append('<button class="btn btn-flat btn-md btn-danger trust-delete_row" data-key="" style="margin-bottom: 5px;"><i class="fa fa-trash"></i></button>');
     $('#trust-load-input-particu').append('<input type="text" class="form-control input-md inpt-partic-trust" data-part_ID="" data-key="" style="margin-bottom: 5px;">');
     $('#trust-load-amount').append('<input disabled class="form-control input-md trust-amount-partic" data-key="" style="margin-bottom: 5px;">');
-    update_data_key();        
-});
+}
 
 function update_data_key() {
     $.each(['.inpt-partic-trust',
@@ -54,6 +58,13 @@ function update_data_key() {
         });
     });
 }
+
+/** delete row of particulars */
+$(document).on('click', '.trust-delete_row', function() {
+    $('.inpt-partic-trust[data-key="' + $(this).data('key') + '"]').remove();
+    $('.trust-delete_row[data-key="' + $(this).data('key') + '"]').remove();
+    $('.trust-amount-partic[data-key="' + $(this).data('key') + '"]').remove();
+});
 
 $(document).on('click', '#mix-payment-trust', function() {
     $('#load-mix-payment-trust').modal({ backdrop: 'static' });
@@ -82,12 +93,40 @@ $(document).on('keyup', '.inpt-partic-trust', function(e) {
 
                 $.each(e.error_message, function(idx, value) {
                     $('#load-particular-trust').append(
-                        '<tr> <td><button class="btn btn-flat btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td>' + value.Particular + '</td> </tr>'
+                        '<tr> <td><button class="btn btn-flat btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm btn-flat add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> </tr>'
                     );
                 });
             }
         });
     }
+});
+
+/** add particulars by parents */
+$(document).on('click', '.add_by_parent', function() {
+    var parent = $(this).data('parent');
+    $.post({
+        url: baseUrl + 'trust_collection/service/trust_collection_service/search_particular_parent',
+        data: {
+            Parent: parent
+        },
+        dataType: 'json',
+        success: function(e) {
+            if (e.has_error == false) {
+
+                $.each(e.error_message, function(idx, val) {
+                    $('#load-search-particular-trust').modal('hide');
+                    $('.inpt-partic-trust[data-key="' + idx + '"]').val(val.Particular);
+                    $('.trust-amount-partic[data-key="' + idx + '"]').val(val.Amount);
+                    $('.inpt-partic-trust[data-key="' + idx + '"]').attr('data-part_ID', val.ID);
+                    create_trust_particular();
+                    update_data_key();
+                });
+
+            } else {
+                alert(e.error_message);
+            }
+        }
+    });
 });
 
 $(document).on('click', '.click_to_add', function() {
@@ -162,21 +201,20 @@ $(document).on('click', '#f10-t-pay', function() {
 });
 
 $(document).on('keyup', function(e) {
-    // if (Checkers != '') {
-        if (e.keyCode == 120) {
-            $('#payment_modal').modal({ backdrop: 'static' });
-            $('#payment_modal').modal('show');
-            calculate_payable();
-        }
-        // Non Cash Input
-        if (e.keyCode == 121) {
-            $('#trust-non-cash-modal').modal({ backdrop: 'static' });
-            $('#trust-non-cash-modal').modal('show');
-            calculate_payable();
-        }
-    // }
+    if (e.keyCode == 120) {
+        $('#payment_modal').modal({ backdrop: 'static' });
+        $('#payment_modal').modal('show');
+        calculate_payable();
+    }
+    /** Non Cash Input */
+    if (e.keyCode == 121) {
+        $('#trust-non-cash-modal').modal({ backdrop: 'static' });
+        $('#trust-non-cash-modal').modal('show');
+        calculate_payable();
+    }
 });
-// costumer payment cash only
+
+/** costumer payment cash only */
 $(document).on('click', '#costumer_payment', function() {
 
     var particulars = [];
@@ -203,7 +241,7 @@ $(document).on('click', '#costumer_payment', function() {
                 $.post({
                     url: baseUrl + "trust_collection/service/trust_collection_service/save_all_data",
                     data: {
-                        Accountable_form_number: or_number,
+                        Accountable_form_number: $('#t_or_numbers').val(),
                         Payor: $('#trust_payor_name').val(),
                         Paid_by: $('#trust_paid_by').val(),
                         Address: $('#trust_address').val(),

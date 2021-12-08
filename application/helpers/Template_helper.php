@@ -464,8 +464,9 @@ function sidebar($module, $submenu='') {
                 </ul>                
             </li>   
 
-            <li class="treeview <?php echo ($module=='general_collection') || ($module=='trust_collection') || ($module=='dashboard') ||  
-                ($module=='void') || ($module=='reports') || ($module == 'add-payer') || ($module=='fees_charges') ? 'active' : ''; ?>">
+            <li class="treeview <?php echo ($module=='general_collection') || ($module=='trust_collection') || ($module=='dashboard') 
+                || ($module=='payments') || ($module=='port_col') || ($module=='dashboard') || ($module=='reports') 
+                || ($module=='void') || ($module=='rpt') || ($module=='add-payer') || ($module=='oop') || ($module=='fees_charges') ? 'active' : ''; ?>">
                 <a href="#">
                     <i class="fa fa-money"></i>
                     <span> General Collection </span>

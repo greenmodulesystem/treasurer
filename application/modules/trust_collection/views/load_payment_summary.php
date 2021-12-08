@@ -58,11 +58,14 @@ th, td {
         subtotal = subtotals;
     }       
 
-    $('#t_or_numbers').html(or_number);     
+    // $('#t_or_numbers').html(or_number);     
+    document.getElementById('t_or_numbers').value = or_number;
     $('#subtotal').html(subtotal);  
     $('.total_pay').html(subtotal);     
     if(check_validity == 1){        
-        $('#costumer_pay').attr('disabled', true);       
-        document.getElementById("t_or_numbers").innerHTML = "No OR number available";       
+        $('#costumer_pay').attr('disabled', true);
+        document.getElementById("t_or_numbers").disabled = true;
+        document.getElementById("t_or_numbers").value = "No OR number available"; 
+        // document.getElementById("t_or_numbers").innerHTML = "No OR number available";       
     }    
 </script>

@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class trust_collection_service extends CI_Controller
+class Trust_collection_service extends CI_Controller
 {
     public function __construct(){
         parent::__construct();        
@@ -126,6 +126,20 @@ class trust_collection_service extends CI_Controller
             }
         }
         catch(Exception $msg){
+            echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+        }
+    }
+
+    public function search_particular_parent(){
+        try{
+            if(!empty($this->input->post('Parent', true))){
+                $this->MTrust->Parent  =   $this->input->post('Parent', true);
+                $this->MTrust->getParticular_parent();                
+            }else{
+                echo json_encode(array('error_message'=>'Error Processing', 'has_error'=>true));
+            }
+        }
+        catch(exception $msg){
             echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
         }
     }

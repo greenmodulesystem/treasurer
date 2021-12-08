@@ -24,32 +24,29 @@ class Trust_collection_Model extends CI_Model
     public $Mix_cash_amount;
     
     private $table = array(
-        "particular" => "tbl_particular",
-        "payment"   =>  "tbl_payment",
-        "pPaid" =>  "tbl_particular_paid",
+        "particular"    => "tbl_particular",
+        "payment"       =>  "tbl_payment",
+        "pPaid"         =>  "tbl_particular_paid",
         "accnt_form"    =>  "tbl_accountable_form",
-        "temporary" =>  "tbl_temporary_payment",
-        "cedula"    =>  "tbl_collection_cedula",
-        "bank"  =>  "tbl_banks",
-        "cheque" => "tbl_cheque"
+        "temporary"     =>  "tbl_temporary_payment",
+        "cedula"        =>  "tbl_collection_cedula",
+        "bank"          =>  "tbl_banks",
+        "cheque"        => "tbl_cheque"
     );
 
-    public function __construct()
-	{
-        parent::__construct();
-        date_default_timezone_set('Asia/Manila');
-        
-		$this->ctodb = $this->load->database('ctodb', TRUE);
-	}
+    public function __construct(){
+        parent::__construct();        
+        $this->ctodb = $this->load->database('ctodb', true);
+    }
 
     function save_form_data(){        
         $data = array(                                                                                          
-            'Particular_ID' => ($this->Particular == null) ? null : $this->Particular,
-            'Amount'    =>  ($this->Amount == null) ? null : $this->Amount ,
-            'Collector_ID'  =>  ($this->Collector_ID == null) ? null : $this->Collector_ID,
-            'Void'  =>  ($this->Void == null) ? null : $this->Void,
-            'Remarks'   => ($this->Remarks == null) ? null : $this->Remarks,
-            'Or_type_ID'    =>  2
+            'Particular_ID'     => ($this->Particular == null) ? null : $this->Particular,
+            'Amount'            =>  ($this->Amount == null) ? null : $this->Amount ,
+            'Collector_ID'      =>  ($this->Collector_ID == null) ? null : $this->Collector_ID,
+            'Void'              =>  ($this->Void == null) ? null : $this->Void,
+            'Remarks'           => ($this->Remarks == null) ? null : $this->Remarks,
+            'Or_type_ID'        =>  2
         );
         try{
             if($this->Particular != null){     
@@ -87,23 +84,24 @@ class Trust_collection_Model extends CI_Model
         $data_to_insert = array();        
         date_default_timezone_set("Asia/Manila"); 
         try{           
+            if(strlen($this->Accountable_form_number) !== 7){
+                throw new Exception(INVALID_OR, true);
+            }                        
+
             if($this->Payor != null){                 
                 if(!empty($this->Particular[0])){
                     $data = array(
                         'Accountable_form_number'   =>  ($this->Accountable_form_number == null) ? null : $this->Accountable_form_number,
-                        'Payor' =>  ($this->Payor == null) ? null : $this->Payor,
-                        'Address' => ($this->Address == null) ? null : $this->Address,
-                        'Date_paid' =>  ($this->Date_paid == null) ? null : ($this->Date_paid.' '.date('H:i:s')),
-                        'Date_created'  =>  date('Y-m-d H:i:s'),
-                        'Paid_by'   =>  ($this->paid_by == null) ? null : ($this->paid_by),
-                        // 'Cancelled' =>  ($this->Particular[0]['Void'] == null) ? 0 : $this->Particular[0]['Void'],
-                        // 'Remarks'   =>  ($this->Particular[0]['Remarks'] == null) ? null : $this->Particular[0]['Remarks'],
-                        'Collector' =>  ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name,
-                        // 'OR_remarks'    =>  ($this->Particular[0]['OR_Remark'] == null) ? null : $this->Particular[0]['OR_Remark'],
-                        // 'Quantity' => ($this->Particular[0]['Quantity'] == null) ? null : $this->Particular[0]['Quantity'],
-                        'Collector_ID' => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ICS_ID
+                        'Accountable_form_origin'   =>  '51',
+                        'Payor'                     =>  ($this->Payor == null) ? null : $this->Payor,
+                        'Address'                   => ($this->Address == null) ? null : $this->Address,
+                        'Date_paid'                 =>  ($this->Date_paid == null) ? null : ($this->Date_paid.' '.date('H:i:s')),
+                        'Date_created'              =>  date('Y-m-d H:i:s'),
+                        'Paid_by'                   =>  ($this->paid_by == null) ? null : ($this->paid_by),                                                
+                        'Collector'                 =>  ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name,                                            
+                        'Collector_ID'              => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ID
                     );
-                    $this->ctodb->trans_start();
+                    $this->ctodb->trans_start(); 
                     $this->ctodb->insert($this->table['payment'], $data);
                     $insert_id = $this->ctodb->insert_id();
                     $this->ctodb->trans_complete();
@@ -146,10 +144,10 @@ class Trust_collection_Model extends CI_Model
         try{
             if(!empty($this->Bank)){
                 $data = array(
-                    'Payment_ID' => ($insert_id === null) ? null : $insert_id,
-                    'Bank_name' => ($this->Bank === null) ? null : $this->Bank,
-                    'Check_no' => ($this->Check_no === null) ? null : $this->Check_no,
-                    'Check_date' => ($this->Check_date === null) ? null : $this->Check_date
+                    'Payment_ID'    => ($insert_id === null) ? null : $insert_id,
+                    'Bank_name'     => ($this->Bank === null) ? null : $this->Bank,
+                    'Check_no'      => ($this->Check_no === null) ? null : $this->Check_no,
+                    'Check_date'    => ($this->Check_date === null) ? null : $this->Check_date
                 );
                 $this->ctodb->trans_start();
                 $this->ctodb->insert($this->table['cheque'], $data);
@@ -177,9 +175,10 @@ class Trust_collection_Model extends CI_Model
                 
                 foreach ($this->Particular as $key => $value) {
                     $data = array(
-                        'Accountable_form_number'   =>  ($this->Accountable_form_number == null) ? null : $this->Accountable_form_number,                       
-                        'Particular_ID' =>  ($value->Part_ID == null) ? null : $value->Part_ID,
-                        'Amount'   =>  ($value->amount == null) ? null : $value->amount                                
+                        'Accountable_form_number'   =>  ($this->Accountable_form_number == null) ? null : $this->Accountable_form_number, 
+                        'Accountable_form_origin'   => '51',                      
+                        'Particular_ID'             =>  ($value->Part_ID == null) ? null : $value->Part_ID,
+                        'Amount'                    =>  ($value->amount == null) ? null : $value->amount                                
                     );
                     array_push($data_to_insert, $data);
                 }
@@ -215,7 +214,7 @@ class Trust_collection_Model extends CI_Model
                     'Date_paid' =>  ($this->Date_paid == null) ? null : ($this->Date_paid.' '.date('H:i:s')),
                     'Date_created'  =>  date('Y-m-d H:i:s'),                                     
                     'Collector' =>  ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name,                   
-                    'Collector_ID' => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ICS_ID
+                    'Collector_ID' => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ID
                 );
 
                 $this->ctodb->trans_start();
@@ -313,34 +312,34 @@ class Trust_collection_Model extends CI_Model
         return $query;
     }
 
-    function get_or_type(){
+    function get_or_type(){        
         $this->ctodb->select(
             'a.Start_OR, '.
             'a.End_OR, '.
             'a.OR_Type'
         );                
         $this->ctodb->order_by('a.ID', 'desc');
-        $this->ctodb->from($this->table['accnt_form'].' a');
+        $this->ctodb->from($this->table['accnt_form'].' a');        
         $this->ctodb->where('a.OR_for', $this->OR_For);
-        $this->ctodb->where('a.OR_for', "Trust", 'both');
+        $this->ctodb->where('a.OR_for', "Trust");
         $this->ctodb->where('a.Done', 0);
-        $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ICS_ID);
+        $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ID);
         $query = $this->ctodb->get()->row();  
-
+        
         $result = $this->check_or_number_exist();                                   
-        if($result !== null){             
+        if(!empty($result)){             
             $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);                        
             $check_last = $this->check_last_or($result->Accountable_form_number);
             $check = $this->check_validity_of_or($or_number); 
            
             if(!empty($check)){
-                if($query !== null){
+                if(!empty($query)){
                     $query->Accountable_form_number = $query->Start_OR;
                 } 
             }else{
                 if(empty($check_last)){
                     $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);  
-                    if($query !== null){
+                    if(!empty($query)){
                         $query->Accountable_form_number = $result->Accountable_form_number = ($or_number);
                     }                              
                 }else{
@@ -362,16 +361,39 @@ class Trust_collection_Model extends CI_Model
                 $this->ctodb->select(
                     'p.Particular, '. 
                     'p.Amount, '. 
+                    'p.Parent, '. 
                     'p.ID'
                 );
                 $this->ctodb->from($this->table['particular'].' p');
-                $this->ctodb->where('p.Collection_type', 'Trust Fund');
-                $this->ctodb->like('p.Particular', $this->Particular, 'both');
+                $this->ctodb->where('p.Collection_type', 'Trust');
+                $this->ctodb->like('p.Particular', $this->Particular);
                 $query = $this->ctodb->get()->result();
 
                 echo json_encode(array('error_message'=>$query, 'has_error'=>false));
             }else{
                 echo json_encode(array('error_message'=>'Error Processing', 'has_error'=>true));
+            }
+        }
+        catch(Exception $msg){
+            echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+        }
+    }
+
+    /** get particular parents */
+    public function getParticular_parent(){
+        try{
+            if(!empty($this->Parent)){
+                $this->ctodb->select(
+                    'p.Particular, '. 
+                    'p.Parent, '. 
+                    'p.Amount, '. 
+                    'p.ID'
+                );
+                $this->ctodb->from($this->table['particular'].' p');                
+                $this->ctodb->where('p.Parent', $this->Parent);
+                $query = $this->ctodb->get()->result();
+
+                echo json_encode(array('error_message'=>$query, 'has_error'=>false));
             }
         }
         catch(Exception $msg){
@@ -436,8 +458,8 @@ class Trust_collection_Model extends CI_Model
         $this->ctodb->from($this->table['pPaid'].' pp');
         $this->ctodb->join($this->table['particular'].' p','p.ID = pp.Particular_ID', 'left');    
         $this->ctodb->join($this->table['payment'].' pm', 'pm.Accountable_form_number = pp.Accountable_form_number', 'left');   
-        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ICS_ID, 'both');    
-        $this->ctodb->where('p.Collection_type', "Trust Fund");
+        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID, 'both');    
+        $this->ctodb->where('p.Collection_type', "Trust");
         $query = $this->ctodb->get()->row();
         
         return $query;
@@ -454,7 +476,7 @@ class Trust_collection_Model extends CI_Model
         );
         $this->ctodb->from($this->table['temporary'].' temp');   
         $this->ctodb->join($this->table['particular'].' part', 'part.ID = temp.Particular_ID', 'left');    
-        $this->ctodb->where('temp.Collector_ID', $_SESSION['User_details']->ICS_ID);
+        $this->ctodb->where('temp.Collector_ID', $_SESSION['User_details']->ID);
         $this->ctodb->where('temp.Or_type_ID', 2);
         $query = $this->ctodb->get()->result();        
         return $query;
@@ -484,6 +506,7 @@ class Trust_collection_Model extends CI_Model
         $this->ctodb->order_by('pp.ID', 'desc');
         $this->ctodb->from($this->table['pPaid'].' pp');
         $this->ctodb->where('pp.Accountable_form_number', $or_number);
+        $this->ctodb->where('pp.Accountable_form_origin', '51');
         $query = $this->ctodb->get()->result();
         
         return $query;        
