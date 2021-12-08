@@ -22,18 +22,15 @@
                 <div class="box-body">
                     <div class="nav-tabs-custom"> 
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#general" data-toggle="tab"> General Reports </a></li>
-                            <li><a href="#unremitted" data-toggle="tab"> Unremitted Reports </a></li>
-                            <li><a href="#remit" data-toggle="tab"> Remitted Reports </a></li>
-                            <li><a href="#voided" data-toggle="tab">Voided Reciepts</a></li>
+                            <li class="active"><a href="#general" data-toggle="tab"> General </a></li>
+                            <li><a href="#unremitted" data-toggle="tab"> Unremitted </a></li>
+                            <li><a href="#remit" data-toggle="tab"> Remitted </a></li>
+                            <li><a href="#voided" data-toggle="tab"> Voided </a></li>
                         </ul>
                         <div class="tab-content">
                             <!-- GENERAL REPORTS -->
                             <div class="tab-pane active" id="general">
-                                <div>
-                                    <div class="box-header">
-                                        <h4 class="title-header"><i class="fa fa-pie-chart"></i> Reports</h4>
-                                    </div>                
+                                <div>                                                
                                     <div class="row">
                                         <div class="box-body">
                                             <div class="col-md-2">
@@ -49,9 +46,9 @@
                                             <div class="col-md-3">
                                                 <select name="type_of" class="type_reports form-control select2" style="color: black; width: 100%;">
                                                     <option disabled selected value="null"> Select Type of Report </option>
-                                                    <option value="General"> General collection </option>
-                                                    <option value="Trust Fund"> Trust collection </option>
-                                                    <option value="Cedula"> Cedula collection </option>
+                                                    <?php foreach ($col_type as $key => $value) {
+                                                        ?><option value="<?=@$value->Type?>"> <?=@$value->Type?> </option><?php
+                                                    }?>                                                  
                                                 </select>
                                             </div>
                                             <div class="col-md-1">
@@ -111,7 +108,7 @@
                                             </tbody>
                                         </table>
                                         <div class="box-body" style="display:none" id="to_remit_div">      
-                                            <button class="btn btn-flat btn-md btn-default btn-view-unremitted"><i class="fa fa-money"></i><label>&nbsp;Remit</button>                                                                                                                              
+                                            <button class="btn btn-flat btn-md btn-success btn-view-unremitted"><i class="fa fa-money"></i>&nbsp; REMIT </button>                                                                                                                                                                          
                                         </div>
                                     </div>
                                 </div>

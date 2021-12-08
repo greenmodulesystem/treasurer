@@ -16,11 +16,12 @@ class General_collection_service extends CI_Controller
             if(!empty($this->input->post('Particular', true)) && !empty($this->input->post('Category', true)) && 
                 !empty($this->input->post('Amount', true)) && !empty($this->input->post('Type', true))){
                 $this->MCollection->Particular  = $this->input->post('Particular', true);
-                $this->MCollection->Category    = $this->input->post('Category', true);
                 $this->MCollection->Amount      = $this->input->post('Amount', true);
+                $this->MCollection->Category    = $this->input->post('Category', true);               
+                $this->MCollection->Group       = $this->input->post('Group', true);
                 $this->MCollection->Collection_type = $this->input->post('Type', true);
 
-                $this->MCollection->save_particular();
+                $this->MCollection->save_particular();              
             }else{
                 echo json_encode(array('error_message'=>'Check your data', 'has_error'=>true));
             }
@@ -203,6 +204,43 @@ class General_collection_service extends CI_Controller
         catch(exception $msg){
             echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
         }
+    }
+
+    /** get particular information data */
+    public function get_particular_info(){
+        try{
+            if(empty($this->input->get('PartID', true))){
+                throw new Exception(ERROR_PROCESSING, true);
+            }
+            $this->MCollection->ID = $this->input->get('PartID', true);
+            $this->MCollection->Type = $this->input->post('Type', true);
+            $result = $this->MCollection->get_particular_info();
+            echo json_encode($result);
+        }
+        catch(Exception $msg){
+            echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true)); 
+        }
+    }
+
+    /* save updated data of particular */
+    public function update_particular(){
+        try{
+            $this->MCollection->ID          = $this->input->post('ID', true);
+            $this->MCollection->Particular  = $this->input->post('Particular', true);        
+            $this->MCollection->Amount      = $this->input->post('Amount', true);      
+            $this->MCollection->Group       = $this->input->post('Group', true);
+            $this->MCollection->ColType     = $this->input->post('ColType', true);              
+            if(empty($this->input->post('ColType', true))){
+                throw new Exception("Please select collection type", true);
+            }
+            $this->MCollection->update_particular();            
+        }
+        catch(Exception $msg){
+            echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true)); 
+        }
+        if(empty($this->input->post('ID', true))){
+            throw new Exception(ERROR_PROCESSING, true);
+        }        
     }
 }
 ?>

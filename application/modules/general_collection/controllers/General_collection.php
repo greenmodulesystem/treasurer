@@ -7,11 +7,13 @@ class General_collection extends CI_Controller
                 parent::__construct();        
                 $model_list = [
                         'general_collection/General_collection_Model' => 'MCollection',
+                        'reports/Report_Model' => 'MReport',
                 ];
                 $this->load->model($model_list);
         }
 
-        public function index($param = ''){                            
+        public function index($param = ''){     
+                $this->data['col_type'] = $this->MReport->getCollectionType();                         
                 $this->data['Result'] = $this->MCollection->get_particullar_amount();   
                 $this->data['banks'] = $this->MCollection->get_bank();             
                 $this->data['content'] = "collections";                
@@ -19,11 +21,14 @@ class General_collection extends CI_Controller
         }
 
         public function fees_charges(){
+                $this->data['parents'] = $this->MCollection->get_fees_parent();
+                $this->data['col_type'] = $this->MReport->getCollectionType();  
                 $this->data['content'] = "fees_charges";                
                 $this->load->view('layout', $this->data);              
         }  
         
         public function load_fees(){
+                $this->MCollection->search = $this->input->post('search', true);
                 $this->data['result'] = $this->MCollection->get_all();
                 $this->data['content'] = "load_fees";
                 $this->load->view('layout', $this->data);
@@ -32,6 +37,7 @@ class General_collection extends CI_Controller
         public function load_payment_summry(){  
                 $this->data['Type'] = $this->MCollection->get_or_type();                 
                 if(!empty($this->data['Type'])){
+                        $this->MCollection->Origin = $this->data['Type']->OR_origin;
                         $validity = $this->MCollection->check_validity($this->data['Type']->Accountable_form_number); 
                         $same = $this->MCollection->check_same_or($this->data['Type']->Accountable_form_number);
                 }                 

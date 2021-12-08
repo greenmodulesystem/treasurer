@@ -404,8 +404,8 @@ $total_non_cash_col = 0;
         </div>      
         <div>
             <a href="<?php echo base_url()?>reports" class="btn btn-default btn-flat btn-md" role="button"><i class="fa fa-angle-double-left"></i> Back </a>
-            <button class="btn btn-flat btn-md btn-default save_print"><i class="fa fa-print"></i> Save & Print </button>
-            <a href="<?php echo base_url()?>reports/display_abstract" class="btn btn-flat btn-md btn-default" role="button"><i class="fa fa-file"></i> Abstract </a>           
+            <button class="btn btn-flat btn-md btn-primary save_print"><i class="fa fa-print"></i> Save & Print </button>
+            <a href="<?php echo base_url()?>reports/display_abstract" class="btn btn-flat btn-md btn-success" role="button"><i class="fa fa-file-o"></i>&nbsp; Abstract </a>           
         </div>        
     </section>
 </div>

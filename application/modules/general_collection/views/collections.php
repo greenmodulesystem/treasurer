@@ -26,9 +26,7 @@
 <div class="content-wrapper" style="color: black">
     <section class="content-header">
         <ol class="breadcrumb">
-            <li><i class="fa fa-money"></i> City Treasurer's Office</li>
-            <li>Collection</li>
-            <li class="active">General Collection</li>
+            <li><i class="fa fa-money"></i> City Treasurer's Office</li>           
         </ol><br>
     </section>
     <section class="content">    
@@ -94,8 +92,13 @@
                                         <label style="margin-top: 0%; color: red; font: bold 25px Bookman Old Style;" id="subtotal"></label> 
                                     </div>
                                     <div class="col-md-7">
-                                        <label style="font: bold 25px Bookman Old Style;"> OR No: </label>
-                                        <label id="or_numbers" style="margin-top: 0%; color: red; font: bold 25px Bookman Old Style;"></label> 
+                                        <div class="col-sm-4">
+                                            <label style="font: bold 25px Bookman Old Style;"> OR No: </label>
+                                        </div>                                        
+                                        <div class="col-sm-8">
+                                            <input type="number" id="or_numbers" class="form-control input-sm" style="color: red; font: bold 25px Bookman Old Style;"> 
+                                        </div>                                        
+                                        <!-- <label id="or_numbers" style="margin-top: 0%; color: red; font: bold 25px Bookman Old Style;"></label>  -->
                                     </div>
                                 </div>
                                 <div class="row">
@@ -367,6 +370,7 @@
                 <table class="table table-hover table-bordered">
                     <thead>
                         <th> Option </th>
+                        <th> Group </th>
                         <th> Particular </th>                                             
                     </thead>
                     <tbody id="load-particulars">                                

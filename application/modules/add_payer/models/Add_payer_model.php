@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Add_payer_model extends CI_Model
+class add_payer_model extends CI_Model
 {
     private $table = array(
         'payer' => 'tbl_payer'
@@ -8,6 +8,11 @@ class Add_payer_model extends CI_Model
 
     public $Name;
     public $Address;
+
+    public function __construct(){
+        parent::__construct();        
+        $this->ctodb = $this->load->database('ctodb', true);
+    }
 
     public function save(){
         try{
@@ -18,15 +23,15 @@ class Add_payer_model extends CI_Model
                         'Payer' => ucwords($this->Name), 
                         'Address' => ucwords($this->Address)
                     );
-                    $this->db->trans_start();
-                    $this->db->insert($this->table['payer'], $data);
-                    $this->db->trans_complete();
-                    if ($this->db->trans_status() === FALSE) {
-                        $this->db->trans_rollback();
+                    $this->ctodb->trans_start();
+                    $this->ctodb->insert($this->table['payer'], $data);
+                    $this->ctodb->trans_complete();
+                    if ($this->ctodb->trans_status() === FALSE) {
+                        $this->ctodb->trans_rollback();
                         return FALSE;
                     } 
                     else {                                                                                  
-                        $this->db->trans_commit();                  
+                        $this->ctodb->trans_commit();                  
                         echo json_encode(array('error_message' => 'Data saved', 'has_error' => false)); 
                     }  
                 }else{
@@ -44,9 +49,9 @@ class Add_payer_model extends CI_Model
     public function check_payer(){
         try{
             if(!empty($this->Name || $this->Address)){
-                $this->db->where('Payer', $this->Name);
-                $this->db->where('Address', $this->Address);
-                $query = $this->db->get($this->table['payer'])->row();
+                $this->ctodb->where('Payer', $this->Name);
+                $this->ctodb->where('Address', $this->Address);
+                $query = $this->ctodb->get($this->table['payer'])->row();
                 
                 return $query;
             }

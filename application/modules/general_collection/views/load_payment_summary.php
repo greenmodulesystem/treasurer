@@ -60,11 +60,14 @@ th, td {
         subtotal = subtotals;
     }
     
-    $('#or_numbers').html(or_number);     
+    // $('#or_numbers').html(or_number);          
+    document.getElementById('or_numbers').value = or_number;
     $('#subtotal').html(subtotal);  
     
     if(check_validity == 1){        
         $('#costumer_pay').attr('disabled', true);   
-        document.getElementById("or_numbers").innerHTML = "No OR number available";        
+        // document.getElementById("or_numbers").innerHTML = "No OR number available";  
+        document.getElementById("or_numbers").disabled = true;
+        document.getElementById("or_numbers").value = "No OR number available";        
     }
 </script>

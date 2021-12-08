@@ -28,35 +28,44 @@ class General_collection_Model extends CI_Model
         
 
     private $table = array(
-        "particular" => "tbl_particular",
-        "payment"   =>  "tbl_payment",
-        "pPaid" =>  "tbl_particular_paid",
+        "particular"    =>  "tbl_particular",
+        "payment"       =>  "tbl_payment",
+        "pPaid"         =>  "tbl_particular_paid",
         "accnt_form"    =>  "tbl_accountable_form",
-        "temporary" =>  "tbl_temporary_payment",
-        "bank"  =>  "tbl_banks",
-        "cheque" => "tbl_cheque",
-        'payer' => 'tbl_payer'
+        "temporary"     =>  "tbl_temporary_payment",
+        "bank"          =>  "tbl_banks",
+        "cheque"        =>  "tbl_cheque",
+        'payer'         =>  'tbl_payer',
+        "groupCol"      =>  "tbl_group_collection"
     );
 
-    public function __construct()
-	{
-        parent::__construct();
-        date_default_timezone_set('Asia/Manila');
-        
-		$this->ctodb = $this->load->database('ctodb', TRUE);
-	}
+    public function __construct(){
+        parent::__construct();        
+        $this->ctodb = $this->load->database('ctodb', true);
+    }
 
     function save_particular(){
         $data = array(
-            'Particular' => ($this->Particular == null) ? null : $this->Particular,
-            'Category'  => ($this->Category == null) ? null : $this->Category,
-            'Amount'    => ($this->Amount == null) ? null : $this->Amount,
+            'Category'  =>  ($this->Category == null) ? null : $this->Category,
+            'Parent'    =>  ($this->Group == null ) ? null : $this->Group,
+            'Particular' => ($this->Particular == null) ? null : strtoupper($this->Particular),            
+            'Amount'    =>  ($this->Amount == null) ? null : $this->Amount,
             'Collection_type'   => ($this->Collection_type == null) ? null :$this->Collection_type            
         );
         try{
-            if($this->Particular != null){               
+            if(!empty($this->Particular)){      
+                $this->ctodb->trans_start();
                 $this->ctodb->insert($this->table['particular'], $data);
-                echo json_encode(array('error_message' => 'Successful','has_error' => false));
+                $this->ctodb->trans_complete();
+
+                if ($this->ctodb->trans_status() === FALSE) {
+                    $this->ctodb->trans_rollback();
+                    return FALSE;
+                } 
+                else {
+                    $this->ctodb->trans_commit();
+                    echo json_encode(array('error_message' => 'Successful','has_error' => false));                
+                }                 
             }else{
                 echo json_encode(array('error_message' => 'Processing Request','has_error' => true));
             }
@@ -110,6 +119,9 @@ class General_collection_Model extends CI_Model
     function save_all_data(){       
         date_default_timezone_set("Asia/Manila");        
         try{           
+            if(strlen($this->Accountable_form_number) !== 7){
+                throw new Exception(INVALID_OR, true);
+            }
             if($this->Payor != null){                 
                 if(!empty($this->Particular[0])){
                     $data = array(
@@ -119,13 +131,9 @@ class General_collection_Model extends CI_Model
                         'Paid_by'   =>  ($this->Paid_by == null) ? null : $this->Paid_by,
                         'Address' => ($this->Address == null) ? null : $this->Address,
                         'Date_paid' =>  ($this->Date_paid == null) ? null : ($this->Date_paid.' '.date('H:i:s')),
-                        'Date_created'  =>  date('Y-m-d H:i:s'),
-                        // 'Cancelled' =>  ($this->Particular[0]['Void'] == null) ? 0 : $this->Particular[0]['Void'],
-                        // 'Remarks'   =>  ($this->Particular[0]['Remarks'] == null) ? null : $this->Particular[0]['Remarks'],
-                        'Collector' =>  ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name,
-                        // 'OR_remarks'    =>  ($this->Particular[0]['OR_Remark'] == null) ? null : $this->Particular[0]['OR_Remark'],
-                        // 'Quantity' => ($this->Particular[0]['Quantity'] == null) ? null : $this->Particular[0]['Quantity'],
-                        'Collector_ID' => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ICS_ID
+                        'Date_created'  =>  date('Y-m-d H:i:s'),                      
+                        'Collector' =>  ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name,                       
+                        'Collector_ID' => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ID
                     );
                     $this->ctodb->trans_start();
                     $this->ctodb->insert($this->table['payment'], $data);
@@ -206,7 +214,7 @@ class General_collection_Model extends CI_Model
                     'Date_paid' =>  ($this->Date_paid == null) ? null : ($this->Date_paid.' '.date('H:i:s')),
                     'Date_created'  =>  date('Y-m-d H:i:s'),                                     
                     'Collector' =>  ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name,                   
-                    'Collector_ID' => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ICS_ID
+                    'Collector_ID' => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ID
                 );
 
                 $this->ctodb->trans_start();
@@ -253,25 +261,27 @@ class General_collection_Model extends CI_Model
         $this->ctodb->select(
             'a.Start_OR, '.
             'a.End_OR, '.
-            'a.OR_Type'
+            'a.OR_Type, '. 
+            'a.OR_origin'
         );             
         $this->ctodb->order_by('a.ID', 'asc');
         $this->ctodb->from($this->table['accnt_form'].' a');
         $this->ctodb->where('a.OR_for', "General");
         $this->ctodb->where('a.Done', 0);        
         $this->ctodb->where('a.OR_Type', 'Accountable Form #51');
-        $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ICS_ID);        
-        $query = $this->ctodb->get()->row();                 
+        $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ID);        
+        $query = $this->ctodb->get()->row();                        
         
-        $result = $this->check_or_number_exist();       
-        
+        $result = $this->check_or_number_exist();           
+        var_dump($result);
         if(!empty($result)){                      
-            $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);                        
+            $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);       
+                    
             $check_last = $this->check_last_or($result->Accountable_form_number);
             $check = $this->check_validity_of_or($or_number); 
-               
-            if(!empty($check)){
-                if($query !== null){
+           
+            if(!empty($check)){                             
+                if(!empty($query)){
                     $query->Accountable_form_number = $query->Start_OR;
                 } 
             }else{
@@ -288,15 +298,14 @@ class General_collection_Model extends CI_Model
             if($query !== null){                
                 $query->Accountable_form_number = $query->Start_OR;
             }         
-        }                    
+        }                 
        
         return $query;
     }
 
     function check_last_or($or_number){
         $this->ctodb->select('acc.End_OR');
-        $this->ctodb->from($this->table['accnt_form'].' acc');
-        // $this->ctodb->where('acc.Done', 1, 'both');
+        $this->ctodb->from($this->table['accnt_form'].' acc');        
         $this->ctodb->where('acc.End_OR', $or_number, 'both');
         $result = $this->ctodb->get()->row();
         
@@ -330,8 +339,10 @@ class General_collection_Model extends CI_Model
         $this->ctodb->from($this->table['pPaid'].' pp');
         $this->ctodb->join($this->table['particular'].' p','p.ID = pp.Particular_ID', 'left');   
         $this->ctodb->join($this->table['payment'].' pm', 'pm.Accountable_form_number = pp.Accountable_form_number', 'left');   
-        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ICS_ID, 'both');
-        $this->ctodb->where('p.Collection_type', "General", 'both');
+        $this->ctodb->join($this->table['accnt_form'].' acc', 'acc.OR_origin = pp.Accountable_form_origin', 'left');
+        $this->ctodb->where('acc.OR_for', 'General');
+        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID);
+        $this->ctodb->where('p.Collection_type', "General");        
         $query = $this->ctodb->get()->row();
         
         return $query;
@@ -351,9 +362,7 @@ class General_collection_Model extends CI_Model
                     array_push($data_to_insert, $data);   
                 }     
                 $this->ctodb->insert_batch($this->table['pPaid'], $data_to_insert);
-                $this->update_accountable_form();
-                // echo json_encode(array('error_message' => 'Success', 'has_error' => false));
-                // $this->delete_all_particular();                              
+                $this->update_accountable_form();                                            
             }
         }
         catch (Exception $ex) 
@@ -485,8 +494,16 @@ class General_collection_Model extends CI_Model
     }    
 
     function get_all(){
-        $this->ctodb->order_by('ID', 'desc');
-        $result = $this->ctodb->get($this->table['particular']);        
+        if(empty($this->search)){
+            $this->ctodb->order_by('ID', 'desc');
+            $this->ctodb->limit(20);
+            $result = $this->ctodb->get($this->table['particular']); 
+        }else{
+            $this->ctodb->order_by('ID', 'desc');
+            $this->ctodb->like('Particular', $this->search);
+            $result = $this->ctodb->get($this->table['particular']); 
+        }
+                           
         return $result->result();
     }
 
@@ -501,7 +518,7 @@ class General_collection_Model extends CI_Model
         );
         $this->ctodb->from($this->table['temporary'].' temp');   
         $this->ctodb->join($this->table['particular'].' part', 'part.ID = temp.Particular_ID', 'left');    
-        $this->ctodb->where('temp.Collector_ID', $_SESSION['User_details']->ICS_ID, 'both');
+        $this->ctodb->where('temp.Collector_ID', $_SESSION['User_details']->ID, 'both');
         $this->ctodb->where('temp.Or_type_ID', 1);
         $query = $this->ctodb->get()->result();        
         return $query;
@@ -517,7 +534,7 @@ class General_collection_Model extends CI_Model
             'acc.Date_released'
         );
         $this->ctodb->from($this->table['accnt_form'].' acc');
-        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ICS_ID, 'both');
+        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ID, 'both');
         $this->ctodb->where('acc.Done', 0, 'both');
         $query = $this->ctodb->get()->result();
         return $query;
@@ -529,7 +546,8 @@ class General_collection_Model extends CI_Model
         $this->ctodb->order_by('pp.ID', 'desc');
         $this->ctodb->from($this->table['pPaid'].' pp');
         $this->ctodb->where('pp.Accountable_form_number', $or_number);
-        $query = $this->ctodb->get()->result();    
+        $query = $this->ctodb->get()->result();
+        
         return $query;
     }
 
@@ -538,8 +556,9 @@ class General_collection_Model extends CI_Model
         $this->ctodb->order_by('pp.ID', 'desc');
         $this->ctodb->from($this->table['pPaid'].' pp');
         $this->ctodb->where('pp.Accountable_form_number', $or_number);
-        $query = $this->ctodb->get()->result();
-       
+        $this->ctodb->where('pp.Accountable_form_origin', $this->Origin);
+        $query = $this->ctodb->get()->result();        
+
         return $query;        
     }
 
@@ -607,8 +626,8 @@ class General_collection_Model extends CI_Model
                     'p.ID'
                 );
                 $this->ctodb->from($this->table['particular'].' p');
-                $this->ctodb->where('p.Collection_type', 'General');                
-                $this->ctodb->like('p.Parent', $this->Parent, 'both');
+                // $this->ctodb->where('p.Collection_type', 'General');                
+                $this->ctodb->where('p.Parent', $this->Parent);
                 $query = $this->ctodb->get()->result();
 
                 echo json_encode(array('error_message'=>$query, 'has_error'=>false));
@@ -619,5 +638,60 @@ class General_collection_Model extends CI_Model
         }
     }
 
+    /** get particular information data */
+    public function get_particular_info(){
+        $this->ctodb->select('*');
+        $this->ctodb->like('Collection_type', $this->Type);
+        $this->ctodb->where('ID', $this->ID);
+        $result = $this->ctodb->get($this->table['particular'])->row();
+        
+        return $result;
+    }
+
+    /** update particular data */
+    public function update_particular(){
+        $data = array(
+            'Particular' => ($this->Particular == null) ? null : strtoupper($this->Particular),           
+            'Amount'    => ($this->Amount == null) ? null : $this->Amount,    
+            'Collection_type' => $this->ColType                
+        );
+        try{
+            if($this->Particular != null){            
+                $this->ctodb->trans_start();
+                $this->ctodb->where('ID', $this->ID);   
+                $this->ctodb->update($this->table['particular'], $data);
+                $this->ctodb->trans_complete();
+
+                if ($this->ctodb->trans_status() === FALSE)
+                {                
+                    $this->ctodb->trans_rollback();
+                    throw new Exception('ERROR UPDATING TOKEN', true);	
+                }else
+                {
+                    $this->ctodb->trans_commit();
+                    echo json_encode(array('message' => 'Successful','has_error' => false));
+                }                
+            }else{
+                echo json_encode(array('error_message' => 'Processing Request','has_error' => true));
+            }
+        }
+        catch(exception $msg){                        
+			echo json_encode(array('error_message' => 'Processing Request','has_error' => true));
+        }
+    }
+
+    /** get all parents of fees and charges */
+    public function get_fees_parent(){
+        try{
+            $this->ctodb->select('*');
+            $this->ctodb->from($this->table['groupCol']);            
+            $query = $this->ctodb->get()->result();
+
+            return $query;
+        }
+        catch(exception $msg){                        
+			echo json_encode(array('error_message' => 'Processing Request','has_error' => true));
+        }
+    }
 }
 ?>

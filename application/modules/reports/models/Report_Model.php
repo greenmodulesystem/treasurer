@@ -4,11 +4,12 @@ class Report_Model extends CI_Model
     private $table = array(
         "particular"    =>  "tbl_particular",
         "part_paid"     =>  "tbl_particular_paid",
-        "payment"   =>  "tbl_payment",
-        "cedula"    =>  "tbl_collection_cedula",
-        "accountable" => "tbl_accountable_form", 
-        "user"  =>  "tbl_users", 
-        "cheque" => "tbl_cheque"
+        "payment"       =>  "tbl_payment",
+        "cedula"        =>  "tbl_collection_cedula",
+        "accountable"   => "tbl_accountable_form", 
+        "user"          =>  "tbl_users", 
+        "cheque"        => "tbl_cheque",
+        "colType"       =>  "tbl_collection_type"
     );
 
     public $Date;
@@ -17,13 +18,10 @@ class Report_Model extends CI_Model
     public $Data;
     public $ID;
 
-    public function __construct()
-	{
-        parent::__construct();
-        date_default_timezone_set('Asia/Manila');
-        
-		$this->ctodb = $this->load->database('ctodb', TRUE);
-	}
+    public function __construct(){
+        parent::__construct();        
+        $this->ctodb = $this->load->database('ctodb', true);
+    }
 
     // GET GENERAL AND TRUST REPORTS BY SINGLE DATE
     function get_reports(){
@@ -43,7 +41,7 @@ class Report_Model extends CI_Model
                 $this->ctodb->join($this->table['part_paid'].' pp', 'pp.Accountable_form_number = p.Accountable_form_number', 'left');
                 $this->ctodb->join($this->table['particular'].' part', 'part.ID = pp.Particular_ID', 'left');
                 $this->ctodb->where('p.Collector', $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name);
-                $this->ctodb->where('part.Collection_type', $this->Collection_type);
+                $this->ctodb->like('part.Collection_type', $this->Collection_type);
                 $this->ctodb->where('Date(p.Date_paid)', $this->Date);                  
                 $query = $this->ctodb->get()->result();  
                                 
@@ -64,6 +62,22 @@ class Report_Model extends CI_Model
 			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
 		}        
     }
+
+    /** get collection type */
+    public function getCollectionType(){
+        try{
+            $this->ctodb->select('*');
+            $this->ctodb->from($this->table['colType']);
+            $result = $this->ctodb->get()->result();
+
+            return $result;
+        }
+        catch (Exception $ex) 
+		{ 			
+			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+		}
+    }
+    
     // GET GENERAL AND TRUST REPORTS BY DATE RANGE
     function get_report_date_range(){
         try{
@@ -83,7 +97,7 @@ class Report_Model extends CI_Model
                 $this->ctodb->join($this->table['particular'].' part', 'part.ID = pp.Particular_ID', 'left');
                 $this->ctodb->where('p.Date_paid BETWEEN "'. date('Y-m-d', strtotime($this->Date)). '" and "'. date('Y-m-d', strtotime($this->End_date)).'"');
                 $this->ctodb->where('p.Collector', $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name, 'both');
-                $this->ctodb->where('part.Collection_type', $this->Collection_type, 'both');
+                $this->ctodb->like('part.Collection_type', $this->Collection_type);
                 $query = $this->ctodb->get()->result();                                                                                 
                 foreach ($query as $key => $value) {
                     if($value->Remitance === '1'){
@@ -102,7 +116,7 @@ class Report_Model extends CI_Model
 			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
 		} 
     }
-    // GENERATE CEDULA REPORT SINGLE DATE 
+// GENERATE CEDULA REPORT SINGLE DATE 
     function get_cedula_reports(){        
         try{
             if(!empty($this->Date)){
@@ -136,7 +150,7 @@ class Report_Model extends CI_Model
 			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
 		}  
     }
-    // GENERATE CEDULA REPORTS BY DATE RANGE
+// GENERATE CEDULA REPORTS BY DATE RANGE
     function get_cedula_date_range_report(){
         try{
             if(!empty($this->Date)){
@@ -170,7 +184,7 @@ class Report_Model extends CI_Model
 			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
 		}  
     }
-    // UPDATE REMITTANCE FIELD IN PAYMENT TABLE
+// UPDATE REMITTANCE FIELD IN PAYMENT TABLE
     function Update_remitted(){                
         try{
             $data = array(
@@ -191,7 +205,7 @@ class Report_Model extends CI_Model
 			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
 		}
     }
-    // UPDATE REMITTANCE FIELD IN CEDULA TABLE
+// UPDATE REMITTANCE FIELD IN CEDULA TABLE
     function Update_cedula_remittace(){
         try{
             $data = array(
@@ -212,7 +226,7 @@ class Report_Model extends CI_Model
 			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
 		}
     }
-    // get users accountable form data
+// get users accountable form data
     public function user_accnt_form_data(){
         $this->ctodb->select(
             'acct.OR_for'
@@ -223,33 +237,38 @@ class Report_Model extends CI_Model
         $query = $this->ctodb->get()->result();
         echo json_encode($query);
     }
-    // GET UNREMITTED REPORTS
+// GET UNREMITTED REPORTS
     public function get_unremitted(){
-        try{         
-            $this->ctodb->select(
-                'pay.ID, '. 
-                'pay.Accountable_form_number, '. 
-                'pay.Date_paid, '. 
-                'pay.Payor, '. 
-                'pay.Address, '. 
-                'pay.Quantity, '. 
-                'part.Amount, '. 
-                'par.Particular'
-            );
-            $this->ctodb->from($this->table['payment'].' pay');
-            $this->ctodb->join($this->table['part_paid'].' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
-            $this->ctodb->join($this->table['particular'].' par', 'par.ID = part.Particular_ID', 'left');
-            $this->ctodb->where('pay.Remitance', 0);    
-            $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);                                      
-            $query = $this->ctodb->get()->result();                
-            return $query;           
+        try{
+            // if(!empty($this->Data)){
+                $this->ctodb->select(
+                    'pay.ID, '. 
+                    'pay.Accountable_form_number, '. 
+                    'pay.Date_paid, '. 
+                    'pay.Payor, '. 
+                    'pay.Address, '. 
+                    'pay.Quantity, '. 
+                    'part.Amount, '. 
+                    'par.Particular'
+                );
+                $this->ctodb->from($this->table['payment'].' pay');
+                $this->ctodb->join($this->table['part_paid'].' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
+                $this->ctodb->join($this->table['particular'].' par', 'par.ID = part.Particular_ID', 'left');
+                $this->ctodb->where('pay.Remitance', 0);    
+                $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID, 'both');
+                // $this->ctodb->where('par.Collection_type', $this->Data, 'both');                              
+                $query = $this->ctodb->get()->result();                
+                return $query;
+            // }else{
+            //     echo json_encode(array('error_message'=>'Error Processing', 'has_error'=>true));
+            // }
         }
         catch (Exception $ex) 
 		{ 			
 			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
 		}        
     }
-    // Get Non Cash Data
+// Get Non Cash Data
     function get_non_cash(){
         $this->ctodb->select(
             'pp.Amount'
@@ -269,7 +288,7 @@ class Report_Model extends CI_Model
             return false;
         }
     }
-    // get cheque data 
+// get cheque data 
     function get_cheque(){
         $this->ctodb->select(
             'pp.Amount, '. 
@@ -289,7 +308,7 @@ class Report_Model extends CI_Model
             return false;
         }
     }
-    // Get first data
+// Get first data
     function get_first_data(){
         $this->ctodb->select(            
             'pay.Accountable_form_number, '. 
@@ -304,7 +323,7 @@ class Report_Model extends CI_Model
         $query = $this->ctodb->get()->result();                
         return $query;
     }
-    // Get second data
+// Get second data
     function get_second_data(){
         $this->ctodb->select(            
             'pay.Accountable_form_number ,'. 
@@ -320,7 +339,7 @@ class Report_Model extends CI_Model
         
         return $query;
     }
-    // GET REMITTED REPORTS
+// GET REMITTED REPORTS
     function get_remitted(){
         $this->ctodb->select(
             'pay.ID, '. 
@@ -339,7 +358,7 @@ class Report_Model extends CI_Model
 
         return $query;
     }
-    // GET VOIDED REPORTS   
+// GET VOIDED REPORTS   
     function voided(){
         $this->ctodb->select(
             'pay.ID, '. 
@@ -358,7 +377,7 @@ class Report_Model extends CI_Model
         
         return $query;
     }
-    // get data in two database and servers
+// get data in two database and servers
     function get_two_data(){
        $result_one = $this->get_in_first_db();
        $result_two = $this->get_in_second_db();  

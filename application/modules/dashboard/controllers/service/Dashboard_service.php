@@ -1,5 +1,5 @@
 <?php 
-class Dashboard_service extends CI_Controller
+class dashboard_service extends CI_Controller
 {
     public function __construct(){
         parent::__construct();        
@@ -27,6 +27,7 @@ class Dashboard_service extends CI_Controller
         try{
             if(!empty($this->input->post('ID', true))){
                 $this->MDashboard->ID   =   $this->input->post('ID', true);
+                $this->MDashboard->Origin = $this->input->post('origin', true);
                 $this->MDashboard->cancel_form();
             }
         }

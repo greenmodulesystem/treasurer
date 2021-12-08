@@ -1,23 +1,24 @@
 <?php
-class Void_model extends CI_Model
+class void_model extends CI_Model
 {
     private $table = array(
         "particular"    =>  "tbl_particular",
         "part_paid"     =>  "tbl_particular_paid",
-        "payment"   =>  "tbl_payment"
+        "payment"       =>  "tbl_payment"
     );
 
     public $Search;
     public $Remarks;
     public $ID;
 
-    public function __construct()
-	{
-        parent::__construct();
-        date_default_timezone_set('Asia/Manila');
-        
-		$this->ctodb = $this->load->database('ctodb', TRUE);
-	}
+    public function __construct(){
+        parent::__construct();        
+        $model_list = [              
+            'general_collection/General_collection_Model' => 'colModel',
+        ];
+        $this->load->model($model_list);
+        $this->ctodb = $this->load->database('ctodb', true);
+    }
 
     function search(){
         $this->ctodb->select(
@@ -58,6 +59,40 @@ class Void_model extends CI_Model
             }else{
                 echo json_encode(array('error_message' => 'Error Processing', 'has_error' => true));
             }
+        }
+        catch (Exception $ex) 
+		{ 			
+			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+		} 
+    }
+
+    /** get or data for updates */
+    public function get_or_data(){
+        try{
+            $this->ctodb->select('*');
+            $this->ctodb->from($this->table['payment']);
+            $this->ctodb->where('Date(Date_paid)', $this->Date);
+            $this->ctodb->where('ID', $this->tokenNumber);
+            $this->ctodb->where('Collector_ID', $_SESSION['User_details']->ID);
+            $query = $this->ctodb->get()->first_row();
+            
+            return $query;
+        }  
+        catch (Exception $ex) 
+		{ 			
+			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+		} 
+    }
+
+    /** get particulars of searched OR number */
+    public function get_particulars(){
+        try{
+            $this->ctodb->select('*');
+            $this->ctodb->from($this->table['part_paid']);
+            $this->ctodb->where('Accountable_form_number', $this->Number);
+            $query = $this->ctodb->get()->result();
+            
+            return $query;
         }
         catch (Exception $ex) 
 		{ 			

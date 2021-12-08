@@ -25,10 +25,12 @@ $(document).ready(function() {
 
     $('.cancel_form').on('click', function() {
         var key = $(this).data('id');
+        var origin = $(this).data('origin');
         $.post({
             url: baseUrl + "dashboard/service/dashboard_service/cancel_form",
             data: {
-                ID: key
+                ID:     key,
+                origin: origin
             },
             dataType: 'json',
             success: function(response) {

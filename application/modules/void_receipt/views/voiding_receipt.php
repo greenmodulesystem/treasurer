@@ -16,7 +16,7 @@ sidebar('void');
     <section class="content">        
         <div class="box box-primary">
             <div class="box-header">
-                <h3 class="box-title"><i class="fa fa-search"></i> OR number search</h3>
+                <h4 class="box-title"><i class="fa fa-search"></i> Search OR Number </h4>
                 <div class="box-tools">
                     <div class="input-group input-group-sm" style="width: 350px;">
                         <input type="text" name="table_search" id="search" autofocus class="form-control pull-right input-md" placeholder="Search...">

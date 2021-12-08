@@ -413,7 +413,7 @@ function main_footer(){
 <?php
 }
 
-function sidebar($module) {
+function sidebar($module, $submenu='') {
     $ci = & get_instance();
 ?>
 <!-- Left side column. contains the logo and sidebar -->
@@ -468,7 +468,7 @@ function sidebar($module) {
                 ($module=='void') || ($module=='reports') || ($module == 'add-payer') || ($module=='fees_charges') ? 'active' : ''; ?>">
                 <a href="#">
                     <i class="fa fa-money"></i>
-                    <span>General Collection</span>
+                    <span> General Collection </span>
                     <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -480,42 +480,94 @@ function sidebar($module) {
                             <span> Dashboard </span>
                         </a>
                     </li>              
+                    <li class="<?php echo ($module=='oop') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>order_of_payment">
+                            <i class="fa fa-file-text-o"></i> 
+                            <span> OOP Collection </span>
+                        </a>
+                    </li>     
                     <li class="<?php echo ($module=='general_collection') ? 'active' : ''; ?>">
                         <a href="<?php echo base_url() ?>general_collection/index/gen??">
-                            <i class="fa fa-money"></i> 
-                            <span> General </span>
+                        <i class="fa fa-file-text-o"></i> 
+                        <span> Gen. Collection </span>
                         </a>
                     </li>
                     <li class="<?php echo ($module=='trust_collection') ? 'active' : ''; ?>">
                         <a href="<?php echo base_url() ?>trust_collection/index/trust??">
-                            <i class="fa fa-money"></i> 
-                            <span> Trust </span>
+                        <i class="fa fa-file-text-o"></i> 
+                        <span> Trust Collection </span>
                         </a>
                     </li>
-                    <li class="<?php echo ($module=='void') ? 'active' : ''; ?>">
-                        <a href="<?php echo base_url() ?>void_receipt">
-                        <i class="fa fa-ban"></i> 
-                        <span> Voiding </span>
+                    <li class="<?php echo ($module=='port_col') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>port_collection">
+                        <i class="fa fa-file-text-o"></i> 
+                        <span> Port Collection </span>
+                        </a>
+                    </li>                   
+                    <?php if(check_rule('51',OFFICE_R[OFFICE]['FORM'])): ?>
+                    <li class="<?php echo ($submenu=='51') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>payments/form/51">
+                            <i class="fa fa-file-text-o"></i> 
+                            <span> Form Number 51</span>
+                        </a>
+                    </li>   
+                    <?php endif;?> 
+                    <?php if(check_rule('52',OFFICE_R[OFFICE]['FORM'])): ?>                        
+                    <li class="<?php echo ($submenu=='52') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>payments/form/52">
+                            <i class="fa fa-file-text-o"></i> 
+                            <span> Form Number 52</span>
+                        </a>
+                    </li>   
+                    <?php endif;?> 
+                    <?php if(check_rule('53',OFFICE_R[OFFICE]['FORM'])): ?>     
+                    <li class="<?php echo ($submenu=='53') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>payments/form/53">
+                            <i class="fa fa-file-text-o"></i> 
+                            <span> Form Number 53</span>
                         </a>
                     </li>
+                    <?php endif;?> 
+                    <?php if(check_rule('54',OFFICE_R[OFFICE]['FORM'])): ?>    
+                    <li class="<?php echo ($submenu=='54') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>payments/form/54">
+                            <i class="fa fa-file-text-o"></i> 
+                            <span> Form Number 54</span>
+                        </a>
+                    </li>  
+                    <?php endif;?> 
+                    <?php if(check_rule('57',OFFICE_R[OFFICE]['FORM'])): ?>    
+                    <li class="<?php echo ($submenu=='57') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>payments/form/57">
+                            <i class="fa fa-file-text-o"></i> 
+                            <span> Form Number 57</span>
+                        </a>
+                    </li>  
+                    <?php endif;?>                                                                                                                                                                                                  
                     <li class="<?php echo ($module=='reports') ? 'active' : ''; ?>">
                         <a href="<?php echo base_url() ?>reports">
                             <i class="fa fa-bar-chart"></i> 
-                            <span> Abstract </span>
+                            <span> General Report </span>
                         </a>
-                    </li>   
+                    </li>                                                            
+                    <li class="<?php echo ($module=='void') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>void_receipt">
+                        <i class="fa fa-file-text-o"></i> 
+                        <span> Search OR Number </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo ($module=='fees_charges') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>general_collection/fees_charges">
+                        <i class="fa fa-file-text-o"></i> 
+                        <span> Fees and Charges </span>
+                        </a>
+                    </li>
                     <li class="<?php echo ($module == 'add-payer') ? 'active' : '';?>">
                         <a href="<?php echo base_url()?>add-payer">
                             <i class="fa fa-user"></i>
-                            <span> Payor </span>
+                            <span> Payor Management </span>
                         </a>
-                    </li>                       
-                    <!-- <li class="<?php echo ($module=='fees_charges') ? 'active' : ''; ?>">
-                        <a href="<?php echo base_url() ?>general_collection/fees_charges">
-                        <i class="fa fa-cog"></i> 
-                        <span>Fees and Charges</span>
-                        </a>
-                    </li> -->
+                    </li>  
                 </ul>                                                                      
             </li>                                                    
             <hr>

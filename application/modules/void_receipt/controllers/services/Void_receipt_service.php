@@ -1,5 +1,5 @@
 <?php
-class Void_receipt_service extends CI_Controller
+class void_receipt_service extends CI_Controller
 {
     public function __construct(){
         parent::__construct();        

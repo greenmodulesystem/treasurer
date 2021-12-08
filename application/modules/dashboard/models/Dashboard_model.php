@@ -1,5 +1,5 @@
 <?php
-class Dashboard_model extends CI_Model
+class dashboard_model extends CI_Model
 {
     public $ID;
     public $Or_for;
@@ -13,14 +13,10 @@ class Dashboard_model extends CI_Model
         "cedula"    =>  "tbl_collection_cedula"
     );
 
-
-    public function __construct()
-	{
-        parent::__construct();
-        date_default_timezone_set('Asia/Manila');
-        
-		$this->ctodb = $this->load->database('ctodb', TRUE);
-	}
+    public function __construct(){
+        parent::__construct();        
+        $this->ctodb = $this->load->database('ctodb', true);
+    }
 
     function update_or_for(){
         $data = array(
@@ -35,7 +31,7 @@ class Dashboard_model extends CI_Model
                 if($this->ID != null){                           
                     if(!empty($response) || $response === '0'){                    
                         $this->ctodb->where('ID', $this->ID);
-                        $this->ctodb->where('Collector_ID', $_SESSION['User_details']->ICS_ID);
+                        $this->ctodb->where('Collector_ID', $_SESSION['User_details']->ID);
                         $this->ctodb->update($this->table['accnt_form'], $data);
         
                         echo json_encode(array('error_message'=>'Success', 'has_error'=>false));                    
@@ -143,28 +139,31 @@ class Dashboard_model extends CI_Model
     function cancel_form(){
         try{
             if(!empty($this->ID)){
-                $this->ctodb->select('a.Start_OR');
+                $this->ctodb->select('a.Start_OR, '. 'a.OR_origin');
                 $this->ctodb->from($this->table['accnt_form'].' a');
-                $this->ctodb->where('a.ID', $this->ID, 'both');
-                $result = $this->ctodb->get()->row(); 
+                $this->ctodb->where('a.ID', $this->ID);
+                $this->ctodb->where('a.OR_origin', $this->Origin);
+                $result = $this->ctodb->get()->row();                 
 
                 if(!empty($result)){
-                    $this->ctodb->select('p.Accountable_form_number');
-                    $this->ctodb->from($this->table['pPaid'].' p');
-                    $this->ctodb->where('p.Accountable_form_number', $result->Start_OR, 'both');
-                    $response = $this->ctodb->get()->row();
+                    $this->ctodb->select('p.Accountable_form_number, '. 'p.ID as PID');
+                    $this->ctodb->from($this->table['payment'].' p');
+                    $this->ctodb->where('p.Accountable_form_number', $result->Start_OR);
+                    $this->ctodb->where('p.Accountable_form_origin', @$result->OR_origin);
+                    $this->ctodb->where('p.Collector_ID', $_SESSION['User_details']->ID);
+                    $response = $this->ctodb->get()->row();                    
                     if(!empty($response)){
-                        echo json_encode(array('error_message' => 'OR already used', 'has_error' => true));
+                        echo json_encode(array('error_message' => 'O-R already used', 'has_error' => true));
                     }else{
                         $this->ctodb->select('c.OR_number');
                         $this->ctodb->from($this->table['cedula'].' c');
-                        $this->ctodb->where('c.OR_number', $result->Start_OR, 'both');
+                        $this->ctodb->where('c.OR_number', $result->Start_OR);
                         $query = $this->ctodb->get()->row();
                         if(!empty($query)){
-                            echo json_encode(array('error_message' => 'OR already used', 'has_error' => true));
+                            echo json_encode(array('error_message' => 'O-R already used', 'has_error' => true));
                         }else{
                             $data = array('OR_for' => null);                            
-                            $this->ctodb->where('ID', $this->ID, 'both');
+                            $this->ctodb->where('ID', $this->ID);
                             $this->ctodb->update($this->table['accnt_form'], $data);
                             echo json_encode(array('error_message' => 'Success', 'has_error' => false));
                         }
@@ -178,7 +177,7 @@ class Dashboard_model extends CI_Model
 		}             
     }
 
-    function get_accountable_form(){        
+    function get_accountable_form(){
         $this->ctodb->select(
             'acc.ID, '.
             'acc.OR_Type, '.
@@ -187,11 +186,12 @@ class Dashboard_model extends CI_Model
             'acc.End_OR, '.
             'acc.Date_released, '.
             'acc.OR_for, '.
-            'acc.Done'
+            'acc.Done, '. 
+            'acc.OR_origin'
         );
         $this->ctodb->from($this->table['accnt_form'].' acc');
-        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ICS_ID);
-        $this->ctodb->where('acc.Done', 0);
+        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ID, 'both');
+        $this->ctodb->where('acc.Done', 0, 'both');
         $query = $this->ctodb->get()->result();
         return $query;
     }
@@ -202,9 +202,9 @@ class Dashboard_model extends CI_Model
             'acc.OR_for'
         );
         $this->ctodb->from($this->table['accnt_form'].' acc');
-        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ICS_ID);
-        $this->ctodb->where('acc.Done', 0);
-        $this->ctodb->where('acc.OR_for', null);
+        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ID, 'both');
+        $this->ctodb->where('acc.Done', 0, 'both');
+        $this->ctodb->where('acc.OR_for', null, 'both');
         $query = $this->ctodb->get()->result();
         return $query;
     }

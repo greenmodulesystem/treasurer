@@ -7,7 +7,7 @@ if(!empty($unremitted)){
             <td><?=date('m-d-Y', strtotime(@$value['Date_paid']))?></td>
             <td><?=@$value['Payor']?></td> 
             <td><?=@$value['Address']?></td>
-            <td><button class="btn btn-sm btn-flat set_void" data-id="<?=@$value['ID']?>"><i class="fa fa-cog"></i></button></td>
+            <td><button class="btn btn-sm btn-flat btn-danger set_void" data-id="<?=@$value['ID']?>"><i class="fa fa-cog"></i></button></td>
         </tr><?php
     }
 }

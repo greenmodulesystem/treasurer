@@ -14,4 +14,73 @@ define('ERROR_API_KEY', 'Error validating security key.');
 
 define('DEFAULT_PASSWORD','Do not use the default password. Please create new password.');
 define('NOT_MATCH','Your password does not match. Please try again.');
-define('OR_NUMBER','This OR Number is already used.'); // 01-15-2020 
+define('OR_NUMBER','This OR Number is already used.'); /** 01-15-2020  */
+
+
+
+define('OFFICE','ALL');
+define('OFFICE_R',[
+    'ALL' =>
+    [
+        'FORM' => [
+            '52', '53', '54', '57',
+        ],
+        'LONG' => 'All OFFICE' 
+    ],    
+    'DEFAULT' =>
+    [
+        'FORM' => [
+            '51'
+        ],
+        'LONG' => 'DEFAULT OFFICE' 
+    ],
+    'CITY_VET' => 
+        [
+           'FORM' => [
+               '52', 
+               '53',    
+            ],
+           'CERTIFICATES' => [
+                '52' => [
+                    'CERTIFICATE 1'
+                ]
+                , 
+                '53' => [
+                    'CERTIFICATE 2'
+                ],    
+            ],
+            'LONG' => 'CITY VETERINARY OFFICE'
+        ],
+    'LCR' => 
+    [
+        'FORM' => [
+            '54',
+        ],
+        'CERTIFICATES' => [
+            '54' => [
+                'marriage_certificate',
+                'marriage_solemnization',
+            ]            
+        ],
+        'LONG' => 'LCR OFFICE'  
+    ],
+    'SLAUGHTER' => 
+    [
+        'FORM' => [
+            '57',
+        ],
+        'LONG' => 'SLAUTHER OFFICE' 
+    ],
+    'PORT' =>
+    [
+        'FORM' => [
+            '51'
+        ],
+        'CERTIFICATES' => [
+            '51' => [
+                'CERTIFICATE 1'
+            ]
+        ],
+        'LONG' => 'PORT COLLECTION'
+    ],
+]);

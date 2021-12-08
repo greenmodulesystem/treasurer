@@ -10,6 +10,7 @@ class reports extends CI_Controller
     }
 
     public function index(){        
+        $this->data['col_type'] = $this->MReport->getCollectionType();
         $this->data['content'] = "report";
         $this->load->view('layout', $this->data);
     }

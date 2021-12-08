@@ -108,7 +108,7 @@ $(document).on('click', '#costumer_payment', function() {
                 $.post({
                     url: baseUrl + "general_collection/service/general_collection_service/save_all_data",
                     data: {
-                        Accountable_form_number: or_number,                        
+                        Accountable_form_number: $('#or_numbers').val(),                        
                         Payor: $('#payor_name').val(),
                         Paid_by: $('#paid_by').val(),
                         Address: $('#address').val(),
@@ -442,7 +442,7 @@ $(document).on('click', '.add_by_parent', function() {
 
 $(document).on('click', '#add-particu-inpt', function() {
     create_input_particular();
-    update_data_key();    
+    update_data_key();
 });
 
 var create_input_particular = function() {

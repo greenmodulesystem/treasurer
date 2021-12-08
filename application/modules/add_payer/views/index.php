@@ -26,7 +26,7 @@ sidebar('add-payer');
                 <div class="row">
                     <div class="col-md-6">
                         <label> Address: </label>
-                        <input type="text" class="form-control input-md" id="address" placeholder="Address">
+                        <input type="text" class="form-control input-md" id="address" placeholder="Address" value="Cadiz City">
                     </div>
                 </div><br>
                 <div class="row">
