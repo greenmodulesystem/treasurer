@@ -551,7 +551,7 @@ class General_collection_Model extends CI_Model
         return $query;
     }
 
-    function check_validity($or_number){
+    function check_validity($or_number){        
         $this->ctodb->select('pp.ID');
         $this->ctodb->order_by('pp.ID', 'desc');
         $this->ctodb->from($this->table['pPaid'].' pp');

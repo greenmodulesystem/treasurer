@@ -49,7 +49,8 @@ class Treasurers extends CI_Controller {
         }
 
         /** generation of accountable form numbers */
-        $this->data['Type'] = $this->genModel->get_or_type();                 
+        $this->data['Type'] = $this->genModel->get_or_type();               
+        $this->genModel->Origin = @$this->data['Type']->OR_origin;          
         if(!empty($this->data['Type'])){
             $validity = $this->genModel->check_validity($this->data['Type']->Accountable_form_number); 
             $same = $this->genModel->check_same_or($this->data['Type']->Accountable_form_number);

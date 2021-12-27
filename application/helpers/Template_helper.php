@@ -397,19 +397,14 @@ function main_footer(){
     <!-- ChartJS -->
     <script src="<?php echo base_url() ?>assets/theme/bower_components/chart.js/Chart.js"></script>
     <!-- Custom JS -->
-    <script language="javascript" src="<?php echo base_url()?>assets/scripts/jquery-3.2.1.js"></script>
     <script language="javascript" src="<?php echo base_url()?>assets/scripts/noPostBack.js"></script>
     <script language="javascript" src="<?php echo base_url()?>assets/printThis.js"></script>
     <!-- Socket.IO -->
     <script src="<?php echo $ci->config->item('socket_url')?>node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
     <!-- Socket.IO Data-->
     <script src="<?php echo base_url() ?>assets/scripts/socket/index.js"></script>   
-
-    <script src="<?php echo base_url()?>assets/theme/bower_components/select2/dist/js/select2.full.min.js"></script>
 </body>
 </html>
-<!-- Bootstrap 3.3.7 -->
-<script src="<?php echo base_url() ?>assets/theme/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <?php
 }
 
