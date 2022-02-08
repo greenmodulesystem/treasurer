@@ -13,13 +13,13 @@ class General_collection_service extends CI_Controller
 
     public function save_particular(){                
         try{
-            if(!empty($this->input->post('Particular', true)) && !empty($this->input->post('Category', true)) && 
-                !empty($this->input->post('Amount', true)) && !empty($this->input->post('Type', true))){
+            if(!empty($this->input->post('Particular', true)) && !empty($this->input->post('Category', true)) && !empty($this->input->post('Type', true))){
                 $this->MCollection->Particular  = $this->input->post('Particular', true);
                 $this->MCollection->Amount      = $this->input->post('Amount', true);
                 $this->MCollection->Category    = $this->input->post('Category', true);               
                 $this->MCollection->Group       = $this->input->post('Group', true);
                 $this->MCollection->Collection_type = $this->input->post('Type', true);
+                $this->MCollection->NewGroup    =   $this->input->post('NewGroup', true);
 
                 $this->MCollection->save_particular();              
             }else{
@@ -243,4 +243,3 @@ class General_collection_service extends CI_Controller
         }        
     }
 }
-?>

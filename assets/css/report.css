@@ -1,0 +1,193 @@
+.city-logo {
+    opacity: 1;
+    margin-left: 5em;
+    width: 110px;
+    height: 110px;
+    margin-top: 0px;
+}
+
+.or-numbers{
+    text-align:center; 
+    color:red; 
+    font: bold 20px Bookman Old Style;
+}
+
+.header-report {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.header-city-of {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: -10px;
+}
+
+.office-of {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.summary-of {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: -10px;
+}
+
+.remit_no {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 120px;
+}
+
+.remit_date {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: -5px;
+}
+
+.a-col {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 50px;
+}
+
+.border-line {
+    border-bottom: 1px solid black;
+}
+
+.acct {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.table-bord {
+    border: 0px solid black;
+}
+
+.date-of {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: -8px;
+    margin-left: 35%;
+}
+
+.sum-table {
+    border: 1px solid black;
+}
+
+.head-tr {
+    font-weight: bold;
+}
+
+.font-all {
+    font-size: 12px;
+}
+
+.official-font {
+    font-size: 12px;
+}
+
+.account-table {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+.permit-info {
+    border-width: 1px;
+    border-color: gray;
+    border-style: none none ridge none;
+    margin: 0px;
+    padding: 1px;
+    outline: none;
+    background-color: transparent;
+}
+
+
+/* modal RPT */
+
+.modal.modal-wide .modal-dialog {
+    width: 80%;
+}
+
+.modal-wide .modal-body {
+    overflow-y: auto;
+}
+
+.tallModal .modal-body p {
+    margin-bottom: 1px
+}
+
+.table-hover tbody tr:hover td {
+    background: #cceeff;
+}
+
+.check_box_size {
+    width: 17px;
+    height: 17px;
+}
+
+.receipt_body {
+    border: 1px solid black;
+    width: 960px;
+    height: 556px;
+    padding: 2px;
+    margin-left: 5%;
+    margin-top: 2%;
+    align-content: center;
+}
+
+.receipt_logo {
+    opacity: 1;
+    margin-left: -2em;
+    width: 80px;
+    height: 80px;
+    margin-top: -12px;
+}
+
+.repub_phil {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.receipt_header {
+    border: 1px solid black;
+    width: 955px;
+    height: 142px;
+    margin-top: 2%;
+    align-content: center;
+}
+
+.receipt_main {
+    border: 1px solid black;
+    width: 955px;
+    height: 200px;
+    margin-top: 1px;
+    align-content: center;
+}
+
+.official-seal {
+    opacity: 1;
+    width: 80px;
+    height: 80px;
+    margin-top: 3px;
+    margin-left: 5px;
+}
+
+.official-seal-header {
+    border-right: 1px solid black;
+    font-size: 10px;
+    width: 35%;
+}
+
+.modal.modal-cashier .modal-dialog {
+    width: 40%;
+}

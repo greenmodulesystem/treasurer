@@ -3,6 +3,10 @@ $tax = 0;
 $reg_fee = 0;
 $other = 0;
 $total = 0;
+$Q1 = 0;
+$Q2 = 0;
+$Q3 = 0;
+$Q4 = 0;
 $user =  $_SESSION['User_details'];
 
 if($assessment == null){ ?>
@@ -745,10 +749,10 @@ if($assessment == null){ ?>
                 }
             })
             if(print){
-                // $("#Receipt-body").printThis();
-                // setTimeout(function () { document.location.reload(true); }, 1000);
+                $("#Receipt-body").printThis();
+                setTimeout(function () { document.location.reload(true); }, 1000);
             } else {
-                // document.location.reload(true);
+                document.location.reload(true);
             }
         });
     });

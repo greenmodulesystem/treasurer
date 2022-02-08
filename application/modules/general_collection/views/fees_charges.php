@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-md-2">
                             <label> Category </label>                            
-                            <select class="form-control input-sm category select2" name="category" style="color: black">
+                            <select class="form-control input-sm category select2" name="category" style="width:100%;">
                                 <option selected disabled> Select </option>                                  
                                 <option value="GENERAL"> GENERAL </option>
                                 <option value="TRUST"> TRUST </option>      
@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-md-2">
                             <label> Group </label>
-                            <select name="groups" id="groups" class="form-control input-sm groups select2">
+                            <select name="groups" id="groups" class="form-control input-sm groups select2" style="width:100%;">
                                 <option selected disabled> Select </option>
                                 <?php foreach ($parents as $key => $value) {
                                     ?><option value="<?=@$value->Group_name?>"> <?=@$value->Group_name?></option><?php
@@ -44,35 +44,35 @@
                             </select>
                             <div class="row" id="other-disp" style="display: none;">
                                 <div class="box-body">
-                                    <input type="text" class="form-control input-sm" placeholder="New Group">
+                                    <input type="text" class="form-control input-sm" id="new-group" placeholder="New Group">
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <label> Collection Type </label>                            
-                            <select class="form-control input-sm col_type select2" name="col_type" style="color: black">
+                            <select class="form-control input-sm col_type select2" name="col_type" style="width:100%;">
                                 <option selected disabled> Select </option>
                                 <?php foreach ($col_type as $key => $value) {
                                     ?><option value="<?=@$value->Type?>"> <?=@$value->Type?> </option><?php
                                 }?>
                             </select>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1" style="margin-left:-1%;">
                             <label> </label>
-                            <button class="btn btn-md btn-success btn-flat" style="width: 100%;" id="save"><i class="fa fa-plus-square"></i> ADD </button>
+                            <button class="btn btn-md btn-success btn-flat" style="width: 110%;" id="save"><i class="fa fa-plus-square"></i> ADD </button>
                         </div>                                                                                        
                     </div>
                 </div>
                 
                 <div class="box-body" id="search-div" style="display:block; margin-top: 0%;">                           
                     <div class="row">
-                        <div class="col-xs-12 col-md-2">
+                        <div class="col-xs-12 col-md-2" style="display: block" id="search-click">
                             <button class="btn btn-flat btn-md btn-success" id="click-to-search"> SEARCH <i class="fa fa-search"></i></button>
                         </div>
-                        <div class="col-xs-12 col-md-5"></div>
+                        
                         <div class="col-xs-12 col-md-5">
                             <div class="box-tools" id="search-row" style="display: none;">
-                                <div class="input-group input-group-sm" style="width: 100%;">
+                                <div class="input-group input-group-md" style="width: 100%;">
                                     <input type="text" name="table_search" id="search" autofocus class="form-control pull-right input-md" placeholder="Search...">
                                     <div class="input-group-btn">
                                         <button type="button" style="width: 70px;" id="search-particular" class="btn btn-success btn-flat input-md"><i class="fa fa-search"></i></button>

@@ -49,11 +49,13 @@ class Treasurers extends CI_Controller {
         }
 
         /** generation of accountable form numbers */
-        $this->data['Type'] = $this->genModel->get_or_type();                 
+        $this->data['Type'] = $this->genModel->get_or_type();  
+        
+        $this->genModel->Origin = @$this->data['Type']->OR_origin;                    
         if(!empty($this->data['Type'])){
             $validity = $this->genModel->check_validity($this->data['Type']->Accountable_form_number); 
-            $same = $this->genModel->check_same_or($this->data['Type']->Accountable_form_number);
-        }                 
+            // $same = $this->genModel->check_same_or($this->data['Type']->Accountable_form_number);
+        }                         
         if(!empty($this->data['Type'])){
             if(!empty($validity) || $this->data['Type']->Accountable_form_number === ''){                                  
                 $this->data['check_validity'] = 1;                   
@@ -68,8 +70,8 @@ class Treasurers extends CI_Controller {
         $this->data['profiles'] = $this->MProfiles->get_profile($ID);
         $this->data['banks'] = $this->MProfiles->banks();
                                                   
-        $this->data['Checker'] = $this->MCollection->get_report_by_day();
-        $this->data['Result'] = $this->MCollection->get_report_by_day();
+        // $this->data['Checker'] = $this->MCollection->get_report_by_day();
+        // $this->data['Result'] = $this->MCollection->get_report_by_day();
             
         $this->load->view('layout', $this->data);        
     }

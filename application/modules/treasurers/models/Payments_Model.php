@@ -6,6 +6,8 @@ class Payments_Model extends CI_Model {
     public $Data;
     public $colData;
     public $busColData;
+    public $busColItems;
+    public $busColID;
     
     function __construct()
     {
@@ -271,12 +273,16 @@ class Payments_Model extends CI_Model {
             ));
             /** END */
         }        
-        $this->db->insert_batch($table, $data);
+        // $this->db->insert_batch($table, $data);
         $this->Data = $data;
         $this->colData = $colData;
-        $this->insert_business_col_items();
+        $this->busColItems = $busColData;     
+                
+        // $this->insert_business_col_items();
+
         $this->insert_treasurer_table();
-        $this->insert_treasurer_ppaid();        
+        $this->insert_treasurer_ppaid(); 
+        $this->insert_bus_col_items();               
     }
 
     /** insert into treasurer's collection database, in table payment  */
@@ -294,6 +300,7 @@ class Payments_Model extends CI_Model {
             
             $this->ctodb->trans_start();
             $this->ctodb->insert('tbl_payment', $data);
+            $this->busColID = $this->ctodb->insert_id();
             $this->ctodb->trans_complete();
 
             if ($this->db->trans_status() === FALSE) {
@@ -305,6 +312,38 @@ class Payments_Model extends CI_Model {
             } 
         }
         catch(Exception $msg){
+            echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+        }
+    }
+
+    /** insert into general collection database table business collection items */
+    public function insert_bus_col_items(){
+        try{
+
+            $arrayData = array();
+
+            foreach ($this->Data as $key => $value) {
+                $Data = array(
+                    'Payment_ID' => $this->busColID, 
+                    'Particular' => $value['Fee'],
+                    'Amount' => $value['Amount']
+                );
+                array_push($arrayData, $Data);
+            }           
+
+            $this->ctodb->trans_start();
+            $this->ctodb->insert_batch('tbl_business_col_items', $arrayData);            
+            $this->ctodb->trans_complete();
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                return FALSE;
+            } 
+            else {
+                $this->db->trans_commit();                                                       
+            } 
+        }
+         catch(Exception $msg){
             echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
         }
     }
@@ -329,15 +368,15 @@ class Payments_Model extends CI_Model {
         }
     }
 
-    /** insert into treasurer's collection database, in table business collection items  */
-    public function insert_business_col_items(){
-        try{
+    // /** insert into treasurer's collection database, in table business collection items  */
+    // public function insert_business_col_items(){
+    //     try{
 
-        }
-        catch(Exception $msg){
-            echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
-        }
-    }
+    //     }
+    //     catch(Exception $msg){
+    //         echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+    //     }
+    // }
 
     public function preview_items($Fees,$OR_num,$A_ID,$Qtrs,$Blines,$Full){
         $this->db->where('Assessment_ID', $A_ID);
@@ -492,6 +531,9 @@ class Payments_Model extends CI_Model {
         if($Credits != 0){
             $cred = $Credits/$rows;
             $data = [];
+            /** added by paul */
+            $left = 0;
+            /** end */
     
             foreach($result as $key => $r) {
                 // var_dump('QTR '.$r->Qtr.'('.$r->Line_of_business.')');

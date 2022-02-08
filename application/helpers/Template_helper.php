@@ -292,7 +292,7 @@ if(!$permission){
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/css/noPostBack.css">
 
-    <link rel="stylesheet" href="<?php echo base_url()?>assets/theme/bower_components/select2/dist/css/select2.min.css">
+    <!-- <link rel="stylesheet" href="<?php echo base_url()?>assets/theme/bower_components/select2/dist/css/select2.min.css"> -->
 
     <script>
         var baseUrl='<?php echo base_url()?>';
@@ -375,6 +375,13 @@ function main_footer(){
         <strong>Copyright &copy; 2018 <a href="#">Business Licensing Information System</a>.</strong> All rights reserved.
     </footer>
 
+
+    <!-- jQuery -->
+    <script language="javascript" src="<?php echo base_url()?>assets/jquery-3.2.1.js"></script>
+
+    <!-- Custom JS -->
+    <script language="javascript" src="<?php echo base_url()?>assets/scripts/jquery-3.2.1.js"></script>
+
     <!-- jQuery 3 -->
     <script src="<?php echo base_url() ?>assets/theme/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap 3.3.7 -->
@@ -390,26 +397,25 @@ function main_footer(){
     <!-- jvectormap  -->
     <script src="<?php echo base_url() ?>assets/theme/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
     <script src="<?php echo base_url() ?>assets/theme/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-    <!-- jQuery -->
-    <script language="javascript" src="<?php echo base_url()?>assets/jquery-3.2.1.js"></script>
+    
     <!-- SlimScroll -->
     <script src="<?php echo base_url() ?>assets/theme/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <!-- ChartJS -->
     <script src="<?php echo base_url() ?>assets/theme/bower_components/chart.js/Chart.js"></script>
-    <!-- Custom JS -->
-    <script language="javascript" src="<?php echo base_url()?>assets/scripts/jquery-3.2.1.js"></script>
+    
     <script language="javascript" src="<?php echo base_url()?>assets/scripts/noPostBack.js"></script>
     <script language="javascript" src="<?php echo base_url()?>assets/printThis.js"></script>
     <!-- Socket.IO -->
     <script src="<?php echo $ci->config->item('socket_url')?>node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
     <!-- Socket.IO Data-->
     <script src="<?php echo base_url() ?>assets/scripts/socket/index.js"></script>   
-
+    
+    <!-- new added js -->
     <script src="<?php echo base_url()?>assets/theme/bower_components/select2/dist/js/select2.full.min.js"></script>
 </body>
 </html>
-<!-- Bootstrap 3.3.7 -->
-<script src="<?php echo base_url() ?>assets/theme/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
 <?php
 }
 
@@ -499,7 +505,7 @@ function sidebar($module, $submenu='') {
                         <span> Trust Collection </span>
                         </a>
                     </li>
-                    <li class="<?php echo ($module=='port_col') ? 'active' : ''; ?>">
+                    <!-- <li class="<?php echo ($module=='port_col') ? 'active' : ''; ?>">
                         <a href="<?php echo base_url() ?>port_collection">
                         <i class="fa fa-file-text-o"></i> 
                         <span> Port Collection </span>
@@ -544,7 +550,7 @@ function sidebar($module, $submenu='') {
                             <span> Form Number 57</span>
                         </a>
                     </li>  
-                    <?php endif;?>                                                                                                                                                                                                  
+                    <?php endif;?>                                                                                                                                                                                                   -->
                     <li class="<?php echo ($module=='reports') ? 'active' : ''; ?>">
                         <a href="<?php echo base_url() ?>reports">
                             <i class="fa fa-bar-chart"></i> 
@@ -599,7 +605,7 @@ function sidebar($module, $submenu='') {
                 </a>
                 <a>
                     <div style="margin-top:-10px; text-align:left">
-                        <p style=" ">SERVING :</p>
+                        <p>SERVING :</p>
                         <p style="color:red; font-size:30pt; margin-top: -5px;" id="now-serving" ></p>
                         <!-- <p id="business-name-q"></p> -->
                     </div>

@@ -9,19 +9,19 @@ $(document).on('click', '.save_print', function() {
             var storage = {
                 ID: value.ID,
                 accountable_number: value.Accountable_form_number,
-                date_now: value.Date_paid
+                date_now: value.Date_created
             };
             Data.push(storage);
         });
 
-        $.each(trust_data, function(indx, val) {
-            var trust = {
-                ID: val.ID,
-                accountable_number: val.Accountable_form_number,
-                date_now: val.Date_paid
-            };
-            Data.push(trust);
-        });
+        // $.each(trust_data, function(indx, val) {
+        //     var trust = {
+        //         ID: val.ID,
+        //         accountable_number: val.Accountable_form_number,
+        //         date_now: val.Date_paid
+        //     };
+        //     Data.push(trust);
+        // });
 
         $.post({
             url: baseUrl + "reports/service/reports_service/update_remitted",
@@ -32,7 +32,7 @@ $(document).on('click', '.save_print', function() {
             success: function(result) {
                 if (result.has_error === false) {
                     alert(result.error_message);
-                    window.location = baseUrl + "reports";
+                    // window.location = baseUrl + "reports";
                 }
             }
         });

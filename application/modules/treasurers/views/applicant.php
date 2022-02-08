@@ -104,9 +104,9 @@ $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
     var baseUrl = '<?php echo base_url()?>';
     var ID = '<?php echo $profiles->ID?>';
     var or_number;  
-    var payorName = '<?php echo $profiles->Business_name?>';
-    var address = '<?php echo $Address1 = ucwords($Bldg).ucwords($Strt).ucwords($Prk)?>';
-    var address2 = '<?php echo $Address2 = ucwords(trim($profiles->Barangay)).", Cadiz City";?>';
+    var payorName = "<?php echo $profiles->Business_name?>";
+    var address = "<?php echo $Address1 = ucwords($Bldg).ucwords($Strt).ucwords($Prk)?>";
+    var address2 = "<?php echo $Address2 = ucwords(trim($profiles->Barangay)).", Cadiz City";?>";
     var finalAddress = address + address2;    
 
     $(document).ready(function(){        

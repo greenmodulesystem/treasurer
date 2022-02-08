@@ -11,12 +11,45 @@ define('RENEW_SUCCESSFUL', 'Application successfully saved.');
 define('CONFIRM_RENEWAL', 'Submit this application?');
 define('NO_CRYPTO', 'No Cryptographically Secure Random Function Available.');
 define('ERROR_API_KEY', 'Error validating security key.');
+define('ERROR_PROCESSING', 'Error in processing');
 
 define('DEFAULT_PASSWORD','Do not use the default password. Please create new password.');
 define('NOT_MATCH','Your password does not match. Please try again.');
 define('OR_NUMBER','This OR Number is already used.'); /** 01-15-2020  */
+define('INVALID_OR', 'Please double check your OR Number');
 
-
+define('TABLE',[
+    'accountable'   =>  'tbl_accountable_form',
+    'bank'          =>  'tbl_banks',
+    'bVerification' =>  'tbl_bank_verification',
+    'cItems'        =>  'tbl_business_col_items',
+    'cTickets'      =>  'tbl_cash_tickets',
+    'certificate'   =>  'tbl_certificates',
+    'cheque'        =>  'tbl_cheque', 
+    'cedula'        =>  'tbl_collection_cedula',
+    'cType'         =>  'tbl_collection_type',
+    'collector'     =>  'tbl_collector',
+    'department'    =>  'tbl_departments',
+    'gCollection'   =>  'tbl_group_collection',
+    'module'        =>  'tbl_modules',
+    'oAccounts'     =>  'tbl_online_accounts',
+    'oPayment'      =>  'tbl_online_payment', 
+    'orderPayment'  =>  'tbl_order_payment',
+    'orType'        =>  'tbl_or_type', 
+    'particular'    =>  'tbl_particular',
+    'pPaid'         =>  'tbl_particular_paid',
+    'payer'         =>  'tbl_payer',
+    'payment'       =>  'tbl_payment',
+    'pVerification' =>  'tbl_payment_verification',
+    'permission'    =>  'tbl_permission', 
+    'position'      =>  'tbl_position', 
+    'purchased'     =>  'tbl_purchased_or', 
+    'remitSched'    =>  'tbl_remit_schedule', 
+    'rptCollection' =>  'tbl_rpt_collection',
+    'tempPayment'   =>  'tbl_temporary_payment', 
+    'users'         =>  'tbl_users', 
+    'uModule'       =>  'tbl_user_modules'
+]);
 
 define('OFFICE','ALL');
 define('OFFICE_R',[

@@ -31,10 +31,10 @@
             $this->ctodb->from($this->table['accnt_form'].' a');
             $this->ctodb->where('a.OR_for', "General");
             $this->ctodb->where('a.Done', 0);        
-            $this->ctodb->where('a.OR_Type', 'Accountable Form #51');
+            $this->ctodb->where('a.OR_origin', '1');
             $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ID);        
             $query = $this->ctodb->get()->row();                 
-    
+            
             $result = $this->check_or_number_exist();           
             if($result !== null){                      
                 $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);                        

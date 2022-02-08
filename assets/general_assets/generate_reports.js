@@ -15,9 +15,10 @@ $(document).on('click', '.btn-view-unremitted', function() {
 });
 
 $(document).on('click', '#generate_unremit', function() {
+    type_of = $('.select-or-type option:selected').val();
     $.post({
         url: baseUrl + "reports/service/reports_service/generate_unremitted",
-        data: {},
+        data: {Type: type_of},
         dataType: 'json',
         success: function(result) {
             $.post({

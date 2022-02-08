@@ -93,7 +93,7 @@ $(document).on('keyup', '.inpt-partic-trust', function(e) {
 
                 $.each(e.error_message, function(idx, value) {
                     $('#load-particular-trust').append(
-                        '<tr> <td><button class="btn btn-flat btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm btn-flat add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> </tr>'
+                        '<tr> <td><button class="btn btn-flat btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm btn-flat add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> <td>' + (new Intl.NumberFormat('en-US').format(value.Amount)) + '</td> </tr>'
                     );
                 });
             }

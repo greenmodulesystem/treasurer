@@ -1,25 +1,15 @@
 <?php
-echo main_header();
-echo sidebar('reports');
-?>
-<?php
-$total_gencollection = 0;
-$total_trustcollection = 0;
-$total_allcollection = 0;
-$total_cash_col = 0;
-$total_non_cash_col = 0;
+  $total_gencollection = 0;
+  $total_trustcollection = 0;
+  $total_allcollection = 0;
+  $total_cash_col = 0;
+  $total_non_cash_col = 0;
 ?>
 <link rel="stylesheet" href="<?php echo base_url()?>assets/css/report.css">
 <div class="content-wrapper">
-  <section class="content-header">
-    <ol class="breadcrumb">
-      <li><i class="fa fa-money"></i> City Treasurer's Office</li>
-    </ol><br>
-  </section>
   <section class="content">
-    <div class="box box-solid">
-      <div>
-        <div class="box-body">
+    <body onload="window.print()">
+      <div class="box-body">
           <table width="100%" class="table table-border">
             <tr>
               <td width="25%" height="99"><img src="<?php echo base_url()?>assets/img/Logo_2.png" class="city-logo"/>
@@ -400,88 +390,13 @@ $total_non_cash_col = 0;
             </tr>
           </table>
         </div>
-      </div>
-    </div>
-    <div>
-      <a href="<?php echo base_url()?>reports" class="btn btn-default btn-flat btn-md" role="button"><i class="fa fa-angle-double-left"></i> Back </a>
-      <button class="btn btn-flat btn-md btn-primary save_print"><i class="fa fa-print"></i> Save & Print </button>
-      <a href="<?php echo base_url()?>reports/display_abstract?get=<?=@$ColType?>" class="btn btn-flat btn-md btn-success" role="button"><i class="fa fa-file-o"></i>&nbsp; Abstract </a>
-    </div>
+    </body>
   </section>
 </div>
-<?php echo main_footer();?>
-<script language="javascript" src="<?php echo base_url()?>assets/general_assets/unremitted.js"></script>
-<script>
-var total_deno = 0;
-var gen_data = <?php echo json_encode(@$AllPayments);?>;
 
-$('.onethou').on('keyup', function() {
-  calculate();
-});
-
-$('.fivehun').on('keyup', function() {
-  calculate();
-});
-
-$('.twohund').on('keyup', function(){
-  calculate();
-});
-
-$('.onehund').on('keyup', function(){
-  calculate();
-});
-
-$('.fifth').on('keyup', function(){
-  calculate();
-});
-
-$('.twenty').on('keyup', function(){
-  calculate();
-});
-
-$('.tens').on('keyup', function(){
-  calculate();
-});
-
-$('.coins').on('keyup', function(){
-  calculate();
-});
-
-function calculate_to_input(){
-
-}
-
-function calculate() {
-  var total = 0;
-  var subtotal = 0;
-  var total_in_cash = $('#total-in-cash').val();
-  $('.inputs').each(function() {
-    subtotal = parseFloat($(this).data('id') * $(this).val());
-    total += subtotal;
-    if(total_in_cash >= total){
-      $('.display[data-id="'+$(this).data('id')+'"]').html(subtotal);
-    }else{
-      $('.display[data-id="'+$(this).data('id')+'"]').html(0.00);
-    }
-  });
-
-  var a = (total_in_cash - total);
-  if(total_in_cash >= total){
-    $('#total_deno').html(total);
-    $('#remaining').html(a);
-
-    if(total_in_cash == total){
-      document.getElementById("onethou-input").disabled = true;
-      document.getElementById("fivehun-input").disabled = true;
-      document.getElementById("twohun-input").disabled = true;
-      document.getElementById("onehund-input").disabled = true;
-      document.getElementById("fifty-input").disabled = true;
-      document.getElementById("coin-input").disabled = true;
-      document.getElementById("twen-input").disabled = true;
-      document.getElementById("ten-input").disabled = true;
-
-    }
-  }
-
+<script type="text/javascript">
+window.onafterprint = function()
+{
+  alert('Done');
 }
 </script>
