@@ -693,6 +693,17 @@ class General_collection_Model extends CI_Model
         // $this->ctodb->where('p.Collection_type', 'General');
         $this->ctodb->where('p.Parent', $this->Parent);
         $query = $this->ctodb->get()->result();
+        
+        return $query;
+    }
+
+    function check_validity($or_number){        
+        $this->ctodb->select('pp.ID');
+        $this->ctodb->order_by('pp.ID', 'desc');
+        $this->ctodb->from($this->table['pPaid'].' pp');
+        $this->ctodb->where('pp.Accountable_form_number', $or_number);
+        $this->ctodb->where('pp.Accountable_form_origin', $this->Origin);
+        $query = $this->ctodb->get()->result();        
 
         echo json_encode(array('error_message'=>$query, 'has_error'=>false));
       }

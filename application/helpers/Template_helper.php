@@ -402,20 +402,15 @@ function main_footer(){
     <script src="<?php echo base_url() ?>assets/theme/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <!-- ChartJS -->
     <script src="<?php echo base_url() ?>assets/theme/bower_components/chart.js/Chart.js"></script>
-    
+    <!-- Custom JS -->
     <script language="javascript" src="<?php echo base_url()?>assets/scripts/noPostBack.js"></script>
     <script language="javascript" src="<?php echo base_url()?>assets/printThis.js"></script>
     <!-- Socket.IO -->
     <script src="<?php echo $ci->config->item('socket_url')?>node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
     <!-- Socket.IO Data-->
     <script src="<?php echo base_url() ?>assets/scripts/socket/index.js"></script>   
-    
-    <!-- new added js -->
-    <script src="<?php echo base_url()?>assets/theme/bower_components/select2/dist/js/select2.full.min.js"></script>
 </body>
 </html>
-
-
 <?php
 }
 
