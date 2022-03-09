@@ -22,6 +22,8 @@ class Trust_collection_Model extends CI_Model
     public $OR_For = "Trust";    
     public $paid_by;
     public $Mix_cash_amount;
+    public $StartOr;
+    public $EndOr;
     
     private $table = array(
         "particular"    => "tbl_particular",
@@ -323,10 +325,17 @@ class Trust_collection_Model extends CI_Model
         $this->ctodb->where('a.OR_for', $this->OR_For);
         $this->ctodb->where('a.OR_for', "Trust");
         $this->ctodb->where('a.Done', 0);
+        $this->ctodb->where('a.Active', 1);
         $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ID);
         $query = $this->ctodb->get()->row();  
+
+        if (!empty($query)) {
+            $this->StartOr  = $query->Start_OR;
+            $this->EndOr  = $query->End_OR;
+        }
         
-        $result = $this->check_or_number_exist();                                   
+        $result = $this->check_or_number_exist();                   
+
         if(!empty($result)){             
             $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);                        
             $check_last = $this->check_last_or($result->Accountable_form_number);
@@ -458,7 +467,9 @@ class Trust_collection_Model extends CI_Model
         $this->ctodb->from($this->table['pPaid'].' pp');
         $this->ctodb->join($this->table['particular'].' p','p.ID = pp.Particular_ID', 'left');    
         $this->ctodb->join($this->table['payment'].' pm', 'pm.Accountable_form_number = pp.Accountable_form_number', 'left');   
-        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID, 'both');    
+        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID);   
+        $this->ctodb->where('pm.Accountable_form_number >=', $this->StartOr);
+        $this->ctodb->where('pm.Accountable_form_number <=', $this->EndOr); 
         $this->ctodb->where('p.Collection_type', "Trust");
         $query = $this->ctodb->get()->row();
         

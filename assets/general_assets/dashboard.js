@@ -29,7 +29,7 @@ $(document).ready(function() {
         $.post({
             url: baseUrl + "dashboard/service/dashboard_service/cancel_form",
             data: {
-                ID:     key,
+                ID: key,
                 origin: origin
             },
             dataType: 'json',
@@ -41,5 +41,25 @@ $(document).ready(function() {
                 }
             }
         });
+    });
+});
+
+$(document).on('click', '.activate-or', function() {
+    var ID = $(this).data('id');
+    var Designate = $(this).data('designate');
+    $.post({
+        url: baseUrl + "dashboard/service/dashboard_service/ActivateOr",
+        data: {
+            ID: ID,
+            Designate: Designate
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.has_error == false) {
+                window.location = baseUrl + "dashboard";
+            } else {
+                alert(response.error_message);
+            }
+        }
     });
 });

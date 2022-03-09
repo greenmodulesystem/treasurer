@@ -143,4 +143,3 @@ class reports_service extends CI_Controller
     $this->MReport->get_two_data();
   }
 }
-?>
