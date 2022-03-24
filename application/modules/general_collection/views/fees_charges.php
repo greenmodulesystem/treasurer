@@ -3,11 +3,7 @@
         echo sidebar('fees_charges');
 ?>
 <div class="content-wrapper">
-    <section class="content-header">
-        <ol class="breadcrumb">
-            <li><i class="fa fa-money"></i> City Treasurer's Office</li>      
-        </ol><br>
-    </section>
+    
     <section class="content">
         <div class="body">
             <div class="box box-primary"><br>

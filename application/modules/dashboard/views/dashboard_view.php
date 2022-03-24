@@ -8,15 +8,11 @@ echo sidebar('dashboard');
     }
 </style>
 <div class="content-wrapper">
-    <section class="content-header">
-        <ol class="breadcrumb">
-            <li><i class="fa fa-money"></i> City Treasurer's Office</li>
-        </ol><br>
-    </section>
+
     <section class="content">
         <div class="row">
             <div class="box-body">
-                <div class="box box-primary">
+                <div class="box box-primary"><br>
                     <table class="table table-hover">
                         <thead>
                             <th style="width:15%"> ACCOUNTABLE NO. </th>

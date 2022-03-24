@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -70,15 +70,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
+
 $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',	
+	'dsn'	=> '',
 	'hostname' =>  '127.0.0.1',
 	'username' => 'gm',
-	'password' => 'password1234#',	
+	'password' => 'password1234#',
+
+	/** development server database */
 	'database' => 'cadiz_licensing_testing',
+
+	/** testing cadiz server database */
+	// 'database' => 'cadiz_blis_testing',
+
+	/** production cadiz server database */
+	// 'database' => 'cadiz_licensing_testing',
+
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -97,11 +107,20 @@ $db['default'] = array(
 
 /** treasuerers collection database */
 $db['ctodb'] = array(
-	'dsn'	=> '',	
+	'dsn'	=> '',
 	'hostname' =>  '127.0.0.1',
 	'username' => 'gm',
 	'password' => 'password1234#',
+
+	/** development server database */
 	'database' => 'general_collection_v_two',
+
+	/** testing cadiz server database */
+	// 'database' => 'general_collection_testing',
+
+	/** production cadiz server database */
+	// 'database' => 'general_collection_prod',
+
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

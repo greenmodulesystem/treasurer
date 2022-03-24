@@ -103,12 +103,12 @@ $(document).on('click', '#costumer_payment', function() {
         var i = confirm("Payment Confirm?");
         if (i == false) {
             return;
-        } else {            
-            if(total_gross <= parseInt($('#gen_cash_payment').val())){
+        } else {
+            if (total_gross <= parseInt($('#gen_cash_payment').val())) {
                 $.post({
                     url: baseUrl + "general_collection/service/general_collection_service/save_all_data",
                     data: {
-                        Accountable_form_number: $('#or_numbers').val(),                        
+                        Accountable_form_number: $('#or_numbers').val(),
                         Payor: $('#payor_name').val(),
                         Paid_by: $('#paid_by').val(),
                         Address: $('#address').val(),
@@ -138,17 +138,17 @@ $(document).on('click', '#costumer_payment', function() {
                                 document.getElementById("payor_name").value = "";
                                 $('#payment_modal').modal("hide");
                                 window.location = baseUrl + "general_collection/print_receipt?get=" + object;
-                            }else{
+                            } else {
                                 alert(result.error_message);
                             }
-                        }else{
+                        } else {
                             alert(result.error_message);
                         }
                     }
                 });
-            }else{
+            } else {
                 alert('Please input amount greater than total');
-            }            
+            }
         }
     }
 });
@@ -165,7 +165,7 @@ $(document).on('click', '#cheque_pmnt', function() {
             Part_ID: $(this).data('part_id')
         };
         particulars.push(obj);
-        gross_total  = gross_total += parseInt($('.amount-partic[data-key="' + $(this).data('key') + '"]').val());
+        gross_total = gross_total += parseInt($('.amount-partic[data-key="' + $(this).data('key') + '"]').val());
     });
 
     if ($('#payor_name').val() == '') {
@@ -177,7 +177,7 @@ $(document).on('click', '#cheque_pmnt', function() {
         if (i == false) {
             return;
         } else {
-            if(gross_total <= parseInt($('#c-amount').val())){
+            if (gross_total <= parseInt($('#c-amount').val())) {
                 $.post({
                     url: baseUrl + "general_collection/service/general_collection_service/save_data_with_bank",
                     data: {
@@ -210,7 +210,7 @@ $(document).on('click', '#cheque_pmnt', function() {
                             }
                             data_print.push(store);
                             var object = JSON.stringify(data_print);
-    
+
                             loadGrid();
                             document.getElementById("payor_name").value = "";
                             $('#non-cash-modal').modal("hide");
@@ -218,7 +218,7 @@ $(document).on('click', '#cheque_pmnt', function() {
                         }
                     }
                 });
-            }else{
+            } else {
                 alert('Please input amount greater than total');
             }
         }
@@ -281,7 +281,7 @@ $(document).on('click', '#mix-pmnt', function() {
         if (mix_confirm == false) {
             return;
         } else {
-            if(gross_total <= total_two){
+            if (gross_total <= total_two) {
                 $.post({
                     url: baseUrl + 'general_collection/service/general_collection_service/save_data_mixed_pmnt',
                     data: {
@@ -305,9 +305,9 @@ $(document).on('click', '#mix-pmnt', function() {
                         }
                     }
                 });
-            }else{
+            } else {
                 alert('Please input amount greater than total');
-            }            
+            }
         }
     }
 });
@@ -388,7 +388,7 @@ $(document).on('keyup', '.inpt-partic', function(e) {
                     $('#load-search-particular').modal('show');
 
                     Part_value = e.error_message;
-                    $('#load-particulars').html('');                    
+                    $('#load-particulars').html('');
                     $.each(e.error_message, function(idx, value) {
                         $('#load-particulars').append(
                             '<tr> <td><button class="btn btn-flat btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm btn-flat add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> <td>' + (new Intl.NumberFormat('en-US').format(value.Amount)) + '</td> </tr>'
@@ -411,6 +411,7 @@ $(document).on('click', '.click_to_add', function() {
     $('.inpt-partic[data-key="' + Data_key + '"]').val(Particular_ID);
     $('.amount-partic[data-key="' + Data_key + '"]').val(Data_amnt);
     $('.inpt-partic[data-key="' + Data_key + '"]').attr('data-part_ID', part_ID);
+    calculate_payable();
 });
 
 $(document).on('click', '.add_by_parent', function() {
@@ -425,6 +426,7 @@ $(document).on('click', '.add_by_parent', function() {
             if (e.has_error == false) {
 
                 $.each(e.error_message, function(idx, val) {
+
                     $('#load-search-particular').modal('hide');
                     $('.inpt-partic[data-key="' + idx + '"]').val(val.Particular);
                     $('.amount-partic[data-key="' + idx + '"]').val(val.Amount);
@@ -475,8 +477,8 @@ function calculate_payable() {
         total_payable = total_payable + parseFloat($(this).val());
     });
 
-    $('#subtotal').html(total_payable);
-    $('.total_pay').html(total_payable);
+    $('#subtotal').html(total_payable.toLocaleString("en-US"));
+    $('.total_pay').html(total_payable.toFixed(2));
     $('#total_payable_gen').val(total_payable);
     total_payable = 0;
 }

@@ -7,12 +7,7 @@ sidebar('void');
 }</style>
 
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>&nbsp;</h1>
-        <ol class="breadcrumb">           
-            <li class="active" style="color: black"><i class="fa fa-search"></i> Search </li>
-        </ol>
-    </section>
+     
 
     <section class="content">        
         <div class="box box-primary">

@@ -221,13 +221,13 @@ class General_collection_Model extends CI_Model
                 'Address' => $this->Address
             );
 
-            $this->db->select('ID');
-            $this->db->from(TABLE['payer']);
-            $this->db->where('Payer', $this->Payor);
-            $result = $this->db->get()->row();
+            $this->ctodb->select('ID');
+            $this->ctodb->from(TABLE['payer']);
+            $this->ctodb->where('Payer', $this->Payor);
+            $result = $this->ctodb->get()->row();
 
             if (empty($result)) {
-                $this->db->insert(TABLE['payer'], $data);
+                $this->ctodb->insert(TABLE['payer'], $data);
             }
 
             return true;
@@ -339,7 +339,7 @@ class General_collection_Model extends CI_Model
         }
 
         $result = $this->check_or_number_exist();
-        
+
         if (!empty($result)) {
             $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);
 
@@ -703,7 +703,7 @@ class General_collection_Model extends CI_Model
                 $this->ctodb->where('p.Parent', $this->Parent);
                 $query = $this->ctodb->get()->result();
 
-                return $query;
+                echo json_encode(array('error_message' => $query, 'has_error' => false));
             }
         } catch (Exception $msg) {
             echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));

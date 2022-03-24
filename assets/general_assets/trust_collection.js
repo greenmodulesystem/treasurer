@@ -138,6 +138,7 @@ $(document).on('click', '.click_to_add', function() {
     $('.inpt-partic-trust[data-key="' + Data_key + '"]').val(Particular_ID);
     $('.trust-amount-partic[data-key="' + Data_key + '"]').val(Data_amnt);
     $('.inpt-partic-trust[data-key="' + Data_key + '"]').attr('data-part_id', part_ID);
+    calculate_payable();
 });
 
 $(document).on('click', '#add_form', function() {
@@ -218,7 +219,7 @@ $(document).on('keyup', function(e) {
 $(document).on('click', '#costumer_payment', function() {
 
     var particulars = [];
-    var gross_amount = 0; 
+    var gross_amount = 0;
 
     $('.inpt-partic-trust').each(function() {
         var obj = {
@@ -270,7 +271,7 @@ $(document).on('click', '#costumer_payment', function() {
                             document.getElementById("trust_payor_name").value = "";
                             $('#trust-non-cash-modal').modal("hide");
                             window.location = baseUrl + "trust_collection/print_receipt?get=" + object;
-                        }else{
+                        } else {
                             alert(result.error_message);
                         }
                     }
@@ -428,8 +429,8 @@ function calculate_payable() {
         total_payable = total_payable + parseFloat($(this).val());
     });
 
-    $('#subtotal').html(total_payable);
-    $('.total_pay').html(total_payable);
+    $('#subtotal').html(total_payable.toLocaleString("en-US"));
+    $('.total_pay').html(total_payable.toFixed(2));
     $('#total_payable_trust').val(total_payable);
     total_payable = 0;
 }
@@ -437,6 +438,7 @@ function calculate_payable() {
 $('.cash-in').on('keyup', function() {
     cash = $('.cash-in').val();
     subtotal = parseInt($('#total_payable_trust').val());
-    change = (parseInt(cash) - subtotal);    
+    change = (parseInt(cash) - subtotal);
+
     $('#change').html(change);
 });

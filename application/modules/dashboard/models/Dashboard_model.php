@@ -13,8 +13,9 @@ class dashboard_model extends CI_Model
         "cedula"    =>  "tbl_collection_cedula"
     );
 
-    public function __construct(){
-        parent::__construct();        
+    public function __construct()
+    {
+        parent::__construct();
         $this->ctodb = $this->load->database('ctodb', true);
     }
 
@@ -185,7 +186,7 @@ class dashboard_model extends CI_Model
                 'acc.Active'
         );
         $this->ctodb->from($this->table['accnt_form'] . ' acc');
-        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ID, 'both');
+        $this->ctodb->where('acc.Collector_ID', @$_SESSION['User_details']->ID);
         $this->ctodb->where('acc.Done', 0, 'both');
         $query = $this->ctodb->get()->result();
         return $query;
@@ -199,7 +200,7 @@ class dashboard_model extends CI_Model
                 'acc.Active'
         );
         $this->ctodb->from($this->table['accnt_form'] . ' acc');
-        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ID, 'both');
+        $this->ctodb->where('acc.Collector_ID', @$_SESSION['User_details']->ID);
         $this->ctodb->where('acc.Done', 0, 'both');
         $this->ctodb->where('acc.OR_for', null, 'both');
         $query = $this->ctodb->get()->result();

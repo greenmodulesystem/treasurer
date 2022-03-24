@@ -4,13 +4,7 @@ echo sidebar('reports');
 ?>
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/report.css">
 <div class="content-wrapper">
-    <section class="content-header">
-        <ol class="breadcrumb">
-            <li><i class="fa fa-money"></i> City Treasurer's Office</li>
-            <li>Collection</li>
-            <li class="active">Report</li>
-        </ol><br>
-    </section>
+     
     <section class="content">
         <div class="box box-solid">
             <div class="box-body">
@@ -61,10 +55,10 @@ echo sidebar('reports');
                                     </tr>
                                 </table>
                                 <div class="border-line"></div>
-                                <table class="table table-bord" style="font-size: 12px;">
+                                <table class="table table-bord" style="font-size: 12px; font-weight:bold;">
                                     <tr style="font-weight: bold">
-                                        <td style="width: 15%;">Ticket Serial</td>
                                         <td style="width: 20%;">Date</td>
+                                        <td style="width: 15%;">Ticket Serial</td>
                                         <td style="width: 20%;">Payor</td>
                                         <td style="width: 35%;">Particular</td>
                                         <td>Amount</td>
@@ -77,18 +71,19 @@ echo sidebar('reports');
                                     </td>
                                 </tr>
                                 <div class="border-line"></div>
-                                <table width="100%" class="table table-borderless table-bord" style="font-size: 12px;">
+                                <table width="100%" class="table table-borderless table-bord" style="font-size: 12px;font-weight:bold;">
                                     <?php
                                     $total = 0;
                                     foreach ($data as $key => $value) {
                                     ?><tr>
+                                            <td><?= date('m-d-Y', strtotime($value->Date_paid)) ?></td>
                                             <td><?= @$value->Accountable_form_number ?></td>
                                         </tr><?php
                                                 foreach ($value->ParticularPaid as $key => $particular) {
                                                 ?>
                                             <tr>
                                                 <td style="width: 15%;"></td>
-                                                <td style="width: 20%;"><?= date('m-d-Y', strtotime($value->Date_paid)) ?></td>
+                                                <td style="width: 20%;"></td>
                                                 <td style="width: 20%;"><?= strtoupper($value->Payor) ?></td>
                                                 <td style="width: 35%;"><?= strtoupper($particular->Particular) ?></td>
                                                 <td><?= $particular->Amount ?></td>
@@ -109,7 +104,7 @@ echo sidebar('reports');
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="font-weight:bold;">
                         <div class="box-body">
                             <div class="box-body">
                                 <h5 style="font-weight: bold"> Fund Summary: </h5>
@@ -153,5 +148,5 @@ echo sidebar('reports');
 <?php echo main_footer(); ?>
 <script language="javascript" src="<?php echo base_url() ?>assets/general_assets/unremitted.js"></script>
 <script>
-    var gen_data = <?php echo json_encode(@$AllPayments); ?>;    
+    var gen_data = <?php echo json_encode(@$AllPayments); ?>;
 </script>

@@ -1,37 +1,39 @@
 <?php
-    echo main_header();
-    echo sidebar('general_collection');
+echo main_header();
+echo sidebar('general_collection');
 ?>
 <style>
     .myCheckbox {
         width: 20px;
         height: 20px;
-    }.modal.modal-wide .modal-dialog {
-    width: 35%;
     }
-    .modal-wide .modal-body {
-    overflow-y: auto;
-    }
-    .modal-wide-receipt .modal-dialog{
+
+    .modal.modal-wide .modal-dialog {
         width: 35%;
     }
-    .modal-wide-payer .modal-dialog{
+
+    .modal-wide .modal-body {
+        overflow-y: auto;
+    }
+
+    .modal-wide-receipt .modal-dialog {
+        width: 35%;
+    }
+
+    .modal-wide-payer .modal-dialog {
         width: 45%;
     }
+
     .table-hover tbody tr:hover td {
         background: #d0f7e5;
     }
 </style>
 
 <div class="content-wrapper" style="color: black">
-    <section class="content-header">
-        <ol class="breadcrumb">
-            <li><i class="fa fa-money"></i> City Treasurer's Office</li>
-        </ol><br>
-    </section>
+
     <section class="content">
         <div class="body">
-            <div class="box box-default">
+            <div class="box box-primary">
                 <div class="row" style="color: black">
                     <div class="box-body" style="color: black">
                         <div class="box-header" style="margin-top: -2%">
@@ -87,7 +89,7 @@
                         <div class="box-body">
                             <div class="col-md-8" style="color: black">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <label style="font: bold 25px Bookman Old Style;"> SubTotal:</label>
                                         <label style="margin-top: 0%; color: red; font: bold 25px Bookman Old Style;" id="subtotal"></label>
                                     </div>
@@ -96,8 +98,8 @@
                                             <label style="font: bold 25px Bookman Old Style;"> OR No: </label>
                                         </div>
                                         <div class="col-sm-8">
-                                            <input type="number"  id="or_numbers" class="form-control input-sm" style="color: red; font: bold 25px Bookman Old Style;"> 
-                                        </div>                                        
+                                            <input type="number" id="or_numbers" class="form-control input-sm" style="color: red; font: bold 25px Bookman Old Style;">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -131,12 +133,12 @@
                 <div class="box box-primary" style="height: 300px; overflow-y: scroll;">
                     <div class="box-body">
                         <h4 class="modal-title"><i class="fa fa-address-card"></i> Payment Summary </h4>
-                    <div id="load_summary" style="margin-top: 1%"></div>
+                        <div id="load_summary" style="margin-top: 1%"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <input type="hidden" id="collector_name" value="<?=$_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name?>">
+        <input type="hidden" id="collector_name" value="<?= $_SESSION['User_details']->Last_name . ', ' . $_SESSION['User_details']->First_name ?>">
     </section>
 </div>
 <!-- Cash payment -->
@@ -156,7 +158,8 @@
                         <label style="font-size: 20px;">Php <label style="font: bold 25px Bookman Old Style; color: red;" class="total_pay"></label></label>
                         <input type="hidden" id="total_payable_gen" value="">
                     </div>
-                </div><div style="border-top: 1px solid black"></div><br>
+                </div>
+                <div style="border-top: 1px solid black"></div><br>
                 <div class="row">
                     <div class="col-sm-6 text-right">
                         <label style="font-size: 16px;">Cash: </label>
@@ -164,7 +167,8 @@
                     <div class="col-sm-6">
                         <input type="number" class="form-control input-sm text-right cash-in" id="gen_cash_payment" style="width: 80%;">
                     </div>
-                </div><br><div style="border-top: 1px solid black"></div>
+                </div><br>
+                <div style="border-top: 1px solid black"></div>
                 <div class="row">
                     <div class="col-sm-6 text-right">
                         <label style="font-size: 16px;">Change:</label>
@@ -207,8 +211,8 @@
                         <select name="bank-optn" id="" class="form-control input-md bank-optn">
                             <option value="" disabled selected>Select...</option>
                             <?php foreach ($banks as $key => $value) {
-                                ?><option value="<?=$value->Bank_name?>"><?=$value->Bank_name_short?></option><?php
-                            }?>
+                            ?><option value="<?= $value->Bank_name ?>"><?= $value->Bank_name_short ?></option><?php
+                                                                                                            } ?>
                         </select>
                     </div>
                 </div>
@@ -236,7 +240,8 @@
                         <input type="number" class="form-control input-md" id="c-amount" placeholder="Cheque Amount">
                     </div>
                 </div>
-                <br><div style="border-top: 1px solid black"></div><br>
+                <br>
+                <div style="border-top: 1px solid black"></div><br>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-flat btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -271,8 +276,8 @@
                         <select name="mix-bank-optn" id="" class="form-control input-md mix-bank-optn">
                             <option value="" disabled selected>Select...</option>
                             <?php foreach ($banks as $key => $value) {
-                                ?><option value="<?=$value->Bank_name?>"><?=$value->Bank_name_short?></option><?php
-                            }?>
+                            ?><option value="<?= $value->Bank_name ?>"><?= $value->Bank_name_short ?></option><?php
+                                                                                                            } ?>
                         </select>
                     </div>
                 </div>
@@ -308,7 +313,8 @@
                         <input type="number" class="form-control input-md" id="mix-cash-amount" placeholder="Cash Amount">
                     </div>
                 </div>
-                <br><div style="border-top: 1px solid black"></div><br>
+                <br>
+                <div style="border-top: 1px solid black"></div><br>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-flat btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -379,14 +385,14 @@
         </div>
     </div>
 </div>
-<?php echo main_footer();?>
-<script language="javascript" src="<?php echo base_url()?>assets/general_assets/general_collection_save.js"></script>
+<?php echo main_footer(); ?>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/general_collection_save.js"></script>
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 <script src="<?php echo base_url() ?>assets/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script>
-    var baseUrl = '<?php echo base_url();?>';
-    var Particulars = <?php echo json_encode($Result);?>;
-    var col_ID = <?php echo json_encode($_SESSION['User_details']->ID);?>;
+    var baseUrl = '<?php echo base_url(); ?>';
+    var Particulars = <?php echo json_encode($Result); ?>;
+    var col_ID = <?php echo json_encode($_SESSION['User_details']->ID); ?>;
     var voided;
     var particular;
     var particular_name;
@@ -401,11 +407,11 @@
         format: "yyyy-mm-dd",
     });
 
-    var loadGrid = function(){
+    var loadGrid = function() {
         $('#load_summary').load(baseUrl + "general_collection/load_payment_summry");
     }
 
-    var load_form = function(){
+    var load_form = function() {
         $('#load-data').load(baseUrl + "general_collection/load_form_data");
     }
 
@@ -413,7 +419,7 @@
         $('#load-receipt-details').load(baseUrl + "general_collection/print_receipt");
     }
 
-    $(document).ready(function(){
+    $(document).ready(function() {
         loadGrid();
         load_form();
         load_receipt();
@@ -422,11 +428,10 @@
     $(document).on('change', '.particular', function() {
         particular = $('.particular option:selected').val();
         particular_name = $('.particular option:selected').data('name');
-        $.each(Particulars, function(index, value){
+        $.each(Particulars, function(index, value) {
             if (particular == value.ID) {
                 document.getElementById("amount").value = value.Amount;
             }
         });
     });
-
 </script>
