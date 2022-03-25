@@ -23,7 +23,7 @@ sidebar('add-payer');
                 </div><br>
                 <div class="row">
                     <div class="col-md-2">
-                        <button class="btn btn-flat btn-md btn-success" id="save-data"><i class="fa fa-file-o"></i> Save </button>
+                        <button class="btn  btn-md btn-success" id="save-data"><i class="fa fa-plus-square"></i> SAVE </button>
                     </div>
                 </div>
             </div>

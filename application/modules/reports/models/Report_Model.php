@@ -27,6 +27,7 @@ class Report_Model extends CI_Model
     public $End_date;
     public $Data;
     public $ID;
+    public $Counter = 0;
 
     // GET GENERAL AND TRUST REPORTS BY SINGLE DATE
     function get_reports()
@@ -58,16 +59,7 @@ class Report_Model extends CI_Model
 
                 foreach ($query as $key => $value) {
                     $result =  $this->get_paid_particular_per_collection($value->Accountable_form_number);
-                    $response = $this->get_bus_col_items($value->ID);
-
-                    if (empty($result)) {
-                        $query[$key]->ParticularPaid = $response;
-                        if (empty($response)) {
-                            $query[$key]->ParticularPaid = [];
-                        }
-                    } else {
-                        $query[$key]->ParticularPaid = $result;
-                    }
+                    $query[$key]->ParticularPaid = $result;
                 }
 
                 echo json_encode($query);
@@ -141,16 +133,7 @@ class Report_Model extends CI_Model
 
                 foreach ($query as $key => $value) {
                     $result =  $this->get_paid_particular_per_collection($value->Accountable_form_number);
-                    $response = $this->get_bus_col_items($value->ID);
-
-                    if (empty($result)) {
-                        $query[$key]->ParticularPaid = $response;
-                        if (empty($response)) {
-                            $query[$key]->ParticularPaid = [];
-                        }
-                    } else {
-                        $query[$key]->ParticularPaid = $result;
-                    }
+                    $query[$key]->ParticularPaid = $result;
                 }
 
                 echo json_encode($query);
@@ -283,6 +266,71 @@ class Report_Model extends CI_Model
     public function get_unremitted()
     {
         try {
+            if ($this->Type == "51") {
+                $query = $this->unremitted_general_col();
+                return $query;
+            } else {
+                $this->ctodb->select('ac.Start_OR, ' . 'ac.End_OR, ' . 'ac.OR_for');
+                $this->ctodb->order_by('ac.ID', 'asc');
+                $this->ctodb->from(TABLE['accountable'] . ' ac');
+                $this->ctodb->where('ac.Remittance', 0);
+                $this->ctodb->where('ac.OR_origin', $this->Type);
+                $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
+                $response = $this->ctodb->get()->row();
+
+                $this->ctodb->select(
+                    'pay.ID, ' .
+                        'pay.Accountable_form_number, ' .
+                        'pay.Accountable_form_origin, ' .
+                        'pay.Date_paid, ' .
+                        'pay.Payor, ' .
+                        'pay.Address, ' .
+                        'pay.Quantity'
+                );
+                $this->ctodb->from($this->table['payment'] . ' pay');
+                $this->ctodb->where('pay.Accountable_form_number >=', $response->Start_OR);
+                $this->ctodb->where('pay.Accountable_form_number <=', $response->End_OR);
+                $this->ctodb->where('pay.Remitance', 0);
+                $this->ctodb->where('pay.Accountable_form_origin', $this->Type);
+                $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
+                $query = $this->ctodb->get()->result();
+
+                foreach ($query as $key => $value) {
+                    $result =  $this->get_paid_particulars($value->Accountable_form_number);
+                    $query[$key]->ParticularPaid = $result;
+                }
+                return $query;
+            }
+        } catch (Exception $ex) {
+            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function unremitted_general_col()
+    {
+        try {
+            $this->ctodb->select('ac.Start_OR, ' . 'ac.End_OR, ' . 'ac.OR_for');
+            $this->ctodb->order_by('ac.ID', 'asc');
+            $this->ctodb->from(TABLE['accountable'] . ' ac');
+            $this->ctodb->where('ac.Remittance', 0);
+            $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
+            $response = $this->ctodb->get()->result();
+
+            $ArrayMerge = [];
+
+            for ($i = 0; $i < count($response); $i++) {
+                $Query = $this->getUnremitted($response[$i]->Start_OR, $response[$i]->End_OR);
+                $ArrayMerge = array_merge($ArrayMerge, $Query);
+            }
+            return $ArrayMerge;
+        } catch (Exception $ex) {
+            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+        }
+    }
+
+    function getUnremitted($Start, $End)
+    {
+        try {
             $this->ctodb->select(
                 'pay.ID, ' .
                     'pay.Accountable_form_number, ' .
@@ -293,6 +341,8 @@ class Report_Model extends CI_Model
                     'pay.Quantity'
             );
             $this->ctodb->from($this->table['payment'] . ' pay');
+            $this->ctodb->where('pay.Accountable_form_number >=', $Start);
+            $this->ctodb->where('pay.Accountable_form_number <=', $End);
             $this->ctodb->where('pay.Remitance', 0);
             $this->ctodb->where('pay.Accountable_form_origin', $this->Type);
             $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
@@ -300,16 +350,7 @@ class Report_Model extends CI_Model
 
             foreach ($query as $key => $value) {
                 $result =  $this->get_paid_particulars($value->Accountable_form_number);
-                $response = $this->get_bus_col_items($value->ID);
-
-                if (empty($result)) {
-                    $query[$key]->ParticularPaid = $response;
-                    if (empty($response)) {
-                        $query[$key]->ParticularPaid = [];
-                    }
-                } else {
-                    $query[$key]->ParticularPaid = $result;
-                }
+                $query[$key]->ParticularPaid = $result;
             }
 
             return $query;
@@ -327,32 +368,18 @@ class Report_Model extends CI_Model
             foreach ($this->SumData as $key => $value) {
                 foreach ($value->ParticularPaid as $idx => $IdxValue) {
                     array_push($UniqueData, $IdxValue->Particular);
-                    // $data = array(
-                    //   'ID' => $value->ID,
-                    //   'Particular' => $IdxValue->Particular
-                    // );                                   
-                    // array_push($UniqueData, $data);                            
                 }
             }
 
             $Response = array_unique($UniqueData);
-
+            $Length = count($this->SumData);
             foreach ($Response as $key => $value) {
-                $Result = $this->get_summary($value);
-                $response = $this->summary_bus_col_item($value);
-                if (!empty($Result)) {
-                    $data = array(
-                        'Name' => $value,
-                        'Amount' => $Result
-                    );
-                    array_push($Summary, $data);
-                } else {
-                    $data = array(
-                        'Name' => $value,
-                        'Amount' => $response
-                    );
-                    array_push($Summary, $data);
-                }
+                $Result = $this->get_summary($value, $this->SumData[0]->Accountable_form_number, $this->SumData[$Length - 1]->Accountable_form_number);
+                $data = array(
+                    'Name' => $value,
+                    'Amount' => $Result
+                );
+                array_push($Summary, $data);
             }
 
             return $Summary;
@@ -361,7 +388,7 @@ class Report_Model extends CI_Model
         }
     }
 
-    public function get_summary($value)
+    public function get_summary($value, $OrNumberF, $OrNumberS)
     {
         try {
             $this->ctodb->select(
@@ -370,6 +397,8 @@ class Report_Model extends CI_Model
             $this->ctodb->from($this->table['part_paid'] . ' pp', 'left');
             $this->ctodb->join($this->table['particular'] . ' pa', 'pa.ID = pp.Particular_ID', 'left');
             $this->ctodb->join($this->table['payment'] . ' py', 'py.Accountable_form_number = pp.Accountable_form_number', 'left');
+            $this->ctodb->where('py.Accountable_form_number >=', $OrNumberF);
+            $this->ctodb->where('py.Accountable_form_number <=', $OrNumberS);
             $this->ctodb->where('pa.Particular', $value);
             $this->ctodb->where('py.Collector_ID', $_SESSION['User_details']->ID);
             $this->ctodb->where('py.Remitance', 0);
@@ -377,27 +406,6 @@ class Report_Model extends CI_Model
 
             $Amount = 0;
             foreach ($query as $key => $value) {
-                $Amount += $value->Amount;
-            }
-
-            return $Amount;
-        } catch (Exception $ex) {
-            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
-        }
-    }
-
-    public function summary_bus_col_item($value)
-    {
-        try {
-            $this->ctodb->select(
-                'b.Amount'
-            );
-            $this->ctodb->from($this->table['busColItem'] . ' b');
-            $this->ctodb->where('b.Particular', $value);
-            $response = $this->ctodb->get()->result();
-
-            $Amount = 0;
-            foreach ($response as $key => $value) {
                 $Amount += $value->Amount;
             }
 
@@ -418,7 +426,6 @@ class Report_Model extends CI_Model
             $this->ctodb->from($this->table['part_paid'] . ' part');
             $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
             $this->ctodb->where('part.Accountable_form_number', $Accountable);
-            $this->ctodb->where('part.Particular_ID !=', NULL);
             $query = $this->ctodb->get()->result();
 
             return $query;
@@ -427,26 +434,8 @@ class Report_Model extends CI_Model
         }
     }
 
-    public function get_bus_col_items($ID)
-    {
-        try {
-            $this->ctodb->select(
-                'b.Particular, ' .
-                    'b.Amount, ' .
-                    'b.Date_created'
-            );
-            $this->ctodb->from($this->table['busColItem'] . ' b');
-            $this->ctodb->where('b.Payment_ID', $ID);
-            $response = $this->ctodb->get()->result();
 
-            return $response;
-        } catch (Exception $ex) {
-            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
-        }
-    }
-
-
-    // Get Non Cash Data
+    /** Get Non Cash Data */
     function get_non_cash()
     {
         $this->ctodb->select(
@@ -454,9 +443,14 @@ class Report_Model extends CI_Model
         );
         $this->ctodb->from($this->table['payment'] . ' p');
         $this->ctodb->join($this->table['part_paid'] . ' pp', 'p.Accountable_form_number = pp.Accountable_form_number', 'left');
-        $this->ctodb->where('p.Cheque', 1, 'both');
-        $this->ctodb->where('p.Collector_ID', $_SESSION['User_details']->ID, 'both');
+        $this->ctodb->where('p.Cheque', 1);
+        $this->ctodb->where('p.Remitance', 0);
+        $this->ctodb->where('p.Accountable_form_number >=', $this->StartOr);
+        $this->ctodb->where('p.Accountable_form_number <=', $this->EndOr);
+        $this->ctodb->where('p.Collector_ID', $_SESSION['User_details']->ID);
+        $this->ctodb->where('p.Accountable_form_origin', $this->Type);
         $query = $this->ctodb->get()->result();
+
         if (!empty($query)) {
             $Total = 0;
             foreach ($query as $key => $value) {
@@ -467,7 +461,8 @@ class Report_Model extends CI_Model
             return false;
         }
     }
-    // get cheque data
+
+    /** get cheque data */
     function get_cheque()
     {
         $this->ctodb->select(
@@ -479,35 +474,115 @@ class Report_Model extends CI_Model
         $this->ctodb->from($this->table['payment'] . ' p');
         $this->ctodb->join($this->table['part_paid'] . ' pp', 'p.Accountable_form_number = pp.Accountable_form_number', 'left');
         $this->ctodb->join($this->table['cheque'] . ' c', 'c.Payment_ID = p.ID', 'left');
-        $this->ctodb->where('p.Cheque', 1, 'both');
-        $this->ctodb->where('p.Collector_ID', $_SESSION['User_details']->ID, 'both');
+        $this->ctodb->where('p.Cheque', 1);
+        $this->ctodb->where('p.Collector_ID', $_SESSION['User_details']->ID);
+        $this->ctodb->where('p.Accountable_form_origin', $this->Type);
         $query = $this->ctodb->get()->result();
+
         if (!empty($query)) {
             return $query;
         } else {
             return false;
         }
     }
-    // Get first data
+
+    /** get all collectibles per collector */
+    public function getAllCollectible()
+    {
+        try {
+            if ($this->Type == "51") {
+                $ArrayDataCollection = [];
+
+                $this->ctodb->select('ac.Start_OR, ' . 'ac.End_OR, ' . 'ac.OR_for');
+                $this->ctodb->order_by('ac.ID', 'asc');
+                $this->ctodb->from(TABLE['accountable'] . ' ac');
+                $this->ctodb->where('ac.Remittance', 0);
+                $this->ctodb->where('ac.Active', 1);
+                $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
+                $response = $this->ctodb->get()->result();
+                
+                foreach ($response as $value) {
+                    $this->ctodb->select(
+                        'pay.Accountable_form_number, ' .
+                            'pay.Accountable_form_origin, ' .
+                            'part.Amount'
+                    );
+                    $this->ctodb->from($this->table['payment'] . ' pay');
+                    $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
+                    $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+                    $this->ctodb->where('pay.Accountable_form_number >=', $this->StartOr);
+                    $this->ctodb->where('pay.Accountable_form_number <=', $this->EndOr);
+                    $this->ctodb->where('pay.Remitance', 0);
+                    $this->ctodb->where('par.Collection_type', @$value->OR_for);
+                    $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
+                    $query = $this->ctodb->get()->result();
+                    foreach ($query as $idx => $idxValue) {
+                        $query[$idx]->AccountableType =  @$value->OR_for;
+                        $query[$idx]->FormNumber =  @$idxValue->Accountable_form_origin;
+                    }
+                    array_push($ArrayDataCollection, $query);
+                }
+
+                return $ArrayDataCollection;
+            } else {
+                $this->ctodb->select(
+                    'pay.Accountable_form_number, ' .
+                        'part.Amount'
+                );
+                $this->ctodb->from($this->table['payment'] . ' pay');
+                $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
+                $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+                $this->ctodb->where('pay.Accountable_form_number >=', $this->StartOr);
+                $this->ctodb->where('pay.Accountable_form_number <=', $this->EndOr);
+                $this->ctodb->where('pay.Remitance', 0);
+                $this->ctodb->where('pay.Accountable_form_origin', $this->Data);
+                $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
+                $query = $this->ctodb->get()->result();
+
+                return $query;
+            }
+        } catch (Exception $msg) {
+            echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    /** Get first data */
     function get_first_data()
     {
-        $this->ctodb->select(
-            'pay.Accountable_form_number, ' .
-                'part.Amount'
-        );
-        $this->ctodb->from($this->table['payment'] . ' pay');
-        $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
-        $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
-        $this->ctodb->where('pay.Remitance', 0);
-        $this->ctodb->where('par.Collection_type', 'general');
-        $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
-        $query = $this->ctodb->get()->result();
-        $result = $this->get_bus_collection_();
-        $response = array_merge($query, $result);
+        if ($this->Type == "51") {
+            $this->ctodb->select(
+                'pay.Accountable_form_number, ' .
+                    'part.Amount'
+            );
+            $this->ctodb->from($this->table['payment'] . ' pay');
+            $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
+            $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+            $this->ctodb->where('pay.Accountable_form_number >=', $this->StartOr);
+            $this->ctodb->where('pay.Accountable_form_number <=', $this->EndOr);
+            $this->ctodb->where('pay.Remitance', 0);
+            $this->ctodb->where('par.Collection_type', 'general');
+            $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
+            $query = $this->ctodb->get()->result();
+        } else {
+            $this->ctodb->select(
+                'pay.Accountable_form_number, ' .
+                    'part.Amount'
+            );
+            $this->ctodb->from($this->table['payment'] . ' pay');
+            $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
+            $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+            $this->ctodb->where('pay.Accountable_form_number >=', $this->StartOr);
+            $this->ctodb->where('pay.Accountable_form_number <=', $this->EndOr);
+            $this->ctodb->where('pay.Remitance', 0);
+            $this->ctodb->where('pay.Accountable_form_origin', $this->Data);
+            $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
+            $query = $this->ctodb->get()->result();
+        }
 
-        return $response;
+        return $query;
     }
-    // Get second data
+
+    /** Get second data */
     function get_second_data()
     {
         $this->ctodb->select(
@@ -524,18 +599,20 @@ class Report_Model extends CI_Model
 
         return $query;
     }
-    /** get business collection */
-    public function get_bus_collection_()
+
+    /** get all port collection under the collector */
+    public function getPortCollection()
     {
         try {
             $this->ctodb->select(
-                'pay.Accountable_form_number, ' .
-                    'bus.Amount'
+                'pay.Accountable_form_number ,' .
+                    'part.Amount'
             );
-            $this->ctodb->from($this->table['busColItem'] . ' bus');
-            $this->ctodb->join($this->table['payment'] . ' pay', 'bus.Payment_ID = pay.ID', 'left');
-
+            $this->ctodb->from($this->table['payment'] . ' pay');
+            $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
+            $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
             $this->ctodb->where('pay.Remitance', 0);
+            $this->ctodb->where('par.Collection_type', 'port');
             $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
             $query = $this->ctodb->get()->result();
 
@@ -548,7 +625,7 @@ class Report_Model extends CI_Model
     public function get_all_payment()
     {
         try {
-            if (empty($this->Data)) {
+            if (empty($this->Type)) {
                 throw new Exception("Error Processing Request", 1);
             }
 
@@ -567,6 +644,7 @@ class Report_Model extends CI_Model
             echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
         }
     }
+
     // get all forms received by collectors
     public function get_all_forms()
     {
@@ -629,31 +707,18 @@ class Report_Model extends CI_Model
         $this->ctodb->select(
             'pay.ID, ' .
                 'pay.Accountable_form_number, ' .
-                'pay.Accountable_form_origin, ' .
                 'pay.Date_paid, ' .
                 'pay.Payor, ' .
                 'pay.Address, ' .
-                'pay.Quantity'
+                'part.Amount, ' .
+                'par.Particular'
         );
         $this->ctodb->from($this->table['payment'] . ' pay');
+        $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
+        $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
         $this->ctodb->where('pay.Remitance', 1);
-        $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
         $query = $this->ctodb->get()->result();
 
-        foreach ($query as $key => $value) {
-            $result =  $this->get_paid_particulars($value->Accountable_form_number);
-            $response = $this->get_bus_col_items($value->ID);
-
-            if (empty($result)) {
-                $query[$key]->ParticularPaid = $response;
-                if (empty($response)) {
-                    $query[$key]->ParticularPaid = [];
-                }
-            } else {
-                $query[$key]->ParticularPaid = $result;
-            }
-        }
-        // var_dump($query);
         return $query;
     }
     // GET VOIDED REPORTS
@@ -734,6 +799,8 @@ class Report_Model extends CI_Model
             $indiNumber = $this->get_collector_individual_number($value->Start_OR, $value->End_OR, $value->Collector_ID, $value->OR_origin);
             $query[$key]->Individual = $indiNumber;
         }
+
+
 
         foreach ($query as $key => $value) {
             $indiNumber = $this->get_collector_individual_number($value->Start_OR, $value->End_OR, $value->Collector_ID, $value->OR_origin);
@@ -898,20 +965,5 @@ class Report_Model extends CI_Model
         } catch (Exception $msg) {
             echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
         }
-    }
-
-    function sample()
-    {
-        $this->ctodb->select(
-            'a.Particular_ID, ' .
-                'a.Amount, ' .
-                'a.Quantity'
-        );
-        $this->ctodb->from($this->table['part_paid'] . ' a', 'true');
-        $this->ctodb->join($this->table['payment'] . ' b', 'a.Accountable_form_number = b.Accountable_form_number');
-        $this->ctodb->where('a.Quantity >=', 'b.ID');
-        $result = $this->ctodb->get()->result();
-
-        echo json_encode($result);
     }
 }

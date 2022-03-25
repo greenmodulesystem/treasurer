@@ -23,10 +23,10 @@ sidebar('void');
             <div class="box-body"></br>
                 <table class="table table-hover">
                     <thead>
-                        <th>OR Number</th>
-                        <th>Payer's Name</th>
-                        <th>Date Paid</th>
-                        <th>Option</th>
+                        <th> OR NO. </th>
+                        <th> TAXPAYER </th>
+                        <th> DATE PAID </th>
+                        <th> OPTION </th>
                     </thead>
                     <tbody id="grid"></tbody>
                 </table>               
@@ -50,8 +50,8 @@ sidebar('void');
                 </div>               
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-flat btn-danger btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-                <button type="button" class="btn btn-flat btn-success btn-sm pull-right" id="void_payor"><i class="fa fa-forward"></i> Proceed</button>
+                <button type="button" class="btn  btn-danger btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                <button type="button" class="btn  btn-success btn-sm pull-right" id="void_payor"><i class="fa fa-forward"></i> Proceed</button>
             </div>
         </div>
         

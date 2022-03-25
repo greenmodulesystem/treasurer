@@ -33,6 +33,8 @@ if (!empty($unremitted)) {
     var data = <?php echo json_encode($unremitted); ?>;
     remit_data = data;
     unremit_type = <?php echo json_encode(@$unremitted[0]['Accountable_form_origin']); ?>;
+    var StartOr = <?php echo json_encode(@$unremitted[0]['Accountable_form_number']); ?>;
+    var EndOr = <?php echo json_encode(@$unremitted[count(@$unremitted) - 1]['Accountable_form_number']); ?>;
     $(document).ready(function() {
         if (data != '') {
             document.getElementById("to_remit_div").style.display = "block";

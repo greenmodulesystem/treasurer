@@ -1,9 +1,9 @@
-$(document).ready(function () {
-    document.getElementById("save_print").disabled = true;
+$(document).ready(function() {
+    // document.getElementById("save_print").disabled = true;
 })
 
 /** save remit collection */
-$(document).on('click', '#save_print', function () {
+$(document).on('click', '#save_print', function() {
     var i = confirm('Are you done printing the ABSTRACT?');
     if (i == false) {
         return;
@@ -15,7 +15,7 @@ $(document).on('click', '#save_print', function () {
         } else {
             var Data = [];
 
-            $.each(gen_data, function (key, value) {
+            $.each(gen_data, function(key, value) {
                 var storage = {
                     ID: value.ID,
                     accountable_number: value.Accountable_form_number,
@@ -30,7 +30,7 @@ $(document).on('click', '#save_print', function () {
                     data: JSON.stringify(Data)
                 },
                 dataType: 'json',
-                success: function (result) {
+                success: function(result) {
                     if (result.has_error === false) {
                         alert(result.error_message);
                         window.location = baseUrl + "reports";
@@ -42,6 +42,11 @@ $(document).on('click', '#save_print', function () {
 });
 
 /** click to enable remit and save colleciton */
-$(document).on('click', '#print-abstract', function () {
-    document.getElementById("save_print").disabled = false;
+$(document).on('click', '#print-abstract', function() {
+    // document.getElementById("save_print").disabled = false;
 })
+
+
+$(document).on('click', '#print-rcd-report', function() {
+    $("#print-rcd").printThis();
+});

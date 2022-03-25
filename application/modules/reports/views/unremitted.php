@@ -8,13 +8,14 @@ $total_trustcollection = 0;
 $total_allcollection = 0;
 $total_cash_col = 0;
 $total_non_cash_col = 0;
+$TotalCollection = 0;
 ?>
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/report.css">
 <div class="content-wrapper">
 
     <section class="content">
         <div class="box box-solid">
-            <div>
+            <div id="print-rcd">
                 <div class="box-body">
                     <table width="100%" class="table table-border">
                         <tr>
@@ -55,22 +56,14 @@ $total_non_cash_col = 0;
                         <hr>
                         <tr>
                             <table style="margin-top: -8%" class="table table-border">
-                                <?php
-                                foreach ($first as $key => $value) {
-                                    $total_gencollection += $value->Amount;
-                                }
-                                foreach ($second as $key => $value) {
-                                    $total_trustcollection += $value->Amount;
-                                }
-                                ?>
                                 <tr>
                                     <td><label class="a-col">A. COLLECTIONS</label></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
                                 <tr class="official-font">
-                                    <td align="center"><label>TYPE (FORM no.)</label></td>
-                                    <td>
+                                    <td align="center" class="account-table"><label>TYPE (FORM no.)</label></td>
+                                    <td class="account-table">
                                         <table>
                                             <tr>
                                                 <td align="center"><label>Official Receipt/Cash Ticket No.</label></td>
@@ -81,40 +74,47 @@ $total_non_cash_col = 0;
                                             </tr>
                                         </table>
                                     </td>
-                                    <td><label>Amount</label></td>
+                                    <td class="account-table"><label>Amount</label></td>
                                 </tr>
-                                <tr class="official-font">
-                                    <td align="center" class="account-table">51</td>
-                                    <td class="account-table">
-                                        <table>
-                                            <tr>
-                                                <td><?= $first[0]->Accountable_form_number ?></td>
-                                                <td style="width: 58%;"></td>
-                                                <td><?= $first[count($first) - 1]->Accountable_form_number ?></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td class="account-table"><b><?= number_format($total_gencollection, 2) ?></b></td>
-                                </tr>
-                                <tr class="official-font">
-                                    <?php
-                                    if (!empty($second)) {
-                                    ?>
-                                        <td align="center" class="account-table">51</td>
-                                        <td class="account-table">
-                                            <table>
-                                                <tr>
-                                                    <td><?= $second['0']->Accountable_form_number ?></td>
-                                                    <td style="width: 58%;"></td>
-                                                    <td><?= $second[count($second) - 1]->Accountable_form_number ?></td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                        <td class="account-table"><b><?= number_format($total_trustcollection, 2) ?></b></td>
-                                    <?php
+                                <?php
+
+                                $firstArray = (count($allCollection) - 1);
+                                $secondArray = (count($allCollection[count($allCollection) - 1]) - 1);
+
+                                foreach ($allCollection as $key => $value) {
+                                    if (!empty($value[0])) {
+                                ?>
+                                        <tr class="official-font">
+                                            <td align="center" class="account-table"> <?= @$value[0]->FormNumber ?></td>
+                                            <td class="account-table">
+                                                <table>
+                                                    <tr>
+                                                        <td><?= @$value[0]->Accountable_form_number ?></td>
+                                                        <td style="width: 58%;"></td>
+                                                        <td><?= @$value[count($value) - 1]->Accountable_form_number ?></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <?php
+                                            foreach ($value as $idx => $val) {
+                                                $total_gencollection += $val->Amount;
+                                            }
+
+                                            $Total = 0;
+                                            $GeneralTotal = 0;
+                                            if (@$value[0]->AccountableType) {
+                                                foreach ($value as $idx => $val) {
+                                                    $Total = ($Total + $val->Amount);
+                                                    $GeneralTotal = ($GeneralTotal + $Total);
+                                                }
+                                            }
+                                            ?>
+                                            <td class="account-table"><b><?= number_format($Total, 2) ?></b></td>
+                                        </tr>
+                                <?php
                                     }
-                                    ?>
-                                </tr>
+                                }
+                                ?>
                                 <?php $total_allcollection = ($total_gencollection + $total_trustcollection) ?>
                                 <tr class="official-font">
                                     <td class="account-table"></td>
@@ -122,8 +122,7 @@ $total_non_cash_col = 0;
                                     <td class="account-table" style="color: red"><b><?= number_format($total_allcollection, 2) ?></b></td>
                                 </tr>
                             </table>
-                        </tr>
-                        <hr>
+                        </tr><br>
                         <tr>
                             <table class="table official-font">
                                 <tr class="head-tr">
@@ -132,22 +131,31 @@ $total_non_cash_col = 0;
                                     <td class="account-table">Particular</td>
                                     <td class="account-table">Amount</td>
                                 </tr>
-                                <tr>
-                                    <td class="account-table"></td>
-                                    <td class="account-table"></td>
-                                    <td class="account-table">General Collection</td>
-                                    <td class="account-table"><b><?= number_format($total_gencollection, 2) ?></b></td>
-                                </tr>
                                 <?php
-                                if (!empty($second)) {
+                                foreach ($allCollection as $key => $value) {
+                                    foreach ($value as $idx => $val) {
+                                        $TotalCollection += $val->Amount;
+                                    }
+
+                                    $Total = 0;
+                                    $GeneralTotal = 0;
+                                    if (@$value[0]->AccountableType) {
+                                        foreach ($value as $idx => $val) {
+                                            $Total = ($Total + $val->Amount);
+                                            $GeneralTotal = ($GeneralTotal + $Total);
+                                        }
+                                    }
+
+                                    if (!empty(@$value[0])) {
                                 ?>
-                                    <tr>
-                                        <td class="account-table"></td>
-                                        <td class="account-table"></td>
-                                        <td class="account-table">Trust Collection</td>
-                                        <td class="account-table"><b><?= number_format($total_trustcollection, 2) ?></b></td>
-                                    </tr>
+                                        <tr>
+                                            <td class="account-table"></td>
+                                            <td class="account-table"></td>
+                                            <td class="account-table"><?= @$value[0]->AccountableType ?></td>
+                                            <td class="account-table"><b><?= number_format($Total, 2) ?></b></td>
+                                        </tr>
                                 <?php
+                                    }
                                 }
                                 ?>
                                 <tr>
@@ -157,7 +165,7 @@ $total_non_cash_col = 0;
                                     <td class="account-table" style="color: red"><b><?= number_format($total_allcollection, 2) ?></b></td>
                                 </tr>
                             </table>
-                        </tr>
+                        </tr><br>
                         <tr>
                             <table class="table official-font">
                                 <tr>
@@ -478,11 +486,13 @@ $total_non_cash_col = 0;
                     </table>
                 </div>
             </div>
+            <div class="box-body">
+                <button class="btn btn-primary btn-md" id="print-rcd-report"><i class="fa fa-print"></i> PRINT </button>
+                <a href="<?php echo base_url() ?>reports/display_abstract?get=<?= @$ColType ?>" class="btn btn-md btn-success" role="button"><i class="fa fa-file"></i>&nbsp; Abstract </a>
+            </div>
         </div>
         <div>
-            <a href="<?php echo base_url() ?>reports" class="btn btn-default btn-flat btn-md" role="button"><i class="fa fa-angle-double-left"></i> Back </a>
-            <!-- <button class="btn btn-flat btn-md btn-primary save_print"><i class="fa fa-plus-square"></i> Remit & Save </button> -->
-            <a href="<?php echo base_url() ?>reports/display_abstract?get=<?= @$ColType ?>" class="btn btn-flat btn-md btn-success" role="button"><i class="fa fa-file-text"></i>&nbsp; Abstract </a>
+            <a href="<?php echo base_url() ?>reports" class="btn btn-default  btn-md" role="button"><i class="fa fa-angle-double-left"></i> Back </a>
         </div>
     </section>
 </div>
@@ -545,7 +555,7 @@ $total_non_cash_col = 0;
         var a = (total_in_cash - total);
         if (total_in_cash >= total) {
             $('#total_deno').html(total);
-            $('#remaining').html(a);
+            $('#remaining').html(a.toFixed(2));
 
             if (total_in_cash == total) {
                 document.getElementById("onethou-input").disabled = true;

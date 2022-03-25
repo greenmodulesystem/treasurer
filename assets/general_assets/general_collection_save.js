@@ -346,7 +346,7 @@ $('.search_payer').keyup(function(e) {
                     Values = e.error_message;
                     $.each(e.error_message, function(key, value) {
                         $('#load-searched').append(
-                            '<tr> <td><button class="btn btn-flat btn-sm btn-primary add-part" data-id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td>' + value.Payer + '</td> <td>' + value.Address + '</td> </tr>'
+                            '<tr> <td><button class="btn  btn-sm btn-primary add-part" data-id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td>' + value.Payer + '</td> <td>' + value.Address + '</td> </tr>'
                         );
                     })
                 } else {
@@ -391,7 +391,7 @@ $(document).on('keyup', '.inpt-partic', function(e) {
                     $('#load-particulars').html('');
                     $.each(e.error_message, function(idx, value) {
                         $('#load-particulars').append(
-                            '<tr> <td><button class="btn btn-flat btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm btn-flat add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> <td>' + (new Intl.NumberFormat('en-US').format(value.Amount)) + '</td> </tr>'
+                            '<tr> <td><button class="btn  btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm  add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> <td>' + (new Intl.NumberFormat('en-US').format(value.Amount)) + '</td> </tr>'
                         );
                     });
                 } else {
@@ -448,7 +448,7 @@ $(document).on('click', '#add-particu-inpt', function() {
 });
 
 var create_input_particular = function() {
-    $('#load-del-btn').append('<button class="btn btn-flat btn-md btn-danger delete_row" data-key="" style="margin-bottom: 5px; width: 100%;"><i class="fa fa-trash"></i></button>');
+    $('#load-del-btn').append('<button class="btn  btn-md btn-danger delete_row" data-key="" style="margin-bottom: 5px; width: 100%;"><i class="fa fa-trash"></i></button>');
     $('#load-input-particu').append('<input type="text" class="form-control input-md inpt-partic" data-part_ID="" data-key="" style="margin-bottom: 5px;">');
     $('#load-amount').append('<input disabled class="form-control input-md amount-partic" data-key="" style="margin-bottom: 5px;">');
 }

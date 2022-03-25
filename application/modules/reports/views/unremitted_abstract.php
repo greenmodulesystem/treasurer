@@ -4,11 +4,11 @@ echo sidebar('reports');
 ?>
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/report.css">
 <div class="content-wrapper">
-     
+
     <section class="content">
         <div class="box box-solid">
             <div class="box-body">
-                <div>
+                <div id="print-abstract">
                     <div class="row">
                         <div class="box-body">
                             <div class="box-body">
@@ -55,10 +55,10 @@ echo sidebar('reports');
                                     </tr>
                                 </table>
                                 <div class="border-line"></div>
-                                <table class="table table-bord" style="font-size: 12px; font-weight:bold;">
+                                <table class="table table-bord" style="font-size: 12px;">
                                     <tr style="font-weight: bold">
-                                        <td style="width: 20%;">Date</td>
                                         <td style="width: 15%;">Ticket Serial</td>
+                                        <td style="width: 20%;">Date</td>
                                         <td style="width: 20%;">Payor</td>
                                         <td style="width: 35%;">Particular</td>
                                         <td>Amount</td>
@@ -71,21 +71,20 @@ echo sidebar('reports');
                                     </td>
                                 </tr>
                                 <div class="border-line"></div>
-                                <table width="100%" class="table table-borderless table-bord" style="font-size: 12px;font-weight:bold;">
+                                <table width="100%" class="table table-borderless table-bord" style="font-size: 12px;">
                                     <?php
                                     $total = 0;
                                     foreach ($data as $key => $value) {
                                     ?><tr>
-                                            <td><?= date('m-d-Y', strtotime($value->Date_paid)) ?></td>
                                             <td><?= @$value->Accountable_form_number ?></td>
                                         </tr><?php
                                                 foreach ($value->ParticularPaid as $key => $particular) {
                                                 ?>
                                             <tr>
                                                 <td style="width: 15%;"></td>
-                                                <td style="width: 20%;"></td>
-                                                <td style="width: 20%;"><?= strtoupper($value->Payor) ?></td>
-                                                <td style="width: 35%;"><?= strtoupper($particular->Particular) ?></td>
+                                                <td style="width: 20%;"><?= date('m-d-Y', strtotime($value->Date_paid)) ?></td>
+                                                <td style="width: 20%;"><?= $value->Payor ?></td>
+                                                <td style="width: 35%;"><?= $particular->Particular ?></td>
                                                 <td><?= $particular->Amount ?></td>
                                                 <?php $total += $particular->Amount ?>
                                             </tr>
@@ -104,7 +103,7 @@ echo sidebar('reports');
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="font-weight:bold;">
+                    <div class="row">
                         <div class="box-body">
                             <div class="box-body">
                                 <h5 style="font-weight: bold"> Fund Summary: </h5>
@@ -115,7 +114,7 @@ echo sidebar('reports');
                                     $TotalAmount = 0;
                                     foreach ($summary as $key => $value) {
                                     ?><tr>
-                                            <td style="width:40%;"><?= strtoupper($value['Name']) ?></td>
+                                            <td style="width:40%;"><?= $value['Name'] ?></td>
                                             <td style="width:20%;"><?= number_format($value['Amount'], 2) ?></td>
                                         </tr><?php
                                                 $TotalAmount += $value['Amount'];
@@ -129,24 +128,24 @@ echo sidebar('reports');
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                </div>
+                <div class="row" id="print-rcd-report" style="display: block;">
+                    <div class="box-body">
                         <div class="box-body">
-                            <div class="box-body">
-                                <a target="_blank" href="<?php echo base_url() ?>reports/print_abstract_report?get=<?= @$data[0]->Accountable_form_origin ?>" type="button" class="btn btn-success btn-flat btn-md" id="print-abstract"> <i class="fa fa-print"></i> Print </a>
-                                <button class="btn btn-flat btn-md btn-primary" id="save_print"><i class="fa fa-plus-square"></i> Remit & Save </button>
-                            </div>
+                            <button class="btn btn-primary btn-md" id="printing"><i class="fa fa-print"></i> PRINT </button>
+                            <button class="btn btn-success " id="remit-collection"><i class="fa fa-money"></i> Save & Remit </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div>
-            <a href="<?php echo base_url() ?>reports" role="button" class="btn btn-flat btn-default btn-md"><i class="fa fa-angle-double-left"></i> Back </a>
+            <a href="<?php echo base_url() ?>reports" role="button" class="btn  btn-default btn-md"><i class="fa fa-angle-double-left"></i> Back </a>
         </div>
     </section>
 </div>
 <?php echo main_footer(); ?>
-<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/unremitted.js"></script>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/reports/remit_reports.js"></script>
 <script>
-    var gen_data = <?php echo json_encode(@$AllPayments); ?>;
+    var Data = <?php echo json_encode(@$data); ?>;
 </script>

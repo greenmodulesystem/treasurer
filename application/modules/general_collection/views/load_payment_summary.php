@@ -12,11 +12,11 @@
     <table class="table table-hover">
         <thead>
             <th colspan="1"></th>
-            <th width="30%" colspan="1">Particular</th>
-            <th width="15%" colspan="1">Amount</th>
-            <th width="15%">Qty</th>
-            <th width="10%">Total</th>
-            <th width="25%">Remarks</th>
+            <th width="30%" colspan="1"> PARTICULAR </th>
+            <th width="15%" colspan="1"> AMOUNT </th>
+            <th width="15%"> QTY </th>
+            <th width="10%"> TOTAL </th>
+            <th width="25%"> REMARKS </th>
         </thead>
         <tbody>
             <?php $subtotal = 0; ?>
@@ -39,8 +39,7 @@
     var costumer_particular = <?php echo json_encode(@$Result); ?>;
     or_number = <?php echo json_encode(@$Type->Accountable_form_number); ?>;
     check_validity = <?php echo json_encode(@$check_validity); ?>;
-    // var Checker = <?php echo json_encode(@$Checker); ?>;
-    // var Checkers = Checker;
+    
     var Total = 0;
     var quantity = [];
     var amnt = 0;

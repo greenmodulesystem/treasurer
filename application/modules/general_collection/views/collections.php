@@ -53,27 +53,27 @@ echo sidebar('general_collection');
                     </div>
                 </div>
 
-                <div class="box box-default">
+                <div class="box box-primary">
                     <div class="row">
                         <div class="box-body">
                             <div class="box-header" style="margin-top: -2%">
                                 <h4 class="title-header" style="margin-left: 0.9%"><i class="fa fa-edit"></i> Particular </h4>
                                 <div class="box-body" style="margin-left: -1.5%">
                                     <div class="col-md-1">
-                                        <label for=""> Option </label>
+                                        <label for=""> OPTION </label>
                                         <div id="load-del-btn">
                                             </br>
                                         </div>
-                                        </br><button class="btn btn-flat btn-md btn-primary" id="add-particu-inpt"><i class="fa fa-plus-square"></i> ADD </button>
+                                        </br><button class="btn  btn-md btn-primary" id="add-particu-inpt"><i class="fa fa-plus-square"></i> ADD </button>
                                     </div>
                                     <div class="col-md-5">
-                                        <label for=""> Particular/s </label>
+                                        <label for=""> PARTICULAR </label>
                                         <div id="load-input-particu">
                                             </br>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <label for=""> Amount </label>
+                                        <label for=""> AMOUNT </label>
                                         <div id="load-amount">
                                             <br>
                                         </div>
@@ -104,13 +104,13 @@ echo sidebar('general_collection');
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <button class="btn btn-flat btn-md btn-primary" id="costumer_pay" data-backdrop="static" style="width: 100%; margin-top: 12%;" data-toggle="modal"><i class="fa fa-money"></i> F9-Cash </button>
+                                        <button class="btn  btn-md btn-success" id="costumer_pay" data-backdrop="static" style="width: 100%; margin-top: 12%;" data-toggle="modal"><i class="fa fa-money"></i> F9-CASH </button>
                                     </div>
                                     <div class="col-md-4">
-                                        <button class="btn btn-flat btn-md btn-primary" id="f10-pay" data-backdrop="static" style="width: 100%; margin-top: 12%;" data-toggle="modal"><i class="fa fa-money"></i> F10-Cheque </button>
+                                        <button class="btn  btn-md btn-success" id="f10-pay" data-backdrop="static" style="width: 100%; margin-top: 12%;" data-toggle="modal"><i class="fa fa-money"></i> F10-CHEQUE </button>
                                     </div>
                                     <div class="col-md-4">
-                                        <button class="btn btn-flat btn-md btn-success" id="mix_payment" data-backdrop="static" style="width: 100%; margin-top: 12%;"><i class="fa fa-money"></i> Cheque & Cash </button>
+                                        <button class="btn  btn-md btn-success" id="mix_payment" data-backdrop="static" style="width: 100%; margin-top: 12%;"><i class="fa fa-money"></i> CHEQUE & CASH </button>
                                     </div>
                                 </div>
                             </div>
@@ -179,8 +179,8 @@ echo sidebar('general_collection');
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-flat btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                <button type="button" class="btn btn-flat btn-success btn-md pull-right" id="costumer_payment"><i class="fa fa-print"></i> Pay & Print</button>
+                <button type="button" class="btn  btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> CLOSE </button>
+                <button type="button" class="btn  btn-success btn-md pull-right" id="costumer_payment"><i class="fa fa-print"></i> PAY & PRINT </button>
             </div>
         </div>
 
@@ -211,8 +211,10 @@ echo sidebar('general_collection');
                         <select name="bank-optn" id="" class="form-control input-md bank-optn">
                             <option value="" disabled selected>Select...</option>
                             <?php foreach ($banks as $key => $value) {
-                            ?><option value="<?= $value->Bank_name ?>"><?= $value->Bank_name_short ?></option><?php
-                                                                                                            } ?>
+                            ?>
+                                <option value="<?= $value->Bank_name ?>"><?= $value->Bank_name_short ?></option>
+                            <?php
+                            } ?>
                         </select>
                     </div>
                 </div>
@@ -244,8 +246,8 @@ echo sidebar('general_collection');
                 <div style="border-top: 1px solid black"></div><br>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-flat btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                <button type="button" class="btn btn-flat btn-success btn-md pull-right" id="cheque_pmnt"><i class="fa fa-print"></i> Pay & Print</button>
+                <button type="button" class="btn  btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn  btn-success btn-md pull-right" id="cheque_pmnt"><i class="fa fa-print"></i> Pay & Print</button>
             </div>
         </div>
 
@@ -276,8 +278,10 @@ echo sidebar('general_collection');
                         <select name="mix-bank-optn" id="" class="form-control input-md mix-bank-optn">
                             <option value="" disabled selected>Select...</option>
                             <?php foreach ($banks as $key => $value) {
-                            ?><option value="<?= $value->Bank_name ?>"><?= $value->Bank_name_short ?></option><?php
-                                                                                                            } ?>
+                            ?>
+                                <option value="<?= $value->Bank_name ?>"><?= $value->Bank_name_short ?></option>
+                            <?php
+                            } ?>
                         </select>
                     </div>
                 </div>
@@ -317,8 +321,8 @@ echo sidebar('general_collection');
                 <div style="border-top: 1px solid black"></div><br>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-flat btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                <button type="button" class="btn btn-flat btn-success btn-md pull-right" id="mix-pmnt"><i class="fa fa-print"></i> Pay & Print</button>
+                <button type="button" class="btn  btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> CLOSE </button>
+                <button type="button" class="btn  btn-success btn-md pull-right" id="mix-pmnt"><i class="fa fa-print"></i> PAY & PRINT </button>
             </div>
         </div>
     </div>
@@ -337,8 +341,8 @@ echo sidebar('general_collection');
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-flat btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                <button type="button" class="btn btn-flat btn-success btn-sm pull-right" id="costumer_payment"><i class="fa fa-print"></i> Pay & Print</button>
+                <button type="button" class="btn  btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> CLOSE </button>
+                <button type="button" class="btn  btn-success btn-sm pull-right" id="costumer_payment"><i class="fa fa-print"></i> PAY & PRINT </button>
             </div>
         </div>
     </div>
@@ -353,9 +357,9 @@ echo sidebar('general_collection');
             <div class="modal-body">
                 <table class="table table-hover">
                     <thead>
-                        <th> Option </th>
-                        <th> Payer </th>
-                        <th> Address </th>
+                        <th> OPTION </th>
+                        <th> PAYER </th>
+                        <th> ADDRESS </th>
                     </thead>
                     <tbody id="load-searched">
                     </tbody>
@@ -374,9 +378,9 @@ echo sidebar('general_collection');
             <div class="modal-body">
                 <table class="table table-hover table-bordered">
                     <thead>
-                        <th> Option </th>
-                        <th> Group </th>
-                        <th> Particular </th>
+                        <th> OPTION </th>
+                        <th> GROUP </th>
+                        <th> PARTICULAR </th>
                     </thead>
                     <tbody id="load-particulars">
                     </tbody>

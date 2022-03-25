@@ -11,7 +11,7 @@ $(document).on('change', '.type_reports', function() {
 });
 
 $(document).on('click', '.btn-view-unremitted', function() {
-    window.location = "reports/display_unremitted?get=" + unremit_type;
+    window.location = "reports/display_unremitted?get=" + unremit_type + "&start=" + StartOr + "&end=" + EndOr;
 });
 
 $(document).on('click', '#generate_unremit', function() {

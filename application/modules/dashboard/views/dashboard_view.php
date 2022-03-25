@@ -46,7 +46,7 @@ echo sidebar('dashboard');
                                                     ?>
                                                 </select>
                                             </td>
-                                            <td><button class="btn btn-sm btn-flat btn-success save" data-id="<?= $value->ID ?>"><i class="fa fa-plus-square pull-left"></i> Save </button></td>
+                                            <td><button class="btn btn-sm  btn-success save" data-id="<?= $value->ID ?>"><i class="fa fa-plus-square pull-left"></i> Save </button></td>
                                     <?php
                                         }
                                     } ?>
@@ -67,8 +67,8 @@ echo sidebar('dashboard');
                                             }
                                             ?>
                                             <td>
-                                                <button data-origin="<?= @$value->OR_origin ?>" data-id="<?= $value->ID ?>" class="btn btn-flat btn-sm btn-danger cancel_form"><i class="fa fa-times"></i> Cancel </button>
-                                                <button class="btn btn-sm btn-flat btn-success activate-or" data-id="<?= $value->ID ?>" data-designate="<?= @$value->OR_for ?>"><i class="fa fa-check-square pull-left"></i> Use </button>
+                                                <button data-origin="<?= @$value->OR_origin ?>" data-id="<?= $value->ID ?>" class="btn  btn-sm btn-danger cancel_form"><i class="fa fa-times"></i> Cancel </button>
+                                                <button class="btn btn-sm  btn-success activate-or" data-id="<?= $value->ID ?>" data-designate="<?= @$value->OR_for ?>"><i class="fa fa-check-square pull-left"></i> Activate </button>
                                             </td>
                                         <?php
                                         } else {
