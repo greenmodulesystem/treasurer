@@ -469,7 +469,9 @@ class Report_Model extends CI_Model
             'pp.Amount, ' .
                 'c.Bank_name, ' .
                 'c.Check_date, ' .
-                'c.Check_no'
+                'c.Check_no, ' .
+                'c.ID, '. 
+                'pp.Accountable_form_number' 
         );
         $this->ctodb->from($this->table['payment'] . ' p');
         $this->ctodb->join($this->table['part_paid'] . ' pp', 'p.Accountable_form_number = pp.Accountable_form_number', 'left');
@@ -477,7 +479,8 @@ class Report_Model extends CI_Model
         $this->ctodb->where('p.Cheque', 1);
         $this->ctodb->where('p.Collector_ID', $_SESSION['User_details']->ID);
         $this->ctodb->where('p.Accountable_form_origin', $this->Type);
-        $query = $this->ctodb->get()->result();
+        $this->ctodb->where('p.Remitance', 0);        
+        $query = $this->ctodb->get()->result();                
 
         if (!empty($query)) {
             return $query;
@@ -500,7 +503,7 @@ class Report_Model extends CI_Model
                 $this->ctodb->where('ac.Active', 1);
                 $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
                 $response = $this->ctodb->get()->result();
-                
+
                 foreach ($response as $value) {
                     $this->ctodb->select(
                         'pay.Accountable_form_number, ' .
@@ -717,7 +720,8 @@ class Report_Model extends CI_Model
         $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
         $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
         $this->ctodb->where('pay.Remitance', 1);
-        $query = $this->ctodb->get()->result();
+        $this->db->where('pay.Collector_ID', $_SESSION['User_details']->ID);
+        $query = $this->ctodb->get()->result();        
 
         return $query;
     }
@@ -916,8 +920,7 @@ class Report_Model extends CI_Model
                 $query = $this->ctodb->get()->row();
                 if (!empty($query)) {
                     $result = $this->get_particular_paid_type($query->Accountable_form_number);
-                    $query->Particulars = $result;
-                    // var_dump($query);
+                    $query->Particulars = $result;                    
                     return $query;
                 } else {
                     throw new Exception('Empty Response');

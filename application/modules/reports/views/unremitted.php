@@ -17,7 +17,7 @@ $TotalCollection = 0;
         <div class="box box-solid">
             <div id="print-rcd">
                 <div class="box-body">
-                    <table width="100%" class="table table-border">
+                    <table width="100%" class="table table-border" style="font-weight: bold;">
                         <tr>
                             <td width="25%" height="99"><img src="<?php echo base_url() ?>assets/img/Logo_2.png" class="city-logo" />
                                 <table>
@@ -151,7 +151,7 @@ $TotalCollection = 0;
                                         <tr>
                                             <td class="account-table"></td>
                                             <td class="account-table"></td>
-                                            <td class="account-table"><?= @$value[0]->AccountableType ?></td>
+                                            <td class="account-table"><?= strtoupper(@$value[0]->AccountableType) ?></td>
                                             <td class="account-table"><b><?= number_format($Total, 2) ?></b></td>
                                         </tr>
                                 <?php

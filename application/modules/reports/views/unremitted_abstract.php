@@ -12,7 +12,7 @@ echo sidebar('reports');
                     <div class="row">
                         <div class="box-body">
                             <div class="box-body">
-                                <table width="100%" class="table table-borderless table-bord">
+                                <table width="100%" class="table table-borderless table-bord" >
                                     <tr>
                                         <td width="25%" height="99"><img src="<?php echo base_url() ?>assets/img/Logo_2.png" class="city-logo" />
                                             <table>
@@ -85,7 +85,7 @@ echo sidebar('reports');
                                                 <td style="width: 20%;"><?= date('m-d-Y', strtotime($value->Date_paid)) ?></td>
                                                 <td style="width: 20%;"><?= $value->Payor ?></td>
                                                 <td style="width: 35%;"><?= $particular->Particular ?></td>
-                                                <td><?= $particular->Amount ?></td>
+                                                <td style="font-weight: bold;"><?= $particular->Amount ?></td>
                                                 <?php $total += $particular->Amount ?>
                                             </tr>
                                     <?php
@@ -115,7 +115,7 @@ echo sidebar('reports');
                                     foreach ($summary as $key => $value) {
                                     ?><tr>
                                             <td style="width:40%;"><?= $value['Name'] ?></td>
-                                            <td style="width:20%;"><?= number_format($value['Amount'], 2) ?></td>
+                                            <td style="width:20%; font-weight:bold;"><?= number_format($value['Amount'], 2) ?></td>
                                         </tr><?php
                                                 $TotalAmount += $value['Amount'];
                                             }

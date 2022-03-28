@@ -6,6 +6,7 @@
             parent::__construct();
             $model_list = [
                'reports/Report_Model' => 'MReport',
+               'reports/service/Report_service_model' => 'rsModel'
             ];
             $this->load->model($model_list);
         }
@@ -60,6 +61,7 @@
                 if (empty($this->input->post('Data', true))) {
                     throw new Exception(ERROR_PROCESSING, true);
                 }
+                
                 $this->rsModel->Data = $this->input->post('Data', true);
                 $this->rsModel->save_remit_collection();
             } catch (Exception $ex) {
@@ -128,7 +130,7 @@
 
         function remitted()
         {
-            $this->data['remitted'] = $this->MReport->get_remitted();
+            $this->data['remitted'] = $this->MReport->get_remitted();                 
             $this->data['content'] = "remitted";
             $this->load->view('layout', $this->data);
         }

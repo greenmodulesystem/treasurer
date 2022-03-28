@@ -15,7 +15,7 @@ if (!empty($unremitted)) {
                     <td></td>
                     <td><?= strtoupper(@$value['Payor']) ?></td>
                     <td><?= @$particular['Particular'] ?></td>
-                    <td><button class="btn btn-xs btn-flat btn-danger set_void" data-id="<?= @$value['ID'] ?>"><i class="fa fa-cog"></i></button></td>
+                    <td><button class="btn btn-sm btn-danger set_void" data-id="<?= @$value['ID'] ?>"><i class="fa fa-cog"></i></button></td>
                 </tr>
     <?php
             }

@@ -405,15 +405,11 @@ class General_collection_Model extends CI_Model
             'pp.Accountable_form_number'
         );
         $this->ctodb->order_by('pp.ID', 'desc');
-        $this->ctodb->from($this->table['pPaid'] . ' pp');
-        // $this->ctodb->join($this->table['particular'].' p','p.ID = pp.Particular_ID', 'left');
-        $this->ctodb->join($this->table['payment'] . ' pm', 'pm.Accountable_form_number = pp.Accountable_form_number', 'left');
-        // $this->ctodb->join($this->table['accnt_form'].' acc', 'acc.OR_origin = pp.Accountable_form_origin', 'left');
-        // $this->ctodb->where('acc.OR_for', 'General');
+        $this->ctodb->from($this->table['pPaid'] . ' pp');        
+        $this->ctodb->join($this->table['payment'] . ' pm', 'pm.Accountable_form_number = pp.Accountable_form_number', 'left');       
         $this->ctodb->where('pm.Accountable_form_number >=', $this->StartOr);
         $this->ctodb->where('pm.Accountable_form_number <=', $this->EndOr);
-        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID);
-        // $this->ctodb->where('p.Collection_type', "General");
+        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID);        
         $query = $this->ctodb->get()->row();
 
         return $query;

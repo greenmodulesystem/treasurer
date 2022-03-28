@@ -69,7 +69,7 @@ echo sidebar('reports');
                                             </div>
                                         </div>
                                         <div class="col-md-1">
-                                            <button class="btn btn-m btn-flat btn-primary" id="generate"><i class="fa fa-forward"></i> Generate </button>
+                                            <button class="btn btn-m btn-primary" id="generate"><i class="fa fa-forward"></i> Generate </button>
                                         </div>
                                         <hr><br>
                                         <hr>
@@ -95,13 +95,13 @@ echo sidebar('reports');
                                             </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-sm btn-flat btn-primary" style="width:80%" id="generate_unremit"><i class="fa fa-arrow-right"></i> Generate </button>
+                                            <button class="btn btn-sm btn-primary" style="width:80%" id="generate_unremit"><i class="fa fa-arrow-right"></i> Generate </button>
                                         </div>
                                         <div class="col-md-4">
                                             <input type="text" class="form-control input-sm" id="search_input" placeholder="Search...">
                                         </div>
                                         <div class="col-md-2" style="margin-left: -2%;">
-                                            <button class="btn btn-sm btn-flat btn-primary" id="btn-search" style="width: 50%;"><i class="fa fa-search"></i></button>
+                                            <button class="btn btn-sm btn-primary" id="btn-search" style="width: 50%;"><i class="fa fa-search"></i></button>
                                         </div>
                                     </div>
                                     <hr>
@@ -117,7 +117,7 @@ echo sidebar('reports');
                                         </tbody>
                                     </table>
                                     <div class="box-body" style="display:none" id="to_remit_div">
-                                        <button class="btn btn-flat btn-md btn-success btn-view-unremitted"><i class="fa fa-file-text"></i>&nbsp; View RCD </button>
+                                        <button class="btn btn-md btn-success btn-view-unremitted"><i class="fa fa-file-text"></i>&nbsp; VIEW RCD </button>
                                     </div>
                                 </div>
                             </div>
@@ -129,8 +129,7 @@ echo sidebar('reports');
                                     <thead>
                                         <th style="width: 10%;"> DATE </th>
                                         <th style="width: 10%;"> OR NO. </th>
-                                        <th style="width: 35%;"> TAXPAYER </th>
-                                        <th style="width: 35%;"> PARTICULAR </th>
+                                        <th style="width: 35%;"> TAXPAYER </th>                                        
                                     </thead>
                                     <tbody id="load-remitted"></tbody>
                                 </table>
@@ -143,8 +142,8 @@ echo sidebar('reports');
                                     <thead>
                                         <TH> DATE </TH>
                                         <th> OR NO. </th>
-                                        <th> PARTICULAR </th>                                        
-                                        <th> TAXPAYER </th>                                        
+                                        <th> PARTICULAR </th>
+                                        <th> TAXPAYER </th>
                                         <th> OPTION </th>
                                     </thead>
                                     <tbody id="load-voided">
@@ -174,8 +173,8 @@ echo sidebar('reports');
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-flat btn-danger btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-                <button type="button" class="btn btn-flat btn-success btn-sm pull-right" id="void_reciept"><i class="fa fa-forward"></i> Proceed</button>
+                <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                <button type="button" class="btn btn-success btn-sm pull-right" id="void_reciept"><i class="fa fa-forward"></i> Proceed</button>
             </div>
         </div>
 

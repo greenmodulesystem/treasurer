@@ -1,14 +1,14 @@
 <?php login_header(); ?>
 
 <script language="javascript">
-    $(document).ready(function(){
+    $(document).ready(function() {
         $('#Username').focus();
     });
 </script>
 <style type="text/css">
     #right-panel {
-        float               :   right;
-        width               :   40%;
+        float: right;
+        width: 40%;
     }
 </style>
 
@@ -35,34 +35,42 @@
 </div>
 
 <script language="javascript">
-    $('#submit').on('click', function(){
+    
+    $('#submit').on('click', function() {
+        clickToLogin();
+    });
+
+    $(document).on('keyup', '#Password', function(e){
+        if(e.keyCode == 13){
+            clickToLogin();
+        }
+    })
+
+    var clickToLogin = () => {
         $.ajax({
-            url			:	"<?php echo base_url() ?>login/service/authenticate/sign_in",
-            type 		:	"POST",
-            data 		:	
-                    {
-                        Username	:	$("#Username").val(),
-                        Password    :   $("#Password").val()
-                    }
-        }).always(function (e) {
+            url: "<?php echo base_url() ?>login/service/authenticate/sign_in",
+            type: "POST",
+            data: {
+                Username: $("#Username").val(),
+                Password: $("#Password").val()
+            }
+        }).always(function(e) {
             if (e != "") {
-                var a = jQuery.parseJSON( e );
+                var a = jQuery.parseJSON(e);
                 if (a.has_error == true) {
                     $.each($('.user-input'), function() {
                         $(this).parent('div').addClass('has-error');
                     });
                     $('#Error').removeAttr('hidden');
                     $('#Error').html('</br>' + a.error_message);
-                }
-                else if(a.password_verified == true){
+                } else if (a.password_verified == true) {
                     window.location = "<?php echo base_url() ?>login/retype_password";
-                }
-                else {
+                } else {
                     window.location = "<?php echo base_url() ?>treasurers/applicant_search";
                 }
             }
         });
-    });
+    }
 </script>
 
 <?php login_footer(); ?>
