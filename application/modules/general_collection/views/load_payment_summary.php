@@ -12,17 +12,17 @@
     <table class="table table-hover">
         <thead>
             <th colspan="1"></th>
-            <th width="30%" colspan="1"> PARTICULAR </th>
-            <th width="15%" colspan="1"> AMOUNT </th>
-            <th width="15%"> QTY </th>
-            <th width="10%"> TOTAL </th>
-            <th width="25%"> REMARKS </th>
+            <th width="30%" colspan="1">Particular</th>
+            <th width="15%" colspan="1">Amount</th>
+            <th width="15%">Qty</th>
+            <th width="10%">Total</th>
+            <th width="25%">Remarks</th>
         </thead>
         <tbody>
             <?php $subtotal = 0; ?>
             <?php foreach ($Result as $key => $value) {
             ?><tr>
-                    <td><button class="btn btn-flat btn-sm btn-danger part-delete" data-id="<?= $value->ID ?>"><i class="fa fa-trash"></i></button></td>
+                    <td><button class="btn  btn-sm btn-danger part-delete" data-id="<?= $value->ID ?>"><i class="fa fa-trash"></i></button></td>
                     <td><?= $value->Particular ?></td>
                     <td><?= $value->Amount ?></td>
                     <td><input type="number" class="qnty form-control input-sm" data-num="<?= $key ?>" data-amnt="<?= $value->Amount ?>" value="" style="width: 50%"></td>
@@ -34,12 +34,19 @@
         </tbody>
     </table>
 </div>
+
 <script>
     subtotal = <?php echo json_encode($subtotal); ?>;
     var costumer_particular = <?php echo json_encode(@$Result); ?>;
     or_number = <?php echo json_encode(@$Type->Accountable_form_number); ?>;
     check_validity = <?php echo json_encode(@$check_validity); ?>;
     
+    //4-14-2023 LOUIS
+    start_or = <?php echo json_encode(@$Type->Start_OR); ?>;
+    end_or = <?php echo json_encode(@$Type->End_OR); ?>;
+    var remain_receipts = 0;
+    // END
+
     var Total = 0;
     var quantity = [];
     var amnt = 0;
@@ -60,6 +67,11 @@
         $('.total_pay').html(subtotals);
         subtotal = subtotals;
     }
+
+    //4-14-2023 LOUIS
+    remain_receipts = end_or - or_number + 1;
+    document.getElementById('remaining_or').value = remain_receipts;
+    // END
     
     document.getElementById('or_numbers').value = or_number;
     $('#subtotal').html(subtotal);

@@ -3,7 +3,8 @@
     {
         public function __construct(){
             parent::__construct();        
-            $model_list = [                
+            $model_list = [
+                'accountable_form/Accountable_Model' => 'aModel',
                 'order_of_payment/Order_of_payment_model' => 'opModel',
                 'order_of_payment/services/Order_of_payment_services_model' => 'opsModel',
                 'general_collection/General_collection_Model' => 'colModel'            
@@ -46,11 +47,13 @@
         public function open_order(){
             try{                
                 $this->opModel->token = $this->input->get('token', true);   
-                $result = $this->opModel->get_order_payment_details();   
+                $result = $this->opModel->get_order_payment_details();
+             
                 if(empty($this->input->get('token', true))){
                     $this->data['content'] = "not_found/not_found";
                 }else{
                     $this->data['accountable'] = $this->opModel->get_or_types();
+                    $this->data['banks'] = $this->colModel->get_bank(); 
                     $this->data['result'] = $result;
                     $this->data['content'] = "open_order_details";
                 }

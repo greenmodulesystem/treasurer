@@ -39,6 +39,22 @@
             }
         }
 
+         // 4-12-2023 LOUIS
+         public function display_remitted()
+         {
+             try {
+                 if ($this->input->post('Data', true) != null) {
+                     $data = json_decode($this->input->post('Data', true));
+                     $this->data['Result'] = $data;
+                     $this->data['content'] = "remitted";
+                     $this->load->view('layout', $this->data);
+                 }
+             } catch (Exception $ex) {
+                 echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+             }
+         }
+         // END
+         
         /** DISPLAY CEDULA REPORTS FROM DB */
         public function display_generated_cedula_reports()
         {
@@ -78,6 +94,21 @@
 
                 $this->data['content'] = "unremitted";
                 $this->load->view('layout', $this->data);
+                // var_dump($this->MReport->getAllCollectible());
+            } catch (Exception $ex) {
+                echo json_encode(array('error_message' => $ex->getMessage(), 'Error Processing' => true));
+            }
+        }
+
+        /** display unremitted options */
+        public function abstractOption()
+        {
+            try {
+                $this->MReport->Type = $this->input->get('get', true);
+                $this->MReport->ReportType = $this->input->get('type', true);
+                $this->data['Type'] = $this->input->get('get', true);
+                $this->data['content'] = 'abstract_option';
+                $this->load->view('layout', $this->data);
             } catch (Exception $ex) {
                 echo json_encode(array('error_message' => $ex->getMessage(), 'Error Processing' => true));
             }
@@ -87,8 +118,11 @@
         public function display_abstract()
         {
             try {
+                $this->data['RemitNumber'] = $this->MReport->getRemitanceNumber();
                 $this->MReport->Type = $this->input->get('get', true);
+                $this->MReport->ReportType = $this->input->get('type', true);
                 $this->data['ColType'] = $this->input->get('get', true);
+                $this->data['ReportType'] = $this->input->get('type', true);
                 $this->data['data'] = $this->MReport->get_unremitted();
                 $this->MReport->SumData = $this->data['data'];
                 $this->data['summary'] = $this->MReport->summary_list();
@@ -98,6 +132,7 @@
                 echo json_encode(array('error_message' => $ex->getMessage(), 'Error Processing' => true));
             }
         }
+        
 
         /** Re-Print Voided receipt */
         public function re_print_receipt($ID = '')
@@ -105,6 +140,32 @@
             $this->MReport->ID  =   $ID;
             $this->data['Data']   =   $this->MReport->get_voided_receipt();
             $this->data['content']  =   "re_print_receipt";
+            $this->load->view('layout', $this->data);
+        }
+        //RPT view receipt
+        public function view_rpt()
+        {
+            $Control_no = $this->uri->segment(3);
+            $this->MReport->Control_no = $Control_no;
+
+            $this->data['data']   =   $this->MReport->get_rpt_receipt();
+            $this->data['content']  =   "rpt_receipt";
+            $this->load->view('layout', $this->data);
+        }
+
+        // load remit records
+        public function records(){
+            $remit_number = $this->uri->segment(3);
+            $this->data['remit_number'] = $remit_number;
+            $this->MReport->remit_number = $remit_number;
+
+            $this->data['ColType'] = $this->MReport->get_record_coltype();
+            $this->data['ReportType'] = $this->MReport->get_record_reporttype();
+            $this->data['data'] = $this->MReport->get_records();
+            $this->data['remit_rec'] = $this->MReport->get_remit_records();
+            $this->data['summary'] = $this->MReport->get_remit_records_summary();
+
+            $this->data['content']  =   "records";
             $this->load->view('layout', $this->data);
         }
 
@@ -121,7 +182,7 @@
                 $this->MReport->Type = $this->input->get('get');
                 $this->MReport->StartOr = $this->input->get('start');
                 $this->MReport->EndOr = $this->input->get('end');
-              
+
                 $this->data['ColType'] = $this->input->get('get', true);
                 $this->data['non_cash'] = $this->MReport->get_non_cash();
                 $this->data['cheque'] = $this->MReport->get_cheque();
@@ -158,5 +219,12 @@
             } catch (Exception $msg) {
                 echo json_encode(array('error_message' => $msg->getMessage(), 'Error Processing' => true));
             }
+        }
+
+        /** upload files */
+        public function uploadFiles()
+        {
+            $this->data['content'] = "upload_files";
+            $this->load->view('layout', $this->data);
         }
     }

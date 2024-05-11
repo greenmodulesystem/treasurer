@@ -9,8 +9,8 @@ sidebar('applicant');
         <ol class="breadcrumb">
             <li><i class="fa fa-money"></i> City Treasurer's Office</li>
             <li>Businesses</li>
-            <li><a href="<?php echo base_url() ?>treasurers/applicant/<?=$profiles->ID?>">Business Payment</a></li>
-            <li><a href="<?php echo base_url() ?>treasurers/applicant_history/<?=$profiles->ID?>">Payment History</a></li>
+            <li><a href="<?php echo base_url() ?>treasurers/applicant/<?=@$profiles->ID?>">Business Payment</a></li>
+            <li><a href="<?php echo base_url() ?>treasurers/applicant_history/<?=@$profiles->ID?>">Payment History</a></li>
             <li class="active">Receipt</li>
         </ol>
     </section>
@@ -36,10 +36,10 @@ sidebar('applicant');
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><?=$data->Bank_name?></td>
-                                        <td><?=$data->Check_number?></td>
-                                        <td><?=$data->Check_date?></td>
-                                        <td class="text-right"><?=$data->Check_amount?></td>
+                                        <td><?=@$data->Bank_name?></td>
+                                        <td><?=@$data->Check_number?></td>
+                                        <td><?=@$data->Check_date?></td>
+                                        <td class="text-right"><?=@$data->Check_amount?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -56,10 +56,11 @@ sidebar('applicant');
                                     <i class="fa fa-print"></i>&ensp;Reprint Receipt
                                 </button>
                                 <!-------------------------------------- 01-15-2020 -------------------------------------->
-                                <button class="btn btn-sm flat btn-success" id="Edit_OR" data-target="#Edit_modal" 
+                               <!-- COMMENTED BY ANGELO 7/20/23 -->
+                                <!-- <button class="btn btn-sm flat btn-success" id="Edit_OR" data-target="#Edit_modal" 
                                     data-toggle="modal" data-keyboard="false" data-backdrop="static">
                                     <i class="fa fa-edit"></i>&ensp;Edit OR Number
-                                </button>
+                                </button> -->
                                 <div id="Edit_modal" class="modal fade">
                                     <div class="modal-dialog modal-sm">
                                         <div class="modal-content">
@@ -72,7 +73,7 @@ sidebar('applicant');
                                                 <div class="form-group has-feedback">
                                                     <label>Enter OR Number :</label>
                                                     <input id="OR_entry" class="form-control input-sm text-right" 
-                                                        placeholder="0000000" value="<?=$OR_num?>" type="text" autofocus>
+                                                        placeholder="0000000" value="<?=@$OR_num?>" type="text" autofocus>
                                                     <label id="Error" class="text-center" hidden></label>
                                                 </div>
                                             </div>
@@ -99,12 +100,36 @@ sidebar('applicant');
                                             <div class="modal-body" id="Receipt-body">
                                             </div>
                                             <div class="modal-footer">
-                                                <button class="btn btn-danger btn-sm flat pull-left" data-dismiss="modal">
+                                                <button class="btn btn-danger btn-sm flat pull-left" id="close_modal" data-dismiss="modal">
                                                     <i class="fa fa-close"></i>&ensp;Close
                                                 </button>
-                                                <button class="btn btn-primary btn-sm flat" id="Print_receipt"
-                                                    data-dismiss="modal"><i class="fa fa-print"></i>&ensp;Print
+                                                <!--MODIFIED BY KYLE 12-25-2023--------Removed data-dismiss="modal", Toggles the confirmation modal instead--->
+                                                <button class="btn btn-primary btn-sm flat" data-target="#confirm-OR-number" 
+                                                    data-toggle="modal"><i class="fa fa-print"></i>&ensp;Print
                                                 </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!------------------------------ADDED BY KYLE 12-25-2023------------------------------->
+                                <!---------------Added Confirmation Modal for the Official Reciept Number----------------->
+                                <div class="modal fade" id="confirm-OR-number">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" id="x_modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title" style="color:hsl(0 100% 60.78%);">Double Check Reciept Number!</h4>
+                                                
+                                            </div>
+                                            <div style="margin-left: 2.5%">
+                                                <h6 style="color: hsl(0 0% 0%); font-size: 120%;">Reciept number on hand should match with the system.</h6>
+                                                <label style="color: hsl(0 0% 0%); font-size: 120%; font-weight:400;">System Reciept Number: <label style="color:hsl(0 100% 60.78%);"><?=$OR_num?></label></label>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-default" id="close_modal" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-success btn-confirm-obo" data-dismiss="modal" id="Print_receipt">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
@@ -207,7 +232,7 @@ sidebar('applicant');
 </div>
 
 <?php main_footer(); ?>
-
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <!-- <script src="<?php echo base_url() ?>assets/theme/bower_components/bootstrap/dist/js/bootstrap.min.js"></script> -->
 <script language="javascript" src="<?php echo base_url()?>assets/scripts/noPostBack.js"></script>
 <script>
@@ -273,8 +298,9 @@ sidebar('applicant');
     /* ------------------------------------ 01-15-2020 ------------------------------------ */ 
 
     var loadReceipt = function(load){
+        console.log(baseUrl+"treasurers/print_receipt/");
         $(document).gmLoadReceipt({
-            url     :   baseUrl+"treasurers/print_receipt/",
+            url     :   baseUrl+"Treasurers/print_receipt",
             items   :   <?php echo json_encode($items)?>,
             data    :   <?php echo json_encode($data)?>,
             app_ID  :   <?php echo json_encode($app_ID)?>,
@@ -287,8 +313,17 @@ sidebar('applicant');
         loadReceipt(load);
     });
 
-    $('#Print_receipt').on('click', function(){
+    $('#Print_receipt').on('click', function(){ 
+    
         $("#Receipt-body").printThis();
+
+        //Added by KYLE 10-25-2023
+        document.getElementById('close_modal').click();
+    });
+
+    //Added by KYLE 10-25-2023
+    $('#close_modal, #x_modal').on('click', function(){ 
+        document.getElementById('close_modal').click();
     });
 
     $('#Open_void').on('click', function(){

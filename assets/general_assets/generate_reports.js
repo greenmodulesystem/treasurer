@@ -11,6 +11,11 @@ $(document).on('change', '.type_reports', function() {
 });
 
 $(document).on('click', '.btn-view-unremitted', function() {
+    // if (unremit_type == 51 || unremit_type == '51') {
+    //     window.location = "reports/display_unremitted?get=" + unremit_type + "&start=" + StartOr + "&end=" + EndOr;
+    // } else {
+    //     window.location = "reports/display_abstract?get=" + unremit_type + "&start=" + StartOr + "&end=" + EndOr;
+    // }
     window.location = "reports/display_unremitted?get=" + unremit_type + "&start=" + StartOr + "&end=" + EndOr;
 });
 
@@ -38,12 +43,31 @@ $(document).on('click', '.set_void', function() {
     Void_ID = $(this).data('id');
     $('#void_modal').modal("show");
 });
+$(document).on('click', '.set_void_rpt', function() {
+    Void_OR = $(this).data('or');
+    $('#void_modal').modal("show");
+});
 
 $(document).on('click', '#void_reciept', function() {
     $.post({
         url: baseUrl + "void_receipt/services/void_receipt_service/void_applicant_receipt",
         data: {
             ID: Void_ID,
+            Remarks: $('#void_remark').val()
+        },
+        dataType: 'json',
+        success: function(result) {
+            if (result.has_error === false) {
+                window.location = baseUrl + "reports";
+            }
+        }
+    });
+});
+$(document).on('click', '#void_reciept', function() {
+    $.post({
+        url: baseUrl + "void_receipt/services/void_receipt_service/void_rpt_receipt",
+        data: {
+            OR: Void_OR,
             Remarks: $('#void_remark').val()
         },
         dataType: 'json',
@@ -63,6 +87,17 @@ $('input[name=typeOF]').change(function() {
         document.getElementById("end_date_range").style.display = "none";
     }
 });
+
+// 4-12-2023 LOUIS
+$('input[name=typeOF_remitted]').change(function() {
+    values = $('input[name=typeOF_remitted]:checked').val();
+    if (values === 'range') {
+        document.getElementById("end_date_range_remitted").style.display = "block";
+    } else {
+        document.getElementById("end_date_range_remitted").style.display = "none";
+    }
+});
+// END
 
 $(document).on('click', '#remitted', function() {
     var i = confirm('Are you sure you want to remit this report?');
@@ -191,3 +226,33 @@ $(document).ready(function() {
         }
     });
 });
+
+
+// 4-12-2023 LOUIS
+$('#generate_remitted').on('click', function() {
+    $.post({
+        url: baseUrl + "reports/service/reports_service/generate_remitted",
+        data: {
+            date: $('#reports_date_remitted').val(),
+            end_date: $('#end_date_remitted').val(),
+            type: values,
+        },
+        dataType: 'json',
+        success: function(result) {
+            var object = JSON.stringify(result);
+            remitted_data = result;
+            if (object != '') {
+                $.post({
+                    url: baseUrl + "reports/reports/display_remitted",
+                    data: {
+                        Data: object
+                    },
+                    success: function(value) {
+                        $('#load-remitted').html(value);
+                    }
+                });
+            }
+        }
+    });
+});
+// END

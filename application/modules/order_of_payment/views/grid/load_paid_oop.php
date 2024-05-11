@@ -7,7 +7,7 @@
                 <td> <?=@$value->Status?></td>
                 <td> <?=date('M. d, Y', strtotime(@$value->Date_created))?></td>
                 <td> 
-                    <button class="btn btn-flat btn-sm btn-primary open-paid-oop" data-token="<?=@$value->U_ID?>"><i class="fa fa-folder-open"></i> OPEN </button>
+                    <button class="btn  btn-sm btn-primary open-paid-oop" data-token="<?=@$value->U_ID?>"><i class="fa fa-folder-open"></i> OPEN </button>
                 </td>
             </tr><?php
         }

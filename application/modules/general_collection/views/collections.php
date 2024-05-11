@@ -37,16 +37,24 @@ echo sidebar('general_collection');
                 <div class="row" style="color: black">
                     <div class="box-body" style="color: black">
                         <div class="box-header" style="margin-top: -2%">
-                            <h4 class="title-header" style="margin-left: 0.9%"><i class="fa fa-info"></i> General Collection </h4>
+                            <h4 class="title-header" style="margin-left: 0.9%"><i class="fa fa-info"></i>GENERAL Collection</h4>
                             <div class="box-body" style="margin-left: -1.5%">
                                 <div class="col-md-8" style="color: black">
-                                    <label>Payer:</label>
-                                    <input type="text" class="form-control input-md search_payer" id="payor_name" placeholder="Payer's Name" autofocus>
+                                    <label for="or-number">Date:</label>      
+                                    <div class="input-group" style="width:100%">
+                                    <span class="input-group-addon"> <i class="fa fa-calendar-plus-o" ></i></span>
+                                    <input type="text" class="form-control input-md c-date" id="date_paid" style="" data-field="date" placeholder="m/d/Y"   value="<?= date('Y-m-d', time()) ?> "readonly>
+                                    </div> 
+                                    <label>Payor/Company:</label>
+                                    <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md search_payer" id="payor_name" placeholder="Payor's Name" autofocus>
                                     <label>Paid By:</label>
-                                    <input type="text" class="form-control input-md search_paid_by" id="paid_by" placeholder="Paid By">
+                                    <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md search_paid_by" id="paid_by" placeholder="Paid By">
                                     <label>Address:</label>
-                                    <input type="text" class="form-control input-md search_address" id="address" placeholder="Adddress">
-                                    <input type="hidden" disabled class="form-control input-md date_paids" id="date_paid">
+                                    <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md search_address" id="address" value="Municipality of Murcia" placeholder="Address">
+                                    <!-- <input type="hidden" disabled class="form-control input-md date_paids" id="date_paid"> -->
+                                </div>
+                                <div class="col-md-4" style="color: black">
+                                    <label style="color: rgba(0, 0, 0, 0.2); font: bold 90px Bookman Old Style; margin-left:13px;"> General </label>
                                 </div>
                             </div>
                         </div>
@@ -58,23 +66,34 @@ echo sidebar('general_collection');
                         <div class="box-body">
                             <div class="box-header" style="margin-top: -2%">
                                 <h4 class="title-header" style="margin-left: 0.9%"><i class="fa fa-edit"></i> Particular </h4>
+                                    <form action="">
+                                    <input type="radio" class="options" value="single" name="options" checked> Single</input>
+                                    <input type="radio" class="options" value="group" name="options"> Group</input>
+                                    </form>
+                                  
                                 <div class="box-body" style="margin-left: -1.5%">
                                     <div class="col-md-1">
-                                        <label for=""> OPTION </label>
+                                        <label for=""> Option </label>
                                         <div id="load-del-btn">
                                             </br>
                                         </div>
                                         </br><button class="btn  btn-md btn-primary" id="add-particu-inpt"><i class="fa fa-plus-square"></i> ADD </button>
                                     </div>
                                     <div class="col-md-5">
-                                        <label for=""> PARTICULAR </label>
+                                        <label for=""> Particular/s </label>
                                         <div id="load-input-particu">
                                             </br>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <label for=""> AMOUNT </label>
+                                        <label for=""> Amount </label>
                                         <div id="load-amount">
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for=""> Remarks </label>
+                                        <div id="part-remarks">
                                             <br>
                                         </div>
                                     </div>
@@ -87,30 +106,45 @@ echo sidebar('general_collection');
                 <div class="row">
                     <div class="box-body" style="color: black;">
                         <div class="box-body">
-                            <div class="col-md-8" style="color: black">
+                            <div class="col-md-12" style="color: black">
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-3">
                                         <label style="font: bold 25px Bookman Old Style;"> SubTotal:</label>
                                         <label style="margin-top: 0%; color: red; font: bold 25px Bookman Old Style;" id="subtotal"></label>
                                     </div>
-                                    <div class="col-md-7">
+                                    <div class="col-md-5">
                                         <div class="col-sm-4">
                                             <label style="font: bold 25px Bookman Old Style;"> OR No: </label>
                                         </div>
                                         <div class="col-sm-8">
-                                            <input type="number" id="or_numbers" class="form-control input-sm" style="color: red; font: bold 25px Bookman Old Style;">
+                                            <input type="number" id="or_numbers" class="form-control input-sm" style="color: red; font: bold 25px Bookman Old Style;" disabled>
+                                            <!-- <label style="color: Blue; font: bold 15px Bookman Old Style; margin-left:13px;"> General Collection </label> -->
                                         </div>
                                     </div>
+                                    <!-- 4-14-2023 LOUIS -->
+                                    <div class="col-md-4">
+                                        <div class="col-sm-4">
+                                            <label style="font: bold 15px Bookman Old Style;"> Remaining Receipts: </label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="number" id="remaining_or" class="form-control input-sm" style="color: red; text-align: center; font: bold 15px Bookman Old Style;" disabled>
+                                            <!-- <label style="color: Blue; font: bold 15px Bookman Old Style; margin-left:13px;"> General Collection </label> -->
+                                        </div>
+                                    </div>
+                                    <!-- END -->
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <button class="btn  btn-md btn-success" id="costumer_pay" data-backdrop="static" style="width: 100%; margin-top: 12%;" data-toggle="modal"><i class="fa fa-money"></i> F9-CASH </button>
+                                    <div class="col-md-3">
+                                        <button class="btn  btn-md btn-primary" id="costumer_pay" data-backdrop="static" style="width: 100%; margin-top: 12%;" data-toggle="modal"><i class="fa fa-money"></i> F9-Cash </button>
                                     </div>
-                                    <div class="col-md-4">
-                                        <button class="btn  btn-md btn-success" id="f10-pay" data-backdrop="static" style="width: 100%; margin-top: 12%;" data-toggle="modal"><i class="fa fa-money"></i> F10-CHEQUE </button>
+                                    <div class="col-md-3">
+                                        <button class="btn  btn-md btn-primary" id="f10-pay" data-backdrop="static" style="width: 100%; margin-top: 12%;" data-toggle="modal"><i class="fa fa-money"></i> F10-Cheque </button>
                                     </div>
-                                    <div class="col-md-4">
-                                        <button class="btn  btn-md btn-success" id="mix_payment" data-backdrop="static" style="width: 100%; margin-top: 12%;"><i class="fa fa-money"></i> CHEQUE & CASH </button>
+                                    <div class="col-md-3">
+                                        <button class="btn  btn-md btn-primary" id="mix_payment" data-backdrop="static" style="width: 100%; margin-top: 12%;"><i class="fa fa-money"></i> Cheque & Cash </button>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn  btn-md btn-primary" id="other-payment" data-backdrop="static" style="width: 100%; margin-top: 12%;"><i class="fa fa-money"></i> Other Payment </button>
                                     </div>
                                 </div>
                             </div>
@@ -179,8 +213,8 @@ echo sidebar('general_collection');
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn  btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> CLOSE </button>
-                <button type="button" class="btn  btn-success btn-md pull-right" id="costumer_payment"><i class="fa fa-print"></i> PAY & PRINT </button>
+                <button type="button" class="btn  btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn  btn-success btn-md pull-right" id="costumer_payment"><i class="fa fa-print"></i> Pay & Print</button>
             </div>
         </div>
 
@@ -212,9 +246,10 @@ echo sidebar('general_collection');
                             <option value="" disabled selected>Select...</option>
                             <?php foreach ($banks as $key => $value) {
                             ?>
-                                <option value="<?= $value->Bank_name ?>"><?= $value->Bank_name_short ?></option>
+                                <option value="<?= $value->Bank_name_short ?>"><?= $value->Bank_name_short ?></option>
                             <?php
-                            } ?>
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -230,6 +265,7 @@ echo sidebar('general_collection');
                     <div class="col-sm-5 text-right">
                         <label style="font-size: 16px;">Cheque Date:</label>
                     </div>
+                    
                     <div class="col-sm-6">
                         <input type="text" class="form-control input-md c-date" placeholder="Cheque Date">
                     </div>
@@ -281,7 +317,8 @@ echo sidebar('general_collection');
                             ?>
                                 <option value="<?= $value->Bank_name ?>"><?= $value->Bank_name_short ?></option>
                             <?php
-                            } ?>
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -321,8 +358,8 @@ echo sidebar('general_collection');
                 <div style="border-top: 1px solid black"></div><br>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn  btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> CLOSE </button>
-                <button type="button" class="btn  btn-success btn-md pull-right" id="mix-pmnt"><i class="fa fa-print"></i> PAY & PRINT </button>
+                <button type="button" class="btn  btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn  btn-success btn-md pull-right" id="mix-pmnt"><i class="fa fa-print"></i> Pay & Print</button>
             </div>
         </div>
     </div>
@@ -341,10 +378,64 @@ echo sidebar('general_collection');
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn  btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> CLOSE </button>
-                <button type="button" class="btn  btn-success btn-sm pull-right" id="costumer_payment"><i class="fa fa-print"></i> PAY & PRINT </button>
+                <button type="button" class="btn  btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn  btn-success btn-sm pull-right" id="costumer_payment"><i class="fa fa-print"></i> Pay & Print</button>
             </div>
         </div>
+    </div>
+</div>
+<!-- payment  for others -->
+<div class="modal fade modal-wide" id="other-payment-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-money"></i> Payment </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4 text-right">
+                        <label style="font-size: 16px;">Total: </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <label style="font-size: 20px;">Php <label style="font: bold 25px Bookman Old Style; color: red;" class="total_pay"></label></label>
+                        <input type="hidden" id="total_payable_gen" value="">
+                    </div>
+                </div>
+                <div style="border-top: 1px solid black"></div><br>
+                <div class="row">
+                    <div class="col-sm-4 text-right">
+                        <label style="font-size: 16px;">Amount:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control input-sm text-right cash-in" id="other-payment-amount" style="width: 80%;">
+                    </div>
+                </div><br>
+                <div style="border-top: 1px solid black"></div>
+                <div class="row" style="margin-top: 5px;">
+                    <div class="col-sm-4 text-right">
+                        <label> Remarks: </label>
+                    </div>
+                    <div class="col-sm-8">
+                        <textarea name="remarks" class="form-control" id="other-remarks" cols="30" rows="2"></textarea>
+                    </div>
+                </div><br>
+                <div style="border-top: 1px solid black"></div>
+                <!-- <div class="row" style="margin-top: 5px;">
+                    <div class="col-sm-4 text-right">
+                        <label style="font-size: 16px;">Change:</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <label style="font: bold 25px Bookman Old Style; color: red;" id="change"></label>
+                    </div>
+                </div> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn  btn-md pull-left btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                <button type="button" class="btn  btn-success btn-md pull-right" id="other-payment-pay"><i class="fa fa-print"></i> Pay & Print</button>
+            </div>
+        </div>
+
     </div>
 </div>
 <!-- load searched payer and add to payer input -->
@@ -357,9 +448,9 @@ echo sidebar('general_collection');
             <div class="modal-body">
                 <table class="table table-hover">
                     <thead>
-                        <th> OPTION </th>
-                        <th> PAYER </th>
-                        <th> ADDRESS </th>
+                        <th> Option </th>
+                        <th> Payer </th>
+                        <th> Address </th>
                     </thead>
                     <tbody id="load-searched">
                     </tbody>
@@ -378,9 +469,9 @@ echo sidebar('general_collection');
             <div class="modal-body">
                 <table class="table table-hover table-bordered">
                     <thead>
-                        <th> OPTION </th>
-                        <th> GROUP </th>
-                        <th> PARTICULAR </th>
+                        <th> Option </th>
+                        <th> Group </th>
+                        <th> Particular </th>
                     </thead>
                     <tbody id="load-particulars">
                     </tbody>
@@ -391,6 +482,7 @@ echo sidebar('general_collection');
 </div>
 <?php echo main_footer(); ?>
 <script language="javascript" src="<?php echo base_url() ?>assets/general_assets/general_collection_save.js"></script>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 <script src="<?php echo base_url() ?>assets/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script>
@@ -406,9 +498,21 @@ echo sidebar('general_collection');
     var cash = 0;
     var change = 0;
 
+    function upperCaseF(a){
+            setTimeout(function(){
+                a.value = a.value.toUpperCase();
+                
+            }, 1);
+        }
+
+    $(document).on('keyup', '#payor_name', function() {
+        x = $(this).val()
+        $('#paid_by').val(x);
+    });
+
     $('.c-date').datepicker({
         autoclose: true,
-        format: "yyyy-mm-dd",
+        format: "yyyy-m-d",
     });
 
     var loadGrid = function() {

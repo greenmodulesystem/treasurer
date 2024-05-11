@@ -187,3 +187,80 @@ $(document).on('click', '#f-non-cash', function() {
     $('#rpt-non-cash').modal({ backdrop: 'static' });
     $('#rpt-non-cash').modal('show');
 });
+
+/*-------------------------------------------------SAVE & PRINT BUTTON---------------------------------------------------------
+------------------------------------------------From load_receipt_layout-------------------------------------------------------*/
+$(document).on('click', '#print', function() {
+
+    var data = [];
+    $('.single-entry').each(function(index, value) {                                
+        data.push($(value).data('field') + ':' + $(value).val());   
+        
+    });
+    $('.single-entry-text').each(function(index, value) {                                
+        data.push($(value).data('field') + ':' + $(value).text());   
+        
+    });
+
+    var line_data = [];
+    $('.line-data').each(function(index, value) { 
+        line_data.push($(value).data('field') + ':' + $(value).text());
+    });
+    console.info(data);
+    // window.print(); 
+    // window.onafterprint = back;
+
+    $.post({
+        url: baseUrl + "rpt_collection/service/rpt_collection_services/save_all_data",
+        data: {
+            Collector: $('#collector_name').val(),
+            Collector_ID: col_ID,
+            Payor:  $('#search_taxpayer').find('option:selected').text(),
+            line_data : JSON.stringify(line_data),
+            data      : JSON.stringify(data),
+           
+            
+        },
+        dataType: 'json',
+        success: function(result){
+            if (result.has_error == false) {
+                alert(result.error_message);
+                window.print(); 
+
+                 setTimeout(()=> {
+                    window.location.reload(true);
+                },3000);
+            }else {
+                alert(result.error_message);
+            }
+        }
+    });
+    
+
+    
+})
+
+
+
+
+
+/*------------------------------------------number to words conversion----------------------------------------------------*/
+var a = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
+var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
+
+
+function inWords (num) {
+    if ((num = num.toString()).length > 9) return 'overflow';
+    n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+    if (!n) return; var str = '';
+    str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'million ' : '';
+    str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'hundred thousand ' : '';
+    str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
+    str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
+    str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + ' ' : '';
+    return str;
+}
+
+
+
+

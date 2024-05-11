@@ -1,267 +1,276 @@
 .doc {
-    font-size: 12.5px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 4.125in;
-    height: 8.25in;
-    border: 1px solid black;
+  font-size: 12.5px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 4.125in;
+  height: 8.25in;
+  border: 1px solid black;
 }
 
 #date {
-    position: absolute;
-    left: 1.05cm;
-    top: 5.15cm;
-    width: 166px;
-    height: 18px;
-    text-align: center;
-    font-size: 13px;
+  position: absolute;
+  left: 1.05cm;
+  top: 4.75cm;
+  width: 166px;
+  height: 18px;
+  text-align: center;
+  font-size: 13px;
 }
 
 #Agency {
-    position: absolute;
-    left: 1.05cm;
-    top: 6.0cm;
-    width: 351px;
-    height: 18px;
-    padding-left: 50px;
-    font-size: 43px;
+  position: absolute;
+  left: 1.05cm;
+  top: 5.25cm;
+  width: 351px;
+  height: 18px;
+  padding-left: 50px;
+  font-size: 13px;
 }
 
 #OR_num {
-    position: absolute;
-    left: 5.45cm;
-    top: 5.10cm;
-    width: 185px;
-    height: 18px;
-    text-align: center;
-    font-size: 15px;
+  position: absolute;
+  left: 5.45cm;
+  top: 4.75cm;
+  width: 185px;
+  height: 18px;
+  text-align: center;
+  font-size: 15px;
 }
 
 #Payor {
-    position: absolute;
-    left: 1.05cm;
-    top: 6.65cm;
-    width: 351px;
-    height: 18px;
-    padding-left: 40px;
-    font-size: 11.5px;
-    white-space: nowrap;
+  position: absolute;
+  left: 1.05cm;
+  top: 6.25cm;
+  width: 351px;
+  height: 18px;
+  padding-left: 40px;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 #Address1 {
-    position: absolute;
-    left: 1.05cm;
-    top: 6.97cm;
-    width: 351px;
-    height: 14px;
-    padding-left: 40px;
-    font-size: 10.5px;
-    white-space: nowrap;
+  position: absolute;
+  left: 1.05cm;
+  top: 6.75cm;
+  width: 351px;
+  height: 14px;
+  padding-left: 40px;
+  font-size: 10.5px;
+  white-space: nowrap;
 }
 
 #Address2 {
-    position: absolute;
-    left: 1.05cm;
-    top: 7.25cm;
-    width: 351px;
-    height: 14px;
-    padding-left: 40px;
-    font-size: 10.5px;
-    white-space: nowrap;
+  position: absolute;
+  left: 1.05cm;
+  top: 7cm;
+  width: 351px;
+  height: 14px;
+  padding-left: 40px;
+  font-size: 10.5px;
+  white-space: nowrap;
 }
 
 #Items {
-    position: absolute;
-    left: 1.10cm;
-    top: 8.95cm;
-    width: 351px;
-    height: 180px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 10.5px;
-    line-height: 1.3em;
+  position: absolute;
+  left: 0.5cm;
+  top: 8.81cm;
+  width: 404px;
+  height: 180px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 10.5px;
+  line-height: 1.3em;
+}
+
+#Items2 {
+  position: absolute;
+  left: 0.7cm;
+  top: 3.75cm;
+  width: 351px;
+  height: 180px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 11px;
+  line-height: 1.3em;
 }
 
 #Type {
-    position: absolute;
-    left: 1.05cm;
-    top: 13.75cm;
-    width: 160px;
-    height: 18px;
-    text-align: right;
-    font-size: 13.5px;
+  position: absolute;
+  left: 1.05cm;
+  top: 15.7cm;
+  width: 160px;
+  height: 18px;
+  text-align: right;
+  font-size: 13.5px;
 }
 
 #Total {
-    position: absolute;
-    left: 7.26cm;
-    top: 13.75cm;
-    width: 116px;
-    height: 18px;
-    text-align: right;
-    padding-right: 5px;
-    font-size: 15px;
+  position: absolute;
+  left: 7.26cm;
+  top: 15.7cm;
+  width: 116px;
+  height: 18px;
+  text-align: right;
+  padding-right: 5px;
+  font-size: 15px;
 }
 
 #Words {
-    position: absolute;
-    left: 1.3cm;
-    top: 14.57cm;
-    width: 342px;
-    height: 48px;
-    font-size: 10px;
-    padding-left: 5px;
-    padding-right: 3px;
+  position: absolute;
+  left: 1.3cm;
+  top: 16.3cm;
+  width: 342px;
+  height: 48px;
+  font-size: 11px;
+  padding-left: 5px;
+  padding-right: 3px;
+  font-weight: 600;
 }
 
 #Bank {
-    position: absolute;
-    left: 3.7cm;
-    top: 16.5cm;
-    width: 85px;
-    height: 18px;
-    text-align: center;
-    font-size: 10.5px;
+  position: absolute;
+  left: 3.7cm;
+  top: 17.5cm;
+  width: 85px;
+  height: 18px;
+  text-align: center;
+  font-size: 10.5px;
 }
 
 #Check_num {
-    position: absolute;
-    left: 6.05cm;
-    top: 16.5cm;
-    width: 85px;
-    height: 18px;
-    text-align: center;
-    font-size: 10.5px;
+  position: absolute;
+  left: 6.05cm;
+  top: 17.5cm;
+  width: 85px;
+  height: 18px;
+  text-align: center;
+  font-size: 10.5px;
 }
 
 #Date_of_check {
-    position: absolute;
-    left: 8.35cm;
-    top: 16.5cm;
-    width: 75px;
-    height: 18px;
-    text-align: center;
-    font-size: 10.5px;
+  position: absolute;
+  left: 8.35cm;
+  top: 17.5cm;
+  width: 75px;
+  height: 18px;
+  text-align: center;
+  font-size: 10.5px;
 }
 
 #Amount_text {
-    position: absolute;
-    left: 5.8cm;
-    top: 17.1cm;
-    width: 100px;
-    height: 18px;
-    text-align: center;
-    font-size: 10.5px;
+  position: absolute;
+  left: 5.8cm;
+  top: 17.7cm;
+  width: 100px;
+  height: 18px;
+  text-align: center;
+  font-size: 10.5px;
 }
 
 #Amount_value {
-    position: absolute;
-    left: 8.35cm;
-    top: 17.1cm;
-    width: 75px;
-    height: 18px;
-    text-align: center;
-    font-size: 10.5px;
+  position: absolute;
+  left: 8.35cm;
+  top: 17.7cm;
+  width: 75px;
+  height: 18px;
+  text-align: center;
+  font-size: 10.5px;
 }
 
 #Collector {
-    position: absolute;
-    left: 4.9cm;
-    top: 18.4cm;
-    width: 194px;
-    height: 18px;
-    text-align: center;
+  position: absolute;
+  left: 4.9cm;
+  top: 19.1cm;
+  width: 194px;
+  height: 18px;
+  text-align: center;
 }
 
 #Position {
-    position: absolute;
-    left: 4.9cm;
-    top: 18.7cm;
-    width: 194px;
-    height: 18px;
-    text-align: center;
-    font-size: 10.5px;
+  position: absolute;
+  left: 4.9cm;
+  top: 19.55cm;
+  width: 194px;
+  height: 18px;
+  text-align: center;
+  font-size: 10.5px;
 }
 
 @media print {
-    .doc {
-        width: 4.125in;
-        height: 8.25in;
-        position: absolute;
-        top: -0.55in;
-        left: -0.55in;
-        border: none;
-        display: block;
-    }
+  .doc {
+    width: 4.125in;
+    height: 8.25in;
+    position: absolute;
+    top: -0.35in;
+    left: -0.15in;
+    border: none;
+    display : block;
+  }
 }
-
 
 /*---------- 01-18-2020 ----------*/
 
 #date2 {
-    position: absolute;
-    left: 1.05cm;
-    top: 2.15cm;
-    width: 166px;
-    height: 18px;
-    text-align: center;
-    font-size: 13px;
+  position: absolute;
+  left: 1.05cm;
+  top: 2.15cm;
+  width: 166px;
+  height: 18px;
+  text-align: center;
+  font-size: 13px;
 }
 
 #OR_num2 {
-    position: absolute;
-    left: 5.45cm;
-    top: 2.10cm;
-    width: 185px;
-    height: 18px;
-    text-align: center;
-    font-size: 15px;
+  position: absolute;
+  left: 5.45cm;
+  top: 2.1cm;
+  width: 185px;
+  height: 18px;
+  text-align: center;
+  font-size: 15px;
 }
 
 #Payor2 {
-    position: absolute;
-    left: 1.05cm;
-    top: 2.65cm;
-    width: 351px;
-    height: 18px;
-    padding-left: 40px;
-    font-size: 11.5px;
-    white-space: nowrap;
+  position: absolute;
+  left: 1.05cm;
+  top: 2.55cm;
+  width: 351px;
+  height: 18px;
+  padding-left: 40px;
+  font-size: 12.5px;
+  white-space: nowrap;
 }
 
 #Address12 {
-    position: absolute;
-    left: 1.05cm;
-    top: 2.92cm;
-    width: 351px;
-    height: 14px;
-    padding-left: 40px;
-    font-size: 10.5px;
-    white-space: nowrap;
+  position: absolute;
+  left: 1.05cm;
+  top: 2.92cm;
+  width: 351px;
+  height: 14px;
+  padding-left: 40px;
+  font-size: 10.5px;
+  white-space: nowrap;
 }
 
 #Address22 {
-    position: absolute;
-    left: 1.05cm;
-    top: 3.20cm;
-    width: 351px;
-    height: 14px;
-    padding-left: 40px;
-    font-size: 10.5px;
-    white-space: nowrap;
+  position: absolute;
+  left: 1.05cm;
+  top: 3.2cm;
+  width: 351px;
+  height: 14px;
+  padding-left: 40px;
+  font-size: 10.5px;
+  white-space: nowrap;
 }
 
-#Items2 {
-    position: absolute;
-    left: 1.10cm;
-    top: 3.75cm;
-    width: 351px;
-    height: 180px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 10.5px;
-    line-height: 1.3em;
+.testid {
+  padding: 0;
+  width: 50%;
 }
 
+.testrow {
+  display: flex;
+}
 
 /*---------- 01-18-2020 ----------*/

@@ -19,7 +19,7 @@
         <input type="number" disabled value="1" class="form-control input-sm" id="quantity">
     </div>               
     <div class="col-md-3" style="margin-top: 2.2%">                            
-        <button class="btn btn-flat btn-primary btn-sm" id="add_data"><i class="fa fa-plus-square"></i> Add </button>
+        <button class="btn  btn-primary btn-sm" id="add_data"><i class="fa fa-plus-square"></i> Add </button>
     </div>                         
 </div> 
 <script>                

@@ -15,7 +15,7 @@ class Logs_library{
 	private $File;
 	function __construct(){
 		date_default_timezone_set('Asia/Manila');
-		$this->Folder = '../treasurer/application/back up logs/';
+		$this->Folder = '../from_cadizv1.1.5.1/application/back up logs/';
 		$this->Filename = 'logs.txt';
 		$this->File = $this->Folder.$this->Filename;
 		if(!file_exists($this->Folder)){

@@ -55,5 +55,13 @@ class Trust_collection extends CI_Controller
         $this->data['content'] = "trust_print_receipt";
         $this->load->view('layout', $this->data);
     }
+
+    public function get_particulars_for_selected_group()
+    {
+        $this->MCollection->Parent = $this->input->post('Parent', true);
+        $this->data['result'] = $this->MCollection->get_particulars_for_selected_group();
+        $this->data['content'] = "load_particulars_for_selected_group";
+        $this->load->view('layout', $this->data);
+    }
 }
 ?>

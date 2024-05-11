@@ -5,22 +5,36 @@ function salt_generator($length)
     $result = "";
     $chars = "abcdefghijklmnopqrstuvwxyz0123456789$11<>?!@#$%^&*()";
     $charArray = str_split($chars);
-
-    for ($i = 0; $i < $length; $i++) {
-        $randItem = array_rand($charArray);
-        $result .= "" . $charArray[$randItem];
+    
+    for($i = 0; $i < $length; $i++)
+    {
+	    $randItem = array_rand($charArray);
+	    $result .= "".$charArray[$randItem];
     }
-
+    
     return $result;
+}
+
+function remittanceNumberGenerator($fName = '', $lName = '', $mName = '', $Number = '')
+{
+    $Counter = str_pad(((empty($Number)) ? ($Number) : $Number + 1), 5, "00000", STR_PAD_LEFT);
+    $RemittanceNumber = 'REM-' . $fName[0] . '' . $mName[0] . '' . $lName[0] . '-' . $Counter;
+
+    return $RemittanceNumber;
 }
 
 function uniqeid_generator($id = 1, $length = 50)
 {
-    if (function_exists("random_bytes")) {
+    if (function_exists("random_bytes")) 
+    {
         $bytes = random_bytes(ceil($length / 2));
-    } elseif (function_exists("openssl_random_pseudo_bytes")) {
+    } 
+    elseif (function_exists("openssl_random_pseudo_bytes")) 
+    {
         $bytes = openssl_random_pseudo_bytes(ceil($length / 2));
-    } else {
+    } 
+    else 
+    {
         throw new Exception(NO_CRYPTO);
     }
 
@@ -30,14 +44,11 @@ function uniqeid_generator($id = 1, $length = 50)
     return $unique_id;
 }
 
-function check_rule($value, $rules)
-{
+function check_rule($value,$rules){    
     if (in_array($value, $rules, true))
         return true;
     return false;
 }
-
-
 
 function NumberToWords($Number = '')
 {
@@ -99,6 +110,7 @@ function NumberToWords($Number = '')
 
     $rettxt = "";
     foreach ($whole_arr as $key => $i) {
+       
         while (substr($i, 0, 1) == "0")
             $i = substr($i, 1, 5);
         if ($i < 20) {
@@ -111,25 +123,25 @@ function NumberToWords($Number = '')
         } else {
             if (substr($i, 0, 1) != "0") $rettxt .= $ones[substr($i, 0, 1)] . " " . $hundreds[0];
             if (substr($i, 1, 1) != "0") $rettxt .= " " . $tens[substr($i, 1, 1)];
-            if (substr($i, 2, 1) != "0") $rettxt .= " " . $ones[substr($i, 2, 1)];
+            if (substr($i, 2, 1) != "0") $rettxt .= " " . $ones[substr($i, 2, 1)];       
         }
-
+        
         if ($key > 0) {
             $rettxt .= " " . $hundreds[$key] . " ";
         }
     }
     if ($decnum > 0) {
-
+        
         $rettxt .= " AND ";
         if ($decnum < 20) {
-            $rettxt .= $ones[$decnum] . " PESOS ONLY";
+            $rettxt .= $ones[$decnum] . " CENTAVOS ONLY";
         } elseif ($decnum < 100) {
             $rettxt .= $tens[substr($decnum, 0, 1)];
-            $rettxt .= " " . $ones[substr($decnum, 1, 1)] . " PESOS ONLY";
+            $rettxt .= " " . $ones[substr($decnum, 1, 1)] . " CENTAVOS ONLY";
         }
-    } else {
-        $rettxt = $rettxt . " PESOS ONLY";
+    }else{
+        $rettxt = $rettxt." PESOS ONLY";        
     }
-
+    
     return $rettxt;
 }

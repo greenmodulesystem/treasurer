@@ -98,7 +98,7 @@
 <?php
     }
 ?>
-
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <script language="javascript" src="<?php echo base_url()?>assets/cto_assets/js/handlers/items_handler.js"></script>
 <script language="javascript"> 
     var amount = <?php echo json_encode($amount)?>;

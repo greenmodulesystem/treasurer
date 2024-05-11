@@ -11,16 +11,10 @@ class Report_Model extends CI_Model
         "cheque"        =>  "tbl_cheque",
         "colType"       =>  "tbl_collection_type",
         'orType'        =>  'tbl_or_type',
-        'busColItem'    =>  'tbl_business_col_items'
+        "collection"    =>  'tbl_rpt_collection',
+        'payer'         =>  'tbl_payer',
+        'remitSched'    =>  'tbl_remit_schedule'
     );
-
-    public function __construct()
-    {
-        parent::__construct();
-        date_default_timezone_set('Asia/Manila');
-
-        $this->ctodb = $this->load->database('ctodb', TRUE);
-    }
 
     public $Date;
     public $Collection_type;
@@ -28,6 +22,11 @@ class Report_Model extends CI_Model
     public $Data;
     public $ID;
     public $Counter = 0;
+
+    public function __construct(){
+        parent::__construct();        
+        $this->ctodb = $this->load->database('ctodb', true);
+    }
 
     // GET GENERAL AND TRUST REPORTS BY SINGLE DATE
     function get_reports()
@@ -62,6 +61,11 @@ class Report_Model extends CI_Model
                     $query[$key]->ParticularPaid = $result;
                 }
 
+                foreach ($query as $key => $value) {
+                    if (empty($value->ParticularPaid)) {
+                        unset($query[$key]);
+                    }
+                }
                 echo json_encode($query);
             } else {
                 echo json_encode(array('error_message' => 'Error Processing', 'has_error' => true));
@@ -105,6 +109,74 @@ class Report_Model extends CI_Model
         }
     }
 
+     //4-23-2023 LOUIS
+     function get_remitted_singledate()
+     {
+         try {
+             if (!empty($this->Date)) {
+ 
+                 $this->db->select(
+                     'p.ID, ' .
+                         'p.Accountable_form_number, ' .
+                         'p.Date_paid, ' .
+                         'p.Payor, ' .
+                         'p.Cancelled, ' .
+                         'p.Remitance, ' .
+                         'part.Amount, ' .
+                         'par.Particular, '
+                 );
+                 $this->db->from($this->table['payment'] . ' p');
+                 $this->db->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = p.Accountable_form_number', 'left');
+                 $this->db->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+                 $this->db->where('p.Collector', $_SESSION['User_details']->Last_name . ', ' . $_SESSION['User_details']->First_name);
+                 $this->db->where('p.Collector_ID', $_SESSION['User_details']->ID);
+                 $this->db->where('Date(p.Date_paid)', $this->Date);
+                 $this->db->where('p.Remitance', 1);
+                 $query = $this->db->get()->result();
+ 
+                 echo json_encode($query);
+             } else {
+                 echo json_encode(array('error_message' => 'Error Processing', 'has_error' => true));
+             }
+         } catch (Exception $ex) {
+             echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+         }
+     }
+     // END
+
+      // 4-13-2023 LOUIS GET REMITTED BY DATE RANGE
+    function get_remitted_date_range()
+    {
+        try {
+            if (!empty($this->Date)) {
+                $this->db->select(
+                    'p.ID, ' .
+                        'p.Accountable_form_number, ' .
+                        'p.Date_paid, ' .
+                        'p.Payor, ' .
+                        'p.Cancelled, ' .
+                        'p.Remitance, ' .
+                        'part.Amount, ' .
+                        'par.Particular, '
+                );
+                $this->db->from($this->table['payment'] . ' p');
+                $this->db->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = p.Accountable_form_number', 'left');
+                $this->db->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+                $this->db->where('p.Collector', $_SESSION['User_details']->Last_name . ', ' . $_SESSION['User_details']->First_name);
+                $this->db->where('p.Date_paid BETWEEN "' . date('Y-m-d', strtotime($this->Date)) . '" and "' . date('Y-m-d', strtotime($this->End_date)) . '"');
+                $this->db->where('p.Remitance', 1);
+                $query = $this->db->get()->result();
+
+                echo json_encode($query);
+            } else {
+                echo json_encode(array('error_message' => 'Error Processing', 'has_error' => true));
+            }
+        } catch (Exception $ex) {
+            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+        }
+    }
+    //END
+    
     // GET GENERAL AND TRUST REPORTS BY DATE RANGE
     function get_report_date_range()
     {
@@ -116,18 +188,21 @@ class Report_Model extends CI_Model
                         'p.Date_paid, ' .
                         'p.Payor, ' .
                         'p.Cancelled, ' .
-                        'p.Remitance'
+                        'p.Remitance,'.
+                        'p.Accepted'
                 );
                 $this->ctodb->from($this->table['payment'] . ' p');
                 $this->ctodb->where('p.Collector', $_SESSION['User_details']->Last_name . ', ' . $_SESSION['User_details']->First_name);
                 $this->ctodb->where('p.Date_paid BETWEEN "' . date('Y-m-d', strtotime($this->Date)) . '" and "' . date('Y-m-d', strtotime($this->End_date)) . '"');
                 $query = $this->ctodb->get()->result();
-
+                
                 foreach ($query as $key => $value) {
-                    if ($value->Remitance === '1') {
+                    if ($value->Remitance === '1' && $value->Accepted === '0') {
+                        $query[$key]->Status_remitance = "On Process";
+                    }  else if($value->Remitance === '1'&& $value->Accepted === '1') {
                         $query[$key]->Status_remitance = "Remitted";
                     } else {
-                        $query[$key]->Status_remitance = "For Remitance";
+                        $query[$key]->Status_remitance = "Unremitted";
                     }
                 }
 
@@ -271,29 +346,33 @@ class Report_Model extends CI_Model
                 return $query;
             } else {
                 $this->ctodb->select('ac.Start_OR, ' . 'ac.End_OR, ' . 'ac.OR_for');
-                $this->ctodb->order_by('ac.ID', 'asc');
-                $this->ctodb->from(TABLE['accountable'] . ' ac');
+                $this->ctodb->order_by('ac.ID', 'desc');
+                $this->ctodb->from($this->table['accountable'] . ' ac');
                 $this->ctodb->where('ac.Remittance', 0);
                 $this->ctodb->where('ac.OR_origin', $this->Type);
                 $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
-                $response = $this->ctodb->get()->row();
+                $response = $this->ctodb->get()->result();
+                $l = sizeof($response);
 
                 $this->ctodb->select(
-                    'pay.ID, ' .
+                        'pay.ID, ' .
                         'pay.Accountable_form_number, ' .
+                        // 'pay.OR_hardcopy, ' .
                         'pay.Accountable_form_origin, ' .
                         'pay.Date_paid, ' .
                         'pay.Payor, ' .
                         'pay.Address, ' .
-                        'pay.Quantity'
+                        'pay.Quantity,'.
+                        'pay.Cancelled'
                 );
                 $this->ctodb->from($this->table['payment'] . ' pay');
-                $this->ctodb->where('pay.Accountable_form_number >=', $response->Start_OR);
-                $this->ctodb->where('pay.Accountable_form_number <=', $response->End_OR);
+                $this->ctodb->where('pay.Accountable_form_number >=', $response[0]->Start_OR);
+                $this->ctodb->where('pay.Accountable_form_number <=', $response[0]->End_OR);
                 $this->ctodb->where('pay.Remitance', 0);
                 $this->ctodb->where('pay.Accountable_form_origin', $this->Type);
                 $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
                 $query = $this->ctodb->get()->result();
+                
 
                 foreach ($query as $key => $value) {
                     $result =  $this->get_paid_particulars($value->Accountable_form_number);
@@ -311,34 +390,86 @@ class Report_Model extends CI_Model
         try {
             $this->ctodb->select('ac.Start_OR, ' . 'ac.End_OR, ' . 'ac.OR_for');
             $this->ctodb->order_by('ac.ID', 'asc');
-            $this->ctodb->from(TABLE['accountable'] . ' ac');
+            $this->ctodb->from($this->table['accountable'] . ' ac');
             $this->ctodb->where('ac.Remittance', 0);
+            $this->ctodb->where('ac.OR_origin', '51');
             $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
             $response = $this->ctodb->get()->result();
-
+            
             $ArrayMerge = [];
+            $calculate = 0;
 
             for ($i = 0; $i < count($response); $i++) {
+                
                 $Query = $this->getUnremitted($response[$i]->Start_OR, $response[$i]->End_OR);
-                $ArrayMerge = array_merge($ArrayMerge, $Query);
+                if (!empty(@$Query[$calculate]->ParticularPaid)) {
+                    $ArrayMerge = array_merge($ArrayMerge, $Query);
+                    $calculate++;
+                }
             }
+
             return $ArrayMerge;
         } catch (Exception $ex) {
             echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
         }
     }
 
+    /** get remitance number of each collector */
+    public function getRemitanceNumber()
+    {
+        try {
+            $this->ctodb->select('rs.Remittance_no');
+            $this->ctodb->order_by('rs.ID', 'desc');
+            $this->ctodb->from($this->table['remitSched'] . ' rs');
+            $this->ctodb->where('rs.Collector_ID', $_SESSION['User_details']->ID);
+            $Response = $this->ctodb->get()->result();
+
+            $Result = remittanceNumberGenerator($_SESSION['User_details']->First_name, $_SESSION['User_details']->Last_name, $_SESSION['User_details']->Middle_name, count($Response));
+
+            return $Result;
+        } catch (Exception $ex) {
+            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+        }
+    }
+
+
     function getUnremitted($Start, $End)
     {
         try {
+            // $this->ctodb->select(
+            //     'pay.ID, ' .
+            //         'pay.Accountable_form_number, ' .
+            //         'pay.Accountable_form_origin, ' .
+            //         'pay.Date_paid, ' .
+            //         'pay.Payor, ' .
+            //         'pay.Address, ' .
+            //         'pay.Quantity'
+            // );
+            // $this->ctodb->from($this->table['payment'] . ' pay');
+            // $this->ctodb->where('pay.Accountable_form_number >=', $Start);
+            // $this->ctodb->where('pay.Accountable_form_number <=', $End);
+            // $this->ctodb->where('pay.Remitance', 0);
+            // $this->ctodb->where('pay.Accountable_form_origin', $this->Type);
+            // $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
+            // $query = $this->ctodb->get()->result();
+
+            // foreach ($query as $key => $value) {
+            //     $result =  $this->get_paid_particulars($value->Accountable_form_number);
+            //     $query[$key]->ParticularPaid = $result;
+            // }
+
+            // var_dump($Start.' - '.$End);
+
             $this->ctodb->select(
                 'pay.ID, ' .
                     'pay.Accountable_form_number, ' .
+                    // 'pay.OR_hardcopy, ' .
                     'pay.Accountable_form_origin, ' .
                     'pay.Date_paid, ' .
                     'pay.Payor, ' .
                     'pay.Address, ' .
-                    'pay.Quantity'
+                    'pay.Quantity,'.
+                    'pay.Cancelled'
             );
             $this->ctodb->from($this->table['payment'] . ' pay');
             $this->ctodb->where('pay.Accountable_form_number >=', $Start);
@@ -363,17 +494,35 @@ class Report_Model extends CI_Model
     {
         try {
             $UniqueData = array();
+            $BusTaxData = array();
+            $x = array();
             $Summary = array();
 
             foreach ($this->SumData as $key => $value) {
                 foreach ($value->ParticularPaid as $idx => $IdxValue) {
-                    array_push($UniqueData, $IdxValue->Particular);
+                    // if($IdxValue->Particular != "BUSINESS TAX"){
+                    //     array_push($UniqueData, $IdxValue->Particular_ID);
+                    // } else{
+                    //     // array_push($BusTaxData, $IdxValue->Bus_tax_particular);
+                    //     // $x = "";
+                    //     // if (strpos(strtoupper($IdxValue->Bus_tax_particular), 'BUSINESS TAX FOR RETAILER') !== false) {
+                    //     //     // $x = "BUSINESS TAX FOR RETAILER";
+                    //     //     array_push($UniqueData, $IdxValue->Bus_tax_particular);
+                    //     //     // array_push($UniqueData, $x);
+                    //     // }else{
+                    //     //      array_push($UniqueData, $IdxValue->Bus_tax_particular);
+                    //     // }
+                    //     array_push($UniqueData, $IdxValue->Bus_tax_particular);
+                    // }
+                    array_push($UniqueData, $IdxValue->Bus_tax_particular);
+                    
                 }
             }
 
             $Response = array_unique($UniqueData);
             $Length = count($this->SumData);
             foreach ($Response as $key => $value) {
+
                 $Result = $this->get_summary($value, $this->SumData[0]->Accountable_form_number, $this->SumData[$Length - 1]->Accountable_form_number);
                 $data = array(
                     'Name' => $value,
@@ -392,14 +541,19 @@ class Report_Model extends CI_Model
     {
         try {
             $this->ctodb->select(
-                'pp.Amount'
+                'pp.Amount,'
             );
+
             $this->ctodb->from($this->table['part_paid'] . ' pp', 'left');
             $this->ctodb->join($this->table['particular'] . ' pa', 'pa.ID = pp.Particular_ID', 'left');
             $this->ctodb->join($this->table['payment'] . ' py', 'py.Accountable_form_number = pp.Accountable_form_number', 'left');
             $this->ctodb->where('py.Accountable_form_number >=', $OrNumberF);
             $this->ctodb->where('py.Accountable_form_number <=', $OrNumberS);
-            $this->ctodb->where('pa.Particular', $value);
+            // $this->ctodb->where('pa.Particular !=', "BUSINESS TAX");
+            // $this->ctodb->like('pp.Bus_tax_particular', $value); // Angelo 6/27/23
+            $this->ctodb->where('pp.Bus_tax_particular', $value); // Angelo 6/27/23
+            // $this->ctodb->or_where('pa.ID', $value);
+            $this->ctodb->where('py.Cancelled', 0);
             $this->ctodb->where('py.Collector_ID', $_SESSION['User_details']->ID);
             $this->ctodb->where('py.Remitance', 0);
             $query = $this->ctodb->get()->result();
@@ -410,6 +564,7 @@ class Report_Model extends CI_Model
             }
 
             return $Amount;
+     
         } catch (Exception $ex) {
             echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
         }
@@ -418,15 +573,33 @@ class Report_Model extends CI_Model
     public function get_paid_particulars($Accountable)
     {
         try {
-            $this->ctodb->select(
-                'part.Amount, ' .
-                    'par.Particular'
-            );
-
-            $this->ctodb->from($this->table['part_paid'] . ' part');
-            $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
-            $this->ctodb->where('part.Accountable_form_number', $Accountable);
-            $query = $this->ctodb->get()->result();
+            if(empty($this->ReportType)){
+                $this->ctodb->select(
+                    'part.Amount, ' .
+                        'par.Particular, ' .
+                    'part.Particular_ID, ' .
+                    'part.Bus_tax_particular'
+                );
+    
+                $this->ctodb->from($this->table['part_paid'] . ' part');
+                $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+                $this->ctodb->where('part.Accountable_form_number', $Accountable);
+                $query = $this->ctodb->get()->result();
+            }else{
+                $this->ctodb->select(
+                    'part.Amount, ' .
+                        'par.Particular, ' .
+                    'part.Particular_ID, '.
+                    'part.Bus_tax_particular'
+                );
+    
+                $this->ctodb->from($this->table['part_paid'] . ' part');
+                $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+                $this->ctodb->where('part.Accountable_form_number', $Accountable);
+                $this->ctodb->where('par.Collection_type', $this->ReportType);
+                $query = $this->ctodb->get()->result();
+            }
+            
 
             return $query;
         } catch (Exception $ex) {
@@ -466,21 +639,24 @@ class Report_Model extends CI_Model
     function get_cheque()
     {
         $this->ctodb->select(
-            'pp.Amount, ' .
+            'c.Check_amount as Amount, ' .
                 'c.Bank_name, ' .
                 'c.Check_date, ' .
-                'c.Check_no, ' .
-                'c.ID, '. 
-                'pp.Accountable_form_number' 
+                'c.Check_no'
         );
-        $this->ctodb->from($this->table['payment'] . ' p');
-        $this->ctodb->join($this->table['part_paid'] . ' pp', 'p.Accountable_form_number = pp.Accountable_form_number', 'left');
-        $this->ctodb->join($this->table['cheque'] . ' c', 'c.Payment_ID = p.ID', 'left');
+
+        $this->ctodb->from($this->table['cheque'] . ' c');
+        $this->ctodb->join($this->table['payment'] . ' p', 'c.Payment_ID = p.ID', 'left');
+        // $this->ctodb->join($this->table['part_paid'] . ' pp', 'p.Accountable_form_number = pp.Accountable_form_number', 'left');
+        
+        // $this->ctodb->from($this->table['payment'] . ' p');
+        // $this->ctodb->join($this->table['part_paid'] . ' pp', 'p.Accountable_form_number = pp.Accountable_form_number', 'left');
+        // $this->ctodb->join($this->table['cheque'] . ' c', 'c.Payment_ID = p.ID', 'left');
         $this->ctodb->where('p.Cheque', 1);
+        $this->ctodb->where('p.Remitance', 0);
         $this->ctodb->where('p.Collector_ID', $_SESSION['User_details']->ID);
         $this->ctodb->where('p.Accountable_form_origin', $this->Type);
-        $this->ctodb->where('p.Remitance', 0);        
-        $query = $this->ctodb->get()->result();                
+        $query = $this->ctodb->get()->result();
 
         if (!empty($query)) {
             return $query;
@@ -498,7 +674,7 @@ class Report_Model extends CI_Model
 
                 $this->ctodb->select('ac.Start_OR, ' . 'ac.End_OR, ' . 'ac.OR_for');
                 $this->ctodb->order_by('ac.ID', 'asc');
-                $this->ctodb->from(TABLE['accountable'] . ' ac');
+                $this->ctodb->from($this->table['accountable'] . ' ac');
                 $this->ctodb->where('ac.Remittance', 0);
                 $this->ctodb->where('ac.Active', 1);
                 $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
@@ -516,6 +692,7 @@ class Report_Model extends CI_Model
                     $this->ctodb->where('pay.Accountable_form_number >=', $this->StartOr);
                     $this->ctodb->where('pay.Accountable_form_number <=', $this->EndOr);
                     $this->ctodb->where('pay.Remitance', 0);
+                    $this->ctodb->where('pay.Cancelled', 0);
                     $this->ctodb->where('par.Collection_type', @$value->OR_for);
                     $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
                     $query = $this->ctodb->get()->result();
@@ -528,6 +705,7 @@ class Report_Model extends CI_Model
 
                 return $ArrayDataCollection;
             } else {
+                $ArrayDataCollection = [];
                 $this->ctodb->select(
                     'pay.Accountable_form_number, ' .
                         'part.Amount'
@@ -538,11 +716,16 @@ class Report_Model extends CI_Model
                 $this->ctodb->where('pay.Accountable_form_number >=', $this->StartOr);
                 $this->ctodb->where('pay.Accountable_form_number <=', $this->EndOr);
                 $this->ctodb->where('pay.Remitance', 0);
-                $this->ctodb->where('pay.Accountable_form_origin', $this->Data);
+                $this->ctodb->where('pay.Cancelled', 0);
+                // $this->ctodb->where('pay.Accountable_form_origin', $this->Data);
                 $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
                 $query = $this->ctodb->get()->result();
-
-                return $query;
+                foreach ($query as $idx => $idxValue) {
+                    $query[$idx]->AccountableType = "AF#: ".@$this->Type;
+                    $query[$idx]->FormNumber =  @$idxValue->Accountable_form_origin;
+                }
+                array_push($ArrayDataCollection, $query);
+                return $ArrayDataCollection;
             }
         } catch (Exception $msg) {
             echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
@@ -675,7 +858,7 @@ class Report_Model extends CI_Model
                     // var_dump($col->Accountable_form_number);
                 }
             }
-
+            
             return $result;
             // var_dump($result);
         } catch (Exception $msg) {
@@ -720,8 +903,8 @@ class Report_Model extends CI_Model
         $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
         $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
         $this->ctodb->where('pay.Remitance', 1);
-        $this->db->where('pay.Collector_ID', $_SESSION['User_details']->ID);
-        $query = $this->ctodb->get()->result();        
+        $this->ctodb->where('pay.Collector_ID', $_SESSION['User_details']->ID);
+        $query = $this->ctodb->get()->result();
 
         return $query;
     }
@@ -735,12 +918,29 @@ class Report_Model extends CI_Model
                 'pay.Payor, ' .
                 'pay.Address, ' .
                 'part.Amount, ' .
-                'par.Particular'
+                'par.Particular' 
+
+
         );
         $this->ctodb->from($this->table['payment'] . ' pay');
         $this->ctodb->join($this->table['part_paid'] . ' part', 'part.Accountable_form_number = pay.Accountable_form_number', 'left');
-        $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');
+        $this->ctodb->join($this->table['particular'] . ' par', 'par.ID = part.Particular_ID', 'left');  
         $this->ctodb->where('pay.Cancelled', 1);
+        $this->db->where('Collector_ID', $_SESSION['User_details']->ID);
+        $query = $this->ctodb->get()->result();
+
+        return $query;
+    }
+    function get_rpt()
+    {
+        $this->ctodb->select(
+            'col.*, ' .
+                'p.Payer AS pname,'
+        );
+        $this->ctodb->from($this->table['collection'] . ' col');
+        $this->ctodb->join($this->table['payer'] . ' p', 'p.ID = col.Payer_ID', 'left');
+        $this->ctodb->group_by('col.Control_no');
+        $this->ctodb->where('col.Cancelled',0);
         $query = $this->ctodb->get()->result();
 
         return $query;
@@ -750,10 +950,9 @@ class Report_Model extends CI_Model
     {
         $result_one = $this->get_in_first_db();
         $result_two = $this->get_in_second_db();
-        $third = $this->get_unremitted();
 
-        foreach ($result_one as $one => $value_one) {
-            foreach ($result_two as $two => $value_two) {
+        foreach ($result_one as  $value_one) {
+            foreach ($result_two as  $value_two) {
             }
         }
         echo json_encode($result_two);
@@ -796,43 +995,56 @@ class Report_Model extends CI_Model
         $this->ctodb->from($this->table['accountable'] . ' a');
         $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ID);
         $this->ctodb->where('a.OR_for !=', 'RealProperty');
-        $this->ctodb->where('a.OR_origin', '51');
+        $this->ctodb->where('a.Done', 0);
+        // $this->ctodb->where('a.OR_origin', '51');
+        $this->ctodb->where('a.OR_origin', $this->Type);
         $query = $this->ctodb->get()->result();
 
         foreach ($query as $key => $value) {
             $indiNumber = $this->get_collector_individual_number($value->Start_OR, $value->End_OR, $value->Collector_ID, $value->OR_origin);
-            $query[$key]->Individual = $indiNumber;
-        }
-
-
-
-        foreach ($query as $key => $value) {
-            $indiNumber = $this->get_collector_individual_number($value->Start_OR, $value->End_OR, $value->Collector_ID, $value->OR_origin);
             $query[$key]->Inclusive = $indiNumber;
+            
         }
 
         foreach ($query as $idx => $index) {
-
             $number = count($index->Inclusive);
-
+            
             $query[$idx]->BeginForm = $index->OR_origin;
-            $query[$idx]->BeginQty = (($index->End_OR + 1) - $index->Start_OR);
+            // $query[$idx]->BeginQty =   (($index->End_OR - ($index->Inclusive[0]->Accountable_form_number)) + 1);
+            // $query[$idx]->StartFrom = ($index->Inclusive[0]->Accountable_form_number);
+            
 
+            // $query[$idx]->IncQty = $number;
+            // $query[$idx]->IncFrom = ($index->Inclusive[0]->Accountable_form_number);
+            // $query[$idx]->IncTo = ($index->Inclusive[$number - 1]->Accountable_form_number);
+            
+            // $query[$idx]->EndingQty = ($index->End_OR) - ($index->Inclusive[$number - 1]->Accountable_form_number);
+            // $query[$idx]->EndingFrom = str_pad((($index->Inclusive[$number - 1]->Accountable_form_number + 1)), 7, "0000000", STR_PAD_LEFT);
+            // $query[$idx]->EndingTo = $index->End_OR;
+
+            // $query[$idx]->Remitance = ($index->Inclusive[$number - 1]->Remitance);
+
+            $query[$idx]->BeginQty = (($index->End_OR + 1) - $index->Start_OR);
+            
             if (!empty($index->Inclusive)) {
+                $query[$idx]->StartFrom = ($index->Inclusive[0]->Accountable_form_number);
+                $query[$idx]->BeginQty =   ($index->End_OR - ($index->Inclusive[0]->Accountable_form_number)) + 1;
                 $query[$idx]->IncQty = $number;
                 $query[$idx]->IncFrom = ($index->Inclusive[0]->Accountable_form_number);
                 $query[$idx]->IncTo = ($index->Inclusive[$number - 1]->Accountable_form_number);
-
+                
                 $query[$idx]->EndingQty = ($index->End_OR) - ($index->Inclusive[$number - 1]->Accountable_form_number);
                 $query[$idx]->EndingFrom = str_pad((($index->Inclusive[$number - 1]->Accountable_form_number + 1)), 7, "0000000", STR_PAD_LEFT);
                 $query[$idx]->EndingTo = $index->End_OR;
             } else {
+                $query[$idx]->StartFrom = $index->Start_OR;
+                $query[$idx]->BeginQty = (($index->End_OR + 1) - $index->Start_OR);
                 $query[$idx]->EndingQty = (($index->End_OR + 1) - $index->Start_OR);
                 $query[$idx]->EndingFrom = $index->Start_OR;
                 $query[$idx]->EndingTo = $index->End_OR;
             }
-        }
 
+        }
         if (!empty($query)) {
             return $query;
         } else {
@@ -844,7 +1056,8 @@ class Report_Model extends CI_Model
     {
         try {
             $this->ctodb->select(
-                'pm.Accountable_form_number'
+                'pm.Accountable_form_number,'.
+                'pm.Remitance'
             );
             $this->ctodb->from($this->table['payment'] . ' pm');
             $this->ctodb->where('pm.Collector_ID', $CollectorID);
@@ -852,13 +1065,14 @@ class Report_Model extends CI_Model
             $this->ctodb->where('pm.Accountable_form_number >=', $start);
             $this->ctodb->where('pm.Accountable_form_number <=', $end);
             $this->ctodb->where('pm.Remitance', 0);
-            $query = $this->ctodb->get()->result();;
+            $query = $this->ctodb->get()->result();
 
             return $query;
         } catch (Exception $msg) {
             echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
         }
     }
+
 
     function get_individual_form($OrFor)
     {
@@ -920,7 +1134,8 @@ class Report_Model extends CI_Model
                 $query = $this->ctodb->get()->row();
                 if (!empty($query)) {
                     $result = $this->get_particular_paid_type($query->Accountable_form_number);
-                    $query->Particulars = $result;                    
+                    $query->Particulars = $result;
+                    // var_dump($query);
                     return $query;
                 } else {
                     throw new Exception('Empty Response');
@@ -932,6 +1147,37 @@ class Report_Model extends CI_Model
             echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
         }
     }
+     // get data of rpt receipt
+     public function get_rpt_receipt()
+     {
+         try {
+             if (!empty($this->Control_no)) {
+                 $this->ctodb->select(
+                    'col.*, ' .
+                    'p.Payer AS pname,'
+                 );
+                 $this->ctodb->from($this->table['collection'] . ' col');
+                 $this->ctodb->join($this->table['payer'] . ' p', 'p.ID = col.Payer_ID', 'left');
+                 $this->ctodb->where('col.Control_no', $this->Control_no);
+                 $query = $this->ctodb->get()->result();
+                 
+                 return $query;
+                //  var_dump($query);
+                //  if (!empty($query)) {
+                //      $result = $this->get_particular_paid_type($query->Accountable_form_number);
+                //      $query->Particulars = $result;
+                //      // var_dump($query);
+                //      return $query;
+                //  } else {
+                //      throw new Exception('Empty Response');
+                //  }
+             } else {
+                 throw new Exception("Error missing client ID", true);
+             }
+         } catch (Exception $msg) {
+             echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+         }
+     }
 
     function get_particular_paid_type($or_number)
     {
@@ -967,6 +1213,208 @@ class Report_Model extends CI_Model
             return $response;
         } catch (Exception $msg) {
             echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function get_records()
+    {
+        try {
+            $this->ctodb->select('rs.*');
+            $this->ctodb->order_by('rs.ID', 'desc');
+            $this->ctodb->from($this->table['remitSched'] . ' rs');
+            $this->ctodb->where('rs.Collector_ID', $_SESSION['User_details']->ID);
+            $Response = $this->ctodb->get()->result();
+
+            return $Response;
+        } catch (Exception $msg) {
+            echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function get_remit_records()
+    {
+        try {
+            $this->ctodb->select(
+                'p.ID, ' .
+                'p.Accountable_form_number, ' .
+                'p.Accountable_form_origin, ' .
+                'p.Date_paid, ' .
+                'p.Payor, ' .
+                'p.Address, ' .
+                'p.Quantity,'.
+                'p.Cancelled,'.
+                'part.Particular,'.
+                'pp.Amount,'.
+                'pp.Particular_ID,'.
+                'pp.Bus_tax_particular,'.
+                'p.Accountable_form_origin'
+            );
+            $this->ctodb->from($this->table['payment'] . ' p');
+            $this->ctodb->join($this->table['part_paid'] . ' pp', 'pp.Accountable_form_number = p.Accountable_form_number', 'left');
+            $this->ctodb->join($this->table['particular'] . ' part', 'part.ID = pp.particular_ID', 'left');
+            $this->ctodb->where('p.Remit_number', $this->remit_number);
+            $query = $this->ctodb->get()->result();
+
+
+            return $query;
+        } catch (Exception $msg) {
+            echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function get_remit_records_summary()
+    {
+        try {
+            $this->ctodb->select(
+                'p.ID, ' .
+                'p.Accountable_form_number, ' .
+                'p.Accountable_form_origin, ' .
+                'p.Date_paid, ' .
+                'p.Payor, ' .
+                'p.Address, ' .
+                'p.Quantity,'.
+                'p.Cancelled,'.
+                'part.Particular,'.
+                'pp.Amount,'.
+                'pp.Particular_ID,'.
+                'pp.Bus_tax_particular'
+            );
+            $this->ctodb->from($this->table['payment'] . ' p');
+            $this->ctodb->join($this->table['part_paid'] . ' pp', 'pp.Accountable_form_number = p.Accountable_form_number', 'left');
+            $this->ctodb->join($this->table['particular'] . ' part', 'part.ID = pp.particular_ID', 'left');
+            $this->ctodb->where('p.Remit_number', $this->remit_number);
+            $this->ctodb->where('p.Cancelled', 0);
+            $query = $this->ctodb->get()->result();
+            
+            $UniqueData = array();
+            $x = array();
+            $Summary = array();
+
+            foreach($query as $key => $value){
+                if($value->Particular != "BUSINESS TAX"){
+                    // added rtrim angelo 4/25/23
+                    array_push($UniqueData, rtrim($value->Particular));
+                } else{
+                    // added rtrim angelo 4/25/23
+                    array_push($UniqueData, rtrim($value->Bus_tax_particular));
+                }
+                
+            }
+
+            $Response = array_unique($UniqueData);
+          
+            foreach ($Response as $key => $value) {
+                $x;
+                $Result = $this->get_remit_records_summary_amount_bt($value, $this->remit_number);
+
+                if($Result == 0){
+                    $x = $this->get_remit_records_summary_amount($value, $this->remit_number);
+                } else {
+                    $x = $this->get_remit_records_summary_amount_bt($value, $this->remit_number);
+                }
+                $data = array(
+                    'Name' => $value,
+                    'Amount' => $x
+                );
+                array_push($Summary, $data);
+            }
+
+            return $Summary;
+        } catch (Exception $msg) {
+            echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function get_remit_records_summary_amount($value, $remit_number)
+    {
+        try {
+            $this->ctodb->select(
+                'pp.Amount,'
+            );
+
+            $this->ctodb->from($this->table['part_paid'] . ' pp', 'left');
+            $this->ctodb->join($this->table['particular'] . ' pa', 'pa.ID = pp.Particular_ID', 'left');
+            $this->ctodb->join($this->table['payment'] . ' py', 'py.Accountable_form_number = pp.Accountable_form_number', 'left');
+            $this->ctodb->where('py.Remit_number', $remit_number);
+            // $this->ctodb->where('pp.Bus_tax_particular', $value);
+            $this->ctodb->where('pa.Particular', $value);
+            $this->ctodb->where('py.Cancelled', 0);
+            $this->ctodb->where('py.Collector_ID', $_SESSION['User_details']->ID);
+            $this->ctodb->where('py.Remitance', 1);
+            $query = $this->ctodb->get()->result();
+
+            $Amount = 0;
+            foreach ($query as $key => $value) {
+                $Amount += $value->Amount;
+            }
+
+            return $Amount;
+     
+        } catch (Exception $ex) {
+            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function get_remit_records_summary_amount_bt($value, $remit_number)
+    {
+        try {
+            $this->ctodb->select(
+                'pp.Amount,'
+            );
+
+            $this->ctodb->from($this->table['part_paid'] . ' pp', 'left');
+            $this->ctodb->join($this->table['particular'] . ' pa', 'pa.ID = pp.Particular_ID', 'left');
+            $this->ctodb->join($this->table['payment'] . ' py', 'py.Accountable_form_number = pp.Accountable_form_number', 'left');
+            $this->ctodb->where('py.Remit_number', $remit_number);
+            $this->ctodb->where('pp.Bus_tax_particular', $value);
+            // $this->ctodb->where('pa.Particular', $value);
+            $this->ctodb->where('py.Cancelled', 0);
+            $this->ctodb->where('py.Collector_ID', $_SESSION['User_details']->ID);
+            $this->ctodb->where('py.Remitance', 1);
+            $query = $this->ctodb->get()->result();
+
+            $Amount = 0;
+            foreach ($query as $key => $value) {
+                $Amount += $value->Amount;
+            }
+
+            return $Amount;
+     
+        } catch (Exception $ex) {
+            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function get_record_coltype()
+    {
+        try {
+            $this->ctodb->select( '*');
+            $this->ctodb->from($this->table['payment']);
+            $this->ctodb->where('Remit_number', $this->remit_number);
+            $query = $this->ctodb->get()->row();
+
+            return $query;
+     
+        } catch (Exception $ex) {
+            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
+        }
+    }
+
+    public function get_record_reporttype()
+    {
+        try {
+            $this->ctodb->select(
+                'r.OR_for'
+        
+            );
+            $this->ctodb->from($this->table['remitSched'] . ' r');
+            $this->ctodb->where('r.Remittance_no', $this->remit_number);
+            $query = $this->ctodb->get()->row();
+
+            return $query;
+     
+        } catch (Exception $ex) {
+            echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
         }
     }
 }

@@ -6,28 +6,31 @@
     margin-top: 0px;
 }
 
-.or-numbers{
-    text-align:center; 
-    color:red; 
+.or-numbers {
+    text-align: center;
+    color: red;
     font: bold 20px Bookman Old Style;
 }
 
 .header-report {
     font-family: Tahoma, Geneva, sans-serif;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: bold;
+}
+.top-border{
+    border-top-color: black !important;
 }
 
 .header-city-of {
     font-family: Tahoma, Geneva, sans-serif;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 600;
     margin-top: -10px;
 }
 
 .office-of {
     font-family: Tahoma, Geneva, sans-serif;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: bold;
 }
 
@@ -43,7 +46,6 @@
     font-size: 11px;
     font-weight: bold;
     margin-top: 120px;
-    margin-left: -20%;
 }
 
 .remit_date {
@@ -51,7 +53,6 @@
     font-size: 11px;
     font-weight: bold;
     margin-top: -5px;
-    margin-left: -20%;
 }
 
 .a-col {
@@ -74,9 +75,10 @@
     border: 0px solid black;
 }
 
+
 .date-of {
     font-family: Tahoma, Geneva, sans-serif;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: bold;
     margin-top: -8px;
     margin-left: 35%;
@@ -95,12 +97,14 @@
 }
 
 .official-font {
-    font-size: 12px;
+    font-size: 17px;
 }
 
 .account-table {
     border-collapse: collapse;
-    border: 1px solid black;
+    border-style: solid;
+    border-width: thin;
+    border-top:  1px solid black !important;
 }
 
 .permit-info {

@@ -1,6 +1,8 @@
 <?php 
 main_header();
-sidebar('applicant'); 
+sidebar('applicant');
+
+$OR_number = $this->uri->segment(4);
 ?>
 
 <div class="content-wrapper">
@@ -14,6 +16,21 @@ sidebar('applicant');
             <li class="active">Receipt</li>
         </ol>
     </section>
+
+    <!-- ===========================ADDED BY KYLE 10-27-2023=============================== -->
+
+    <!-- var_dump here for Testing Purposes only -->
+    <?php
+        // var_dump($this->uri->segment(4));
+    ?>
+
+    <!-- hidden Inputs for JS variable data transfer -->
+    <div class="container" hidden>
+        <input id="OR_num" value="<?=$OR_number?>">
+    </div>
+
+    <!-- ================================================================================== -->
+
     <section class="content">
         <div class="row">
             <div class="col-md-offset-1 col-md-5">
@@ -66,7 +83,12 @@ sidebar('applicant');
                     </div>
                 </div>
                 <div class="row text-center">
+            <?php   if(@$check_status->revived != "1"){      ?>
                     <font color="red" size="7"><b>RECEIPT VOIDED</b></font></br></br>
+            <?php   } else {                                ?>
+                    <font color="limegreen" size="7"><b>RECEIPT REVIVED</b></font></br></br>
+            <?php   }                                       ?>
+                    <button class="btn btn-primary" id="btn_revive" style="margin-bottom: 2rem;">Revive Receipt</button> <!--Added by KYLE 10-27-2023-->
                     <div class="box box-default text-left">
                         <div class="box-header with-border">
                             <div class="box-title">
@@ -93,6 +115,9 @@ sidebar('applicant');
 
 <!-- <script src="<?php echo base_url() ?>assets/theme/bower_components/bootstrap/dist/js/bootstrap.min.js"></script> -->
 <script language="javascript" src="<?php echo base_url()?>assets/scripts/noPostBack.js"></script>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
+<script language="javascript" src="<?php echo base_url()?>assets/general_assets/revive_receipt.js"></script> <!-- ADDED BY KYLE 10-27-2023 -->
+
 <script>
 
     $(document).ready(function(){

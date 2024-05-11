@@ -15,23 +15,29 @@
             'pay_veri'      =>  "tbl_payment_verification"
         );
 
+        public function __construct(){
+            parent::__construct();    
+            
+            $this->ctodb = $this->load->database('ctodb', true);
+        }
+
         public $ID;
 
         /** search particular */
         public function getParticular(){
             try{
                 if(!empty($this->Particular)){
-                    $this->db->select(
+                    $this->ctodb->select(
                         'p.Particular, '. 
                         'p.Parent, '. 
                         'p.Amount, '. 
                         'p.ID'
                     );
-                    $this->db->from($this->table['particular'].' p');                    
-                    $this->db->where('p.Parent !=', NULL); 
-                    $this->db->like('p.Particular', $this->Particular);
-                    $this->db->or_like('p.Parent', $this->Particular);                                       
-                    $query = $this->db->get()->result();
+                    $this->ctodb->from($this->table['particular'].' p');                    
+                    $this->ctodb->where('p.Parent !=', NULL); 
+                    $this->ctodb->like('p.Particular', $this->Particular);
+                    $this->ctodb->or_like('p.Parent', $this->Particular);                                       
+                    $query = $this->ctodb->get()->result();
     
                     foreach ($query as $key => $value) {
                         if(empty($value->Parent)){
@@ -72,20 +78,20 @@
                     'Paid_by'       =>  $this->Paid_by,
                     'Address'       =>  $this->Address,                                      
                     'Collector'     =>  $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name,                       
-                    'Collector_ID'  =>  $_SESSION['User_details']->ID
+                    'Collector_ID'  =>  $_SESSION['User_details']->ID,
                 );
                
-                $this->db->trans_start();
-                $this->db->insert($this->table['payment'], $data);
-                $this->ID = $this->db->insert_id();
-                $this->db->trans_complete();
+                $this->ctodb->trans_start();
+                $this->ctodb->insert($this->table['payment'], $data);
+                $this->ID = $this->ctodb->insert_id();
+                $this->ctodb->trans_complete();
 
-                if ($this->db->trans_status() === FALSE) {
-                    $this->db->trans_rollback();
+                if ($this->ctodb->trans_status() === FALSE) {
+                    $this->ctodb->trans_rollback();
                     return FALSE;
                 } 
                 else {
-                    $this->db->trans_commit();    
+                    $this->ctodb->trans_commit();    
                     $this->save_particular_paid();                                        
                 }    
             }
@@ -107,22 +113,82 @@
                         'Accountable_form_number'   =>  $this->orNumber,
                         'Accountable_form_origin'   =>  $this->OriginOR,                    
                         'Particular_ID' =>  $value->Part_ID,
+                        'Bus_tax_particular' => $value->particular,
                         'Amount'        =>  $value->amount                             
                     );                    
                     array_push($data_to_insert, $data);                       
                 }     
 
-                $this->db->trans_start();
-                $this->db->insert_batch($this->table['pPaid'], $data_to_insert);
-                $this->db->trans_complete();
-                if ($this->db->trans_status() === FALSE) {
-                    $this->db->trans_rollback();
+                $this->ctodb->trans_start();
+                $this->ctodb->insert_batch($this->table['pPaid'], $data_to_insert);
+                $this->ctodb->trans_complete();
+                if ($this->ctodb->trans_status() === FALSE) {
+                    $this->ctodb->trans_rollback();
                     return FALSE;
                 } 
                 else {                                                                                  
-                    $this->db->trans_commit();                  
-                    $this->update_accountable_form();
+                    $this->ctodb->trans_commit();                  
+                    $this->save_additional_particular();
                 }                
+            }
+            catch(Exception $msg){
+                echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+            }
+        }
+
+         /** save additional particulars to payment veri */
+         public function save_additional_particular(){
+            try{
+                if(empty($this->Particulars)){
+                    throw new Exception(ERROR_PROCESSING, true);
+                }
+
+                $data_to_insert = array();
+                foreach ($this->Particulars as $key => $value) {
+                    $data = array(
+                        'Order_payment_ID'   =>  $this->oopID,                    
+                        'Particular_ID' =>  $value->Part_ID,
+                        'Amount'        =>  $value->amount                    
+                    );                    
+                    array_push($data_to_insert, $data);                       
+                }     
+
+                $this->ctodb->trans_start();
+                $this->ctodb->insert_batch($this->table['pay_veri'], $data_to_insert);
+                $this->ctodb->trans_complete();
+                if ($this->ctodb->trans_status() === FALSE) {
+                    $this->ctodb->trans_rollback();
+                    return FALSE;
+                } 
+                else {                                                                                  
+                    $this->ctodb->trans_commit();                  
+                    $this->update_payment_veri();
+                }                
+            }
+            catch(Exception $msg){
+                echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+            }
+        }
+
+         /** UPDATE payment verification status to verified */
+         public function update_payment_veri(){
+            try{
+                $data = array(
+                    'Status' => "Verified"
+                );
+                 
+                $this->ctodb->trans_start();
+                $this->ctodb->where('Order_payment_ID', $this->oopID);
+                $this->ctodb->update($this->table['pay_veri'], $data);
+                $this->ctodb->trans_complete();
+                if ($this->ctodb->trans_status() === FALSE) {
+                    $this->ctodb->trans_rollback();
+                    return FALSE;
+                } 
+                else {                                                                                  
+                    $this->ctodb->trans_commit();                  
+                    $this->update_accountable_form();                    
+                }
             }
             catch(Exception $msg){
                 echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
@@ -135,16 +201,17 @@
                 $data = array(
                     'Done' => 1
                 );
-                $this->db->trans_start();
-                $this->db->where('End_OR', $this->orNumber);
-                $this->db->update($this->table['accnt_form'], $data);
-                $this->db->trans_complete();
-                if ($this->db->trans_status() === FALSE) {
-                    $this->db->trans_rollback();
+                 
+                $this->ctodb->trans_start();
+                $this->ctodb->where('End_OR', $this->orNumber);
+                $this->ctodb->update($this->table['accnt_form'], $data);
+                $this->ctodb->trans_complete();
+                if ($this->ctodb->trans_status() === FALSE) {
+                    $this->ctodb->trans_rollback();
                     return FALSE;
                 } 
                 else {                                                                                  
-                    $this->db->trans_commit();                  
+                    $this->ctodb->trans_commit();                  
                     $this->update_status_oop();                    
                 }
             }
@@ -159,16 +226,21 @@
                 if(empty($this->Token)){
                     throw new Exception(ERROR_PROCESSING, true);
                 }
-                $this->db->where('U_ID', $this->Token);                                
-                $this->db->trans_start();
-                $this->db->update($this->table['order'], array('Status'=>'Verified'));
-                $this->db->trans_complete();
-                if ($this->db->trans_status() === FALSE) {
-                    $this->db->trans_rollback();
+                $data = array(
+                    'Amount'        =>  $this->totalAmount,
+                    'Status'        =>  'Verified'                          
+                );
+                $this->ctodb->where('U_ID', $this->Token);                                
+                $this->ctodb->trans_start();
+                // $this->ctodb->update($this->table['order'], array('Status'=>'Verified'));
+                $this->ctodb->update($this->table['order'], $data);
+                $this->ctodb->trans_complete();
+                if ($this->ctodb->trans_status() === FALSE) {
+                    $this->ctodb->trans_rollback();
                     return FALSE;
                 } 
                 else {                                                                                  
-                    $this->db->trans_commit();                  
+                    $this->ctodb->trans_commit();                  
                     echo json_encode(array('message'=>'Success', 'has_error'=>false));
                 }
             }
@@ -177,29 +249,30 @@
             }
         }
 
+
         /** get or numbers */
         public function generate(){
 
-            $this->db->select("*"); 
-            $this->db->from($this->table['accnt_form'].' ac');
-            $this->db->where('ac.OR_Type','Accountable Form #'.$this->form);  
-            $this->db->where('ac.Done',0);
-            $this->db->where('ac.Collector_ID', $_SESSION['User_details']->ID);
-            $avail_stabs = $this->db->get()->result();
+            $this->ctodb->select("*"); 
+            $this->ctodb->from($this->table['accnt_form'].' ac');
+            $this->ctodb->where('ac.OR_Type','Accountable Form #'.$this->form);  
+            $this->ctodb->where('ac.Done',0);
+            $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
+            $avail_stabs = $this->ctodb->get()->result();
 
-            $this->db->select("*"); 
-            $this->db->from($this->table['accnt_form'].' ac');
-            $this->db->where('ac.OR_Type','Accountable Form #'.$this->form);
-            $this->db->where('ac.OR_origin', $this->form);  
-            $this->db->where('ac.Done',0);
-            $this->db->where('ac.Collector_ID', $_SESSION['User_details']->ID);
-            $result = $this->db->get()->first_row();
+            $this->ctodb->select("*"); 
+            $this->ctodb->from($this->table['accnt_form'].' ac');
+            $this->ctodb->where('ac.OR_Type','Accountable Form #'.$this->form);
+            $this->ctodb->where('ac.OR_origin', $this->form);  
+            $this->ctodb->where('ac.Done',0);
+            $this->ctodb->where('ac.Collector_ID', $_SESSION['User_details']->ID);
+            $result = $this->ctodb->get()->first_row();
             
-            $this->db->select("*"); 
-            $this->db->from($this->table['payment'].' p');
-            $this->db->where('p.Accountable_form_origin',$this->form);  
-            $this->db->order_by('p.ID','desc');
-            $last_or = $this->db->get()->first_row();        
+            $this->ctodb->select("*"); 
+            $this->ctodb->from($this->table['payment'].' p');
+            $this->ctodb->where('p.Accountable_form_origin',$this->form);  
+            $this->ctodb->order_by('p.ID','desc');
+            $last_or = $this->ctodb->get()->first_row();        
     
             $or_number = str_pad((@$last_or->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);  
             

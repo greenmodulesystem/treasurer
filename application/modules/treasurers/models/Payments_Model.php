@@ -186,6 +186,8 @@ class Payments_Model extends CI_Model
                             }
                         }
                         $Fee = $account . ' (' . $key1 . substr($qtrpaid, 0, -1) . ')';
+                        // $Fee = $account;
+
                         array_push(
                             $data,
                             array(
@@ -199,7 +201,10 @@ class Payments_Model extends CI_Model
                         array_push($colData, array(
                             'Amount' => $balance,
                             'Accountable_form_number'   => $OR_num,
-                            'Accountable_form_origin'   =>  51
+                            'Accountable_form_origin'   =>  51,
+                             /**below was added by angelo */
+                             'Bus_tax_particular' => $Fee,
+                             'Particular_ID' => 451
                         ));
                         /** END */
 
@@ -229,7 +234,10 @@ class Payments_Model extends CI_Model
                             array_push($colData, array(
                                 'Amount' => floatval(preg_replace("/[^-0-9\.]/", "", $info['Fee'])),
                                 'Accountable_form_number'   => $OR_num,
-                                'Accountable_form_origin'   =>  51
+                                'Accountable_form_origin'   =>  51,
+                                  /**below was added by angelo */
+                                  'Bus_tax_particular' => $Fee,
+                                  'Particular_ID' => 451
                             ));
                             /** END */
 
@@ -259,7 +267,11 @@ class Payments_Model extends CI_Model
             array_push($colData, array(
                 'Amount' => round($surcharge, 2),
                 'Accountable_form_number'   => $OR_num,
-                'Accountable_form_origin'   =>  51
+                'Accountable_form_origin'   =>  51,
+                 /**below was added by angelo */
+                 'Particular_ID' => 451,
+                 // 'Bus_tax_particular' => $Fee,
+                 'Bus_tax_particular' => 'Surcharge-Business Tax',
             ));
             /** END */
 
@@ -285,7 +297,11 @@ class Payments_Model extends CI_Model
             array_push($colData, array(
                 'Amount' => round($interest, 2),
                 'Accountable_form_number'   => $OR_num,
-                'Accountable_form_origin'   =>  51
+                'Accountable_form_origin'   =>  51,
+                /**below was added by angelo */
+                'Particular_ID' => 451,
+                // 'Bus_tax_particular' => $Fee,
+                'Bus_tax_particular' => 'Interest-Business Tax',
             ));
             /** END */
 
@@ -296,7 +312,7 @@ class Payments_Model extends CI_Model
             ));
             /** END */
         }
-        // $this->db->insert_batch($table, $data);
+        $this->db->insert_batch($table, $data);
         $this->Data = $data;
         $this->colData = $colData;
         $this->busColItems = $busColData;
@@ -306,22 +322,41 @@ class Payments_Model extends CI_Model
         $this->insert_treasurer_table();
         $this->insert_treasurer_ppaid();
         $this->insert_bus_col_items();
+
+         // INSERT TO CHEQUE QUERY 2/22/23 ANGELO
+        if(!empty($this->Check_number)){
+            $this->insert_cheque();
+        }
     }
 
     /** insert into treasurer's collection database, in table payment  */
     public function insert_treasurer_table()
     {
         try {
-            $data = array(
-                'Accountable_form_number' => $this->Data[0]['OR_number'],
-                'Accountable_form_origin' => 51,
-                'Payor' => $this->Payor_name,
-                'Paid_by' => $this->Payor_name,
-                'Address' => $this->payorAddress,
-                'Collector' => $_SESSION['User_details']->Last_name . ', ' . $_SESSION['User_details']->First_name,
-                'Collector_ID' => $_SESSION['User_details']->ID
-            );
-
+            // PUT CONDITION FOR CHEQUE PAYMENTS 2/22/23 ANGELO
+            if(!empty($this->Check_number)){
+                $data = array(
+                    'Accountable_form_number' => $this->Data[0]['OR_number'],
+                    'Accountable_form_origin' => 51,
+                    'Payor' => $this->Payor_name,
+                    'Paid_by' => $this->Payor_name,
+                    'Address' => $this->payorAddress,
+                    'Collector' => $_SESSION['User_details']->Last_name . ', ' . $_SESSION['User_details']->First_name,
+                    'Collector_ID' => $_SESSION['User_details']->ID,
+                    'Cheque' => 1
+                   
+                );
+            } else {
+                $data = array(
+                    'Accountable_form_number' => $this->Data[0]['OR_number'],
+                    'Accountable_form_origin' => 51,
+                    'Payor' => $this->Payor_name,
+                    'Paid_by' => $this->Payor_name,
+                    'Address' => $this->payorAddress,
+                    'Collector' => $_SESSION['User_details']->Last_name . ', ' . $_SESSION['User_details']->First_name,
+                    'Collector_ID' => $_SESSION['User_details']->ID,
+                );
+            }
             $this->ctodb->trans_start();
             $this->ctodb->insert('tbl_payment', $data);
             $this->busColID = $this->ctodb->insert_id();
@@ -375,6 +410,33 @@ class Payments_Model extends CI_Model
         try {
             $this->ctodb->trans_start();
             $this->ctodb->insert_batch('tbl_particular_paid', $this->colData);
+            $this->ctodb->trans_complete();
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                return FALSE;
+            } else {
+                $this->db->trans_commit();
+            }
+        } catch (Exception $msg) {
+            echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+    // INSERT TO CHEQUE TABLE 2/22/23 ANGELO
+    public function insert_cheque()
+    {
+        try {
+                $data = array(
+                    'Payment_ID' => $this->busColID,
+                    'Bank_name' => $this->Bank_name,
+                    'Check_no' => $this->Check_number,
+                    'Check_amount' => $this->Check_amount,
+                    'Check_date' => $this->Check_date
+                );
+
+            $this->ctodb->trans_start();
+            $this->ctodb->insert('tbl_cheque', $data);
             $this->ctodb->trans_complete();
 
             if ($this->db->trans_status() === FALSE) {

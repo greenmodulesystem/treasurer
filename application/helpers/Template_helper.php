@@ -10,7 +10,7 @@
           <meta charset="utf-8">
           <meta http-equiv="X-UA-Compatible" content="IE=edge">
           <title><?php echo $ci->config->item('system_tab_name') ?> - Log in</title>
-          <link rel="icon" href="<?php echo base_url() ?>assets/img/Logo_3.png">
+          <link rel="icon" href="<?php echo base_url() ?>assets/img/murcia_logo.png">
           <!-- Tell the browser to be responsive to screen width -->
           <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
           <!-- Bootstrap 3.3.7 -->
@@ -39,14 +39,14 @@
               }
 
               img.center {
-                  content: url("<?php echo base_url() ?>assets/img/Logo.png");
-                  position: absolute;
-                  left: 3vw;
-                  top: 3vh;
-                  height: 101vh;
-                  opacity: 0.07;
-                  pointer-events: none;
-              }
+            content:url("<?php echo base_url() ?>assets/img/Sagay_logo.png");
+            position: absolute;
+            left: 1.5vw;
+            top: 2vh;
+            height: 110vh;
+            opacity: 0.1;
+            pointer-events: none;
+        }
 
               .blis {
                   position: absolute;
@@ -149,7 +149,7 @@
           <meta charset="utf-8">
           <meta http-equiv="X-UA-Compatible" content="IE=edge">
           <title><?php echo $ci->config->item('system_tab_name') ?> - Log in</title>
-          <link rel="icon" href="<?php echo base_url() ?>assets/img/Logo_3.png">
+          <link rel="icon" href="<?php echo base_url() ?>assets/img/murcia_logo.png">
           <!-- Tell the browser to be responsive to screen width -->
           <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
           <!-- Bootstrap 3.3.7 -->
@@ -282,7 +282,7 @@
           <meta charset="utf-8">
           <meta http-equiv="X-UA-Compatible" content="IE=edge">
           <title><?php echo $ci->config->item('system_tab_name') ?></title>
-          <link rel="icon" href="<?php echo base_url() ?>assets/img/Logo_3.png">
+          <link rel="icon" href="<?php echo base_url() ?>assets/img/murcia_logo.png">
           <!-- Tell the browser to be responsive to screen width -->
           <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
           <!-- Bootstrap 3.3.7 -->
@@ -310,9 +310,47 @@
               var baseUrl = '<?php echo base_url() ?>';
           </script>
 
-          <head>
+        </head>
 
           <body class="hold-transition skin-green-light fixed sidebar-mini">
+            <!-- Idle Modal karl alob 5/2 -->
+    <div class="modal fade" id="idle-modal" tabindex="-1" role="dialog" aria-labelledby="idle-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="idle-modal-label">Idle Warning</h5>
+      </div>
+      <div class="modal-body">
+        <p id="pModal" style="color:white;">YOU WILL BE LOGGED OUT IN 30 SECONDS. MOVE YOUR MOUSE OR REFRESH THE PAGE.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="bModal" type="button" class="btn btn-secondary" data-dismiss="modal" disabled>OKAY</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Expired Modal -->
+<div class="modal fade" id="expired-modal" tabindex="-1" role="dialog" aria-labelledby="expired-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="expired-modal-label">Session Expired</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Your session has expired. Please log in again.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- end -->
               <div class="wrapper">
                   <header class="main-header">
 
@@ -321,7 +359,7 @@
                           <!-- mini logo for sidebar mini 50x50 pixels -->
                           <span class="logo-mini"><?php echo $ci->config->item('system_name_short') ?></span>
                           <!-- logo for regular state and mobile devices -->
-                          <h4><?php echo $ci->config->item('system_name') ?></h4>
+                          <h4><?php echo $ci->config->item('system_name')?></h4>
                       </a>
 
                       <!-- Header Navbar: style can be found in header.less -->
@@ -446,6 +484,7 @@
                     function sidebar($module, $submenu = '')
                     {
                         $ci = &get_instance();
+                        $user =  $_SESSION['User_details'];
     ?>
       <!-- Left side column. contains the logo and sidebar -->
       <aside class="main-sidebar">
@@ -454,117 +493,127 @@
               <!-- sidebar menu: : style can be found in sidebar.less -->
               <ul class="sidebar-menu" data-widget="tree">
                   <li class="header">MAIN NAVIGATION</li>
-                  <li class="treeview <?php echo ($module == 'applicant') || ($module == 'collection') || ($module == 'receipts') ||
-                                            ($module == 'abstract') || ($module == 'payments') ? 'active' : ''; ?>">
-                      <a href="#">
-                          <i class="fa fa-money"></i>
-                          <span style="font-size: 13px;"> BPLO COLLECTION </span>
-                          <span class="pull-right-container">
-                              <i class="fa fa-angle-left pull-right"></i>
-                          </span>
-                      </a>
-                      <ul class="treeview-menu">
-                          <!---------------------------- 02-18-2020 ---------------------------->
-                          <li class="<?php echo ($module == 'abstract') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>treasurers/abstract">
-                                  <i class="fa fa-file-text"></i>
-                                  <span style="font-size: 12px;"> ABSTRACT </span>
-                              </a>
-                          </li>
-                          <!---------------------------- 01-16-2020 ---------------------------->
-                          <li class="<?php echo ($module == 'collection') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>treasurers/collection">
-                                  <i class="fa fa-inbox"></i>
-                                  <span style="font-size: 12px;"> COLLECTIONS </span>
-                              </a>
-                          </li>
-                          <!---------------------------- 02-18-2020 ---------------------------->
-                          <li class="<?php echo ($module == 'applicant') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>treasurers/applicant_search">
-                                  <i class="fa fa-building-o"></i>
-                                  <span style="font-size: 12px;"> BUSINESS PAYMENT </span>
-                              </a>
-                          </li>
-                          <!---------------------------- 01-16-2020 ---------------------------->
-                          <li class="<?php echo ($module == 'receipts') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>treasurers/OR_search">
-                                  <i class="fa fa-search"></i>
-                                  <span style="font-size: 12px;"> SEARCH OR NUMBER </span>
-                              </a>
-                          </li>
+                    <li class="treeview <?php echo ($module == 'applicant') || ($module == 'collection') || ($module == 'receipts') ||
+                                              ($module == 'abstract') || ($module == 'payments') ? 'active' : ''; ?>">
+                        <a href="#">
+                            <i class="fa fa-money"></i>
+                            <span style="font-size: 13px;"> BPLO COLLECTION </span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <!---------------------------- 02-18-2020 ---------------------------->
+                            <li class="<?php echo ($module == 'abstract') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>treasurers/abstract">
+                                    <i class="fa fa-file-text"></i>
+                                    <span style="font-size: 12px;"> ABSTRACT </span>
+                                </a>
+                            </li>
+                            <!---------------------------- 01-16-2020 ---------------------------->
+                            <li class="<?php echo ($module == 'collection') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>treasurers/collection">
+                                    <i class="fa fa-inbox"></i>
+                                    <span style="font-size: 12px;"> COLLECTIONS </span>
+                                </a>
+                            </li>
+                            <!---------------------------- 02-18-2020 ---------------------------->
+                            <li class="<?php echo ($module == 'applicant') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>treasurers/applicant_search">
+                                    <i class="fa fa-building-o"></i>
+                                    <span style="font-size: 12px;"> BUSINESS PAYMENT </span>
+                                </a>
+                            </li>
+                            <!---------------------------- 01-16-2020 ---------------------------->
+                            <li class="<?php echo ($module == 'receipts') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>treasurers/OR_search">
+                                    <i class="fa fa-search"></i>
+                                    <span style="font-size: 12px;"> SEARCH OR NUMBER </span>
+                                </a>
+                            </li>
 
 
-                      </ul>
-                  </li>
+                        </ul>
+                    </li>
 
-                  <li class="treeview <?php echo ($module == 'general_collection') || ($module == 'trust_collection') || ($module == 'dashboard')
-                                            || ($module == 'payments') || ($module == 'port_col') || ($module == 'dashboard') || ($module == 'reports')
-                                            || ($module == 'void') || ($module == 'rpt') || ($module == 'add-payer') || ($module == 'oop') || ($module == 'fees_charges') ? 'active' : ''; ?>">
-                      <a href="#">
-                          <i class="fa fa-money"></i>
-                          <span style="font-size: 13px;"> GENERAL COLLECTION </span>
-                          <span class="pull-right-container">
-                              <i class="fa fa-angle-left pull-right"></i>
-                          </span>
-                      </a>
-                      <ul class="treeview-menu">
-                          <li class="<?php echo ($module == 'dashboard') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>dashboard">
-                                  <i class="fa fa-dashboard"></i>
-                                  <span style="font-size: 12px;"> DASHBOARD </span>
-                              </a>
-                          </li>
+                    <li class="treeview <?php echo ($module == 'general_collection') || ($module == 'trust_collection') || ($module == 'dashboard')
+                                              || ($module == 'payments') || ($module == 'port_col') || ($module == 'dashboard') || ($module == 'reports')
+                                              || ($module == 'void') || ($module == 'rpt') || ($module == 'add-payer') || ($module == 'oop') || ($module == 'fees_charges') ? 'active' : ''; ?>">
+                        <!-- <a href="#">
+                            <i class="fa fa-money"></i>
+                            <span style="font-size: 13px;"> GENERAL COLLECTION </span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a> -->
+                        <ul class="treeview-menu">
+                            <li class="<?php echo ($module == 'dashboard') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>dashboard">
+                                    <i class="fa fa-dashboard"></i>
+                                    <span style="font-size: 12px;"> DASHBOARD </span>
+                                </a>
+                            </li>
 
-                          <li class="<?php echo ($module == 'general_collection') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>general_collection/index/gen??">
-                                  <i class="fa fa-file-text-o"></i>
-                                  <span style="font-size: 12px;"> GEN. COLLECTION </span>
-                              </a>
-                          </li>
+                            <li class="<?php echo ($module == 'general_collection') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>general_collection/index/gen??">
+                                    <i class="fa fa-file-text-o"></i>
+                                    <span style="font-size: 12px;"> GEN. COLLECTION </span>
+                                </a>
+                            </li>
 
-                          <li class="<?php echo ($module == 'trust_collection') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>trust_collection/index/trust??">
-                                  <i class="fa fa-file-text-o"></i>
-                                  <span style="font-size: 12px;"> TRUST COLLECTION </span>
-                              </a>
-                          </li>
+                            <li class="<?php echo ($module == 'trust_collection') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>trust_collection/index/trust??">
+                                    <i class="fa fa-file-text-o"></i>
+                                    <span style="font-size: 12px;"> TRUST COLLECTION </span>
+                                </a>
+                            </li>
 
-                          <li class="<?php echo ($module == 'oop') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>order_of_payment">
-                                  <i class="fa fa-file-text-o"></i>
-                                  <span style="font-size: 12px;"> ORDER OF PAYMENT </span>
-                              </a>
-                          </li>
+                            <li class="<?php echo ($module == 'oop') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>order_of_payment">
+                                    <i class="fa fa-file-text-o"></i>
+                                    <span style="font-size: 12px;"> ORDER OF PAYMENT </span>
+                                </a>
+                            </li>
 
-                          <li class="<?php echo ($module == 'reports') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>reports">
-                                  <i class="fa fa-bar-chart"></i>
-                                  <span style="font-size: 12px;"> GENERAL REPORT </span>
-                              </a>
-                          </li>
+                            <li class="<?php echo ($module == 'reports') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>reports">
+                                    <i class="fa fa-bar-chart"></i>
+                                    <span style="font-size: 12px;"> GENERAL REPORT </span>
+                                </a>
+                            </li>
 
-                          <li class="<?php echo ($module == 'fees_charges') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>general_collection/fees_charges">
-                                  <i class="fa fa-file-text-o"></i>
-                                  <span style="font-size: 12px;"> FEES AND CHARGES </span>
-                              </a>
-                          </li>
+                            <li <?=$user->ID == 51 ? '' : 'hidden'?> class="<?php echo ($module == 'fees_charges') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>general_collection/fees_charges">
+                                    <i class="fa fa-file-text-o"></i>
+                                    <span style="font-size: 12px;"> FEES AND CHARGES  </span>
+                                </a>
+                            </li>
 
-                          <li class="<?php echo ($module == 'void') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>void_receipt">
-                                  <i class="fa fa-file-text-o"></i>
-                                  <span style="font-size: 12px;"> SEARCH OR NUMBER </span>
-                              </a>
-                          </li>
+                            <li class="<?php echo ($module == 'void') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>void_receipt">
+                                    <i class="fa fa-file-text-o"></i>
+                                    <span style="font-size: 12px;"> SEARCH OR NUMBER </span>
+                                </a>
+                            </li>
 
-                          <li class="<?php echo ($module == 'add-payer') ? 'active' : ''; ?>">
-                              <a href="<?php echo base_url() ?>add-payer">
-                                  <i class="fa fa-user"></i>
-                                  <span style="font-size: 12px;"> PAYOR MANAGEMENT </span>
-                              </a>
-                          </li>
-                      </ul>
-                  </li>
+                            <li class="<?php echo ($module == 'add-payer') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url() ?>add-payer">
+                                    <i class="fa fa-user"></i>
+                                    <span style="font-size: 12px;"> PAYOR MANAGEMENT </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- ADDED BY KYLE 10-26-2023 -->
+
+                    <!-- <li class="<?php echo ($module == 'edit_or') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url() ?>edit_or_number">
+                            <i class="fa fa-file-text-o"></i>
+                            <span style="font-size: 12px;"> EDIT O.R. SERIES </span>
+                        </a>
+                    </li> -->
+                            
                   <hr>
                   <style>
                       .header-queue {

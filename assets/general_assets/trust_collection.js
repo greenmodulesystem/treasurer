@@ -44,13 +44,15 @@ $(document).on('click', '#trust-add-particu-inpt', function() {
 var create_trust_particular = () => {
     $('#trust-load-del-btn').append('<button class="btn  btn-md btn-danger trust-delete_row" data-key="" style="margin-bottom: 5px;"><i class="fa fa-trash"></i></button>');
     $('#trust-load-input-particu').append('<input type="text" class="form-control input-md inpt-partic-trust" data-part_ID="" data-key="" style="margin-bottom: 5px;">');
-    $('#trust-load-amount').append('<input disabled class="form-control input-md trust-amount-partic" data-key="" style="margin-bottom: 5px;">');
+    $('#trust-load-amount').append('<input class="form-control input-md trust-amount-partic" data-key="" style="margin-bottom: 5px;">');
+    $('#part-remarks').append('<input class="form-control inpt-remarks input-md " data-key="" style="margin-bottom: 5px;">');
 }
 
 function update_data_key() {
     $.each(['.inpt-partic-trust',
         '.trust-delete_row',
-        '.trust-amount-partic'
+        '.trust-amount-partic',
+        '.inpt-remarks'
     ], function(idx, val) {
 
         $(val).each(function(key) {
@@ -64,9 +66,20 @@ $(document).on('click', '.trust-delete_row', function() {
     $('.inpt-partic-trust[data-key="' + $(this).data('key') + '"]').remove();
     $('.trust-delete_row[data-key="' + $(this).data('key') + '"]').remove();
     $('.trust-amount-partic[data-key="' + $(this).data('key') + '"]').remove();
+    $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').remove();
 });
 
 $(document).on('click', '#mix-payment-trust', function() {
+    $('.inpt-partic-trust').each(function() {
+        var part =  $(this).data('part_id');
+        
+       if(part == ""){
+          alert("Please do not fillup the field manually. If this is a new particular, please add it first on the FEES AND CHARGES tab.");
+          window.reload();
+       }
+      });
+
+      
     $('#load-mix-payment-trust').modal({ backdrop: 'static' });
     $('#load-mix-payment-trust').modal('show');
     calculate_payable();
@@ -78,26 +91,46 @@ var Data_key;
 $(document).on('keyup', '.inpt-partic-trust', function(e) {
     if (e.keyCode === 13) {
         Data_key = $(this).data('key');
+        if($('.options:checked').val() == "single"){
+            $.post({
+                url: baseUrl + 'trust_collection/service/trust_collection_service/search_particular',
+                data: {
+                    particular: $('.inpt-partic-trust[data-key="' + Data_key + '"]').val()
+                },
+                dataType: 'json',
+                success: function(e) {
+                    $('#load-search-particular-trust').modal({ backdrop: 'static' });
+                    $('#load-search-particular-trust').modal('show');
 
-        $.post({
-            url: baseUrl + 'trust_collection/service/trust_collection_service/search_particular',
-            data: {
-                particular: $('.inpt-partic-trust[data-key="' + Data_key + '"]').val()
-            },
-            dataType: 'json',
-            success: function(e) {
-                $('#load-search-particular-trust').modal({ backdrop: 'static' });
-                $('#load-search-particular-trust').modal('show');
+                    $('#load-particular-trust').html('');
 
-                $('#load-particular-trust').html('');
+                    $.each(e.error_message, function(idx, value) {
+                        $('#load-particular-trust').append(
+                            '<tr> <td><button class="btn  btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm  add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> <td>' + (new Intl.NumberFormat('en-US').format(value.Amount)) + '</td> </tr>'
+                        );
+                    });
+                }
+            });
+        } else{
+            $.post({
+                url: baseUrl + 'trust_collection/service/trust_collection_service/search_particular_group',
+                data: {
+                    particular: $('.inpt-partic-trust[data-key="' + Data_key + '"]').val()
+                },
+                dataType: 'json',
+                success: function(e) {
+                    $('#load-search-particular-trust').modal({ backdrop: 'static' });
+                    $('#load-search-particular-trust').modal('show');
 
-                $.each(e.error_message, function(idx, value) {
-                    $('#load-particular-trust').append(
-                        '<tr> <td><button class="btn  btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm  add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> <td>' + (new Intl.NumberFormat('en-US').format(value.Amount)) + '</td> </tr>'
-                    );
-                });
-            }
-        });
+                    $('#load-particular-trust').html('');
+                    $.each(e.error_message, function(idx, value) {
+                        $('#load-particular-trust').append(
+                            '<tr> <td></td> <td> <button class="btn btn-sm  add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td></tr>'
+                        );
+                    });
+                }
+            });
+        }
     }
 });
 
@@ -138,7 +171,6 @@ $(document).on('click', '.click_to_add', function() {
     $('.inpt-partic-trust[data-key="' + Data_key + '"]').val(Particular_ID);
     $('.trust-amount-partic[data-key="' + Data_key + '"]').val(Data_amnt);
     $('.inpt-partic-trust[data-key="' + Data_key + '"]').attr('data-part_id', part_ID);
-    calculate_payable();
 });
 
 $(document).on('click', '#add_form', function() {
@@ -190,16 +222,49 @@ $(document).on('click', '.part-delete', function() {
 });
 
 $(document).on('click', '#t-costumer_pay', function() {
+    $('.inpt-partic-trust').each(function() {
+        var part =  $(this).data('part_id');
+        
+       if(part == ""){
+          alert("Please do not fillup the field manually. If this is a new particular, please add it first on the FEES AND CHARGES tab.");
+          window.reload();
+       }
+      });
+
     $('#payment_modal').modal({ backdrop: 'static' });
     $('#payment_modal').modal('show');
     calculate_payable();
 });
 
 $(document).on('click', '#f10-t-pay', function() {
+    $('.inpt-partic-trust').each(function() {
+        var part =  $(this).data('part_id');
+        
+       if(part == ""){
+          alert("Please do not fillup the field manually. If this is a new particular, please add it first on the FEES AND CHARGES tab.");
+          window.reload();
+       }
+      });
+
     $('#trust-non-cash-modal').modal({ backdrop: 'static' });
     $('#trust-non-cash-modal').modal('show');
     calculate_payable();
 });
+$('#other-payment').on('click', function() {
+    $('.inpt-partic-trust').each(function() {
+        var part =  $(this).data('part_id');
+        
+       if(part == ""){
+          alert("Please do not fillup the field manually. If this is a new particular, please add it first on the FEES AND CHARGES tab.");
+          window.reload();
+       }
+      });
+      
+    calculate_payable();
+    $('#other-payment-modal').modal({ backdrop: 'static' });
+    $('#other-payment-modal').modal('show');
+});
+
 
 $(document).on('keyup', function(e) {
     if (e.keyCode == 120) {
@@ -225,6 +290,7 @@ $(document).on('click', '#costumer_payment', function() {
         var obj = {
             particular: $(this).val(),
             amount: $('.trust-amount-partic[data-key="' + $(this).data('key') + '"]').val(),
+            remarks: $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').val(),
             Part_ID: $(this).data('part_id')
         };
         particulars.push(obj);
@@ -292,6 +358,7 @@ $(document).on('click', '#t-cheque_pmnt', function() {
         var obj = {
             particular: $(this).val(),
             amount: $('.trust-amount-partic[data-key="' + $(this).data('key') + '"]').val(),
+            remarks: $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').val(),
             Part_ID: $(this).data('part_id')
         };
         particulars.push(obj);
@@ -363,6 +430,7 @@ $(document).on('click', '#trust-mix-pmnt', function() {
         var obj = {
             particular: $(this).val(),
             amount: $('.trust-amount-partic[data-key="' + $(this).data('key') + '"]').val(),
+            remarks: $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').val(),
             Part_ID: $(this).data('part_id')
         };
         particulars.push(obj);
@@ -422,6 +490,78 @@ $(document).on('click', '#trust-mix-pmnt', function() {
         }
     }
 });
+/** for other payment method */
+$(document).on('click', '#other-payment-pay', function() {
+    var particulars = [];
+    var total_gross = 0;
+
+    $('.inpt-partic-trust').each(function() {
+        var obj = {
+            particular: $(this).val(),
+            amount: $('.trust-amount-partic[data-key="' + $(this).data('key') + '"]').val(),
+            remarks: $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').val(),
+            Part_ID: $(this).data('part_id')
+        };
+        particulars.push(obj);
+        total_gross = total_gross += parseInt($('.trust-amount-partic[data-key="' + $(this).data('key') + '"]').val());
+    });
+    
+    if ($('#trust_payor_name').val() == '' || particulars == null || $('#total_payable_gen').val() == '0') {
+        alert("Please verify the data before proceeding :)");
+    } else {
+        var i = confirm("Payment Confirm?");
+        if (i == false) {
+            return;
+        } else {
+            if (total_gross <= parseInt($('#other-payment-amount').val())) {
+                $.post({
+                    url: baseUrl + "trust_collection/service/trust_collection_service/save_all_data",
+                    data: {
+                        Accountable_form_number: $('#t_or_numbers').val(),
+                        Payor: $('#trust_payor_name').val(),
+                        Paid_by: $('#trust_paid_by').val(),
+                        Address: $('#trust_address').val(),
+                        Date_paid: $('#trust_date_paid').val(),
+                        Particulars: JSON.stringify(particulars),
+                        Amounts: $('#total_payable_gen').val(),
+                        Cash: $('#other-payment-amount').val(),
+                        Other_remarks: $('#other-remarks').val()
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.has_error == false) {
+                            if (result.has_error == false) {
+                                var data_print = [];
+                                var store = {
+                                    or_number: or_number,
+                                    payor: $('#trust_payor_name').val(),
+                                    address: $('#trust_address').val(),
+                                    particulars: particulars,
+                                    date_paid: $('#trust_date_paid').val(),
+                                    total: $('#total_payable_gen').val(),
+                                    bank: null,
+                                }
+                                data_print.push(store);
+                                var object = JSON.stringify(data_print);
+
+                                load_summary();
+                                document.getElementById("trust_payor_name").value = "";
+                                $('#payment_modal').modal("hide");
+                                window.location = baseUrl + "trust_collection/print_receipt?get=" + object;
+                            } else {
+                                alert(result.error_message);
+                            }
+                        } else {
+                            alert(result.error_message);
+                        }
+                    }
+                });
+            } else {
+                alert('Please input amount greater than total');
+            }
+        }
+    }
+});
 var total_payable = 0;
 
 function calculate_payable() {
@@ -431,7 +571,7 @@ function calculate_payable() {
 
     $('#subtotal').html(total_payable.toLocaleString("en-US"));
     $('.total_pay').html(total_payable.toFixed(2));
-    $('#total_payable_trust').val(total_payable);
+    $('#total_payable_trust').val(total_payable.toFixed(2));
     total_payable = 0;
 }
 
@@ -439,6 +579,5 @@ $('.cash-in').on('keyup', function() {
     cash = $('.cash-in').val();
     subtotal = parseInt($('#total_payable_trust').val());
     change = (parseInt(cash) - subtotal);
-
     $('#change').html(change);
 });

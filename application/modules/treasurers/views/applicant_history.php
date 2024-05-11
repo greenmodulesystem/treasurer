@@ -5,7 +5,7 @@ $Bldg = ($profiles->Building_name != '') ? trim($profiles->Building_name).", " :
 $Strt = ($profiles->Street != '') ? trim($profiles->Street).", " : '';
 $Prk = ($profiles->Purok != '') ? trim($profiles->Purok).", " : '';
 $Address1 = ucwords($Bldg).ucwords($Strt).ucwords($Prk);
-$Address2 = ucwords(trim($profiles->Barangay)).", Cadiz City";
+$Address2 = ucwords(trim($profiles->Barangay)).", Municipality of Murcia";
 $Payor = ucwords($profiles->Tax_payer);
 $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
 ?>
@@ -147,3 +147,4 @@ $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
 </div>
 
 <?php main_footer(); ?>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->

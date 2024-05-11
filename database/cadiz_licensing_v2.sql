@@ -192,11 +192,11 @@ CREATE TABLE `tbl_authorized_representative` (
 --
 
 INSERT INTO `tbl_authorized_representative` (`ID`, `Last_name`, `First_name`, `Address`, `City`, `Province`) VALUES
-(1, 'Torreblanca', 'Mary ', 'Gustilo st. Purok 3, Brgy. 2, Pob.,', 'Cadiz City', 'Negros Occidental'),
-(2, 'Torno ', 'John ', ' Santan st., Purok 2, Brgy. 2 Pob.', 'Cadiz City', 'Negros Occidental'),
-(3, 'Abani ', 'Michelle ', ' Galo st. Prk. 3 Brgy 2 Pob. ', 'Cadiz City', 'Negros Occidental'),
-(4, 'Flores ', 'Joy Anne ', ' Lacson St., Purok 2, Brgy. Cabahug', 'Cadiz City', 'Negros Occidental'),
-(5, 'Dequina', 'Joy', ' Galo st., Purk 2, Brgy. Luna', 'Cadiz City', 'Negros Occidental');
+(1, 'Torreblanca', 'Mary ', 'Gustilo st. Purok 3, Brgy. 2, Pob.,', 'Municipality of Murcia', 'Negros Occidental'),
+(2, 'Torno ', 'John ', ' Santan st., Purok 2, Brgy. 2 Pob.', 'Municipality of Murcia', 'Negros Occidental'),
+(3, 'Abani ', 'Michelle ', ' Galo st. Prk. 3 Brgy 2 Pob. ', 'Municipality of Murcia', 'Negros Occidental'),
+(4, 'Flores ', 'Joy Anne ', ' Lacson St., Purok 2, Brgy. Cabahug', 'Municipality of Murcia', 'Negros Occidental'),
+(5, 'Dequina', 'Joy', ' Galo st., Purk 2, Brgy. Luna', 'Municipality of Murcia', 'Negros Occidental');
 
 -- --------------------------------------------------------
 
@@ -267,11 +267,11 @@ CREATE TABLE `tbl_building_owner` (
 --
 
 INSERT INTO `tbl_building_owner` (`ID`, `U_ID`, `First_name`, `Last_name`, `Address_street`, `Address_zone`, `Address_purok`, `Address_barangay`, `Address_city`, `Address_province`, `Building_name`, `Name_corporation`, `Address_corporation`, `Authorized_representative_ID`, `Project_type`, `Project_address`, `Right_over_land_ID`, `Date_registered`) VALUES
-(1, '840b22be052f1d2e568476b9cba1e27079b0af51', 'Tito ', 'Torreblanca ', 'Gustilo st.', 'Zone 2', 'Purok 3', 'Barangay 2 Pob.', 'Cadiz City', 'Negros Occidental', 'JS Building', ' Standard Insurance Co. ', ' Lacson st. corner Galo st. Bacolod City ', 1, ' Insurance', ' Gustilo BLVD. Brgy 1. (LTO)', 1, '2018-06-06 00:00:00'),
-(2, '9c964efb31d54873eb7cb887b515d9f24f97988e', 'Eva', 'Torno', 'Santan St. ', 'Zone 1', 'Purok 2', 'Barangay 2 Pob.', 'Cadiz City', 'Negros Occidental', 'Teresita Bldg', ' Eatery ', 'DelaSalle St. Brgy. 2, Cadiz City ', 2, ' Eatery ', ' Gustilo BLVD. Brgy 1. (LTO)', 1, '2018-06-06 00:00:00'),
-(3, '8e6a0ab63dcc760118dffc536af50ddac7fd80f0', 'Michael ', 'Abanil ', 'Galo St. ', 'Zone 4', 'Purok 3', 'Barangay 2 Pob.', 'Cadiz City', 'Negros Occidental', 'O Hotel Building  ', ' Michael Vulcanizing ', ' Santan St. Brgy 2. Cadiz City ', 3, ' Vulcanizing Shop ', 'Cabahug St. Brgy 2.  ', 1, '2018-05-06 00:00:00'),
-(4, '8d0c938d51ea34ae173e52cee4920abbaab0dde9', 'Tito ', 'Flores', 'Lacson St. ', 'Zone 5', 'Purok 2', 'Barangay Cabahug', 'Cadiz City', 'Negros Occidental', 'Benilde', ' M\'c Insurance Corp.', ' Santan St. Brgy 2. Cadiz City', 4, ' Insurance ', ' Lacosn St. Brgy. 4, Cadiz City ', 1, '2018-06-11 11:37:00'),
-(5, 'a303c411440744f88babfc0c5097d9686b13f02b', 'Jenel ', 'Dequina', 'Galo St. ', 'Zonr 3', 'Purok 2', 'Barangay Luna', 'Cadiz City', 'Negros Occidental', ' Jam Buildling ', ' Crave Ads Software Dev. ', ' Lacson St. corner galo st. Bacolod City ', 5, ' Software Development ', 'Lacson St. corner Rizal St. Bacolod City ', 1, '2018-06-14 10:55:18');
+(1, '840b22be052f1d2e568476b9cba1e27079b0af51', 'Tito ', 'Torreblanca ', 'Gustilo st.', 'Zone 2', 'Purok 3', 'Barangay 2 Pob.', 'Municipality of Murcia', 'Negros Occidental', 'JS Building', ' Standard Insurance Co. ', ' Lacson st. corner Galo st. Bacolod City ', 1, ' Insurance', ' Gustilo BLVD. Brgy 1. (LTO)', 1, '2018-06-06 00:00:00'),
+(2, '9c964efb31d54873eb7cb887b515d9f24f97988e', 'Eva', 'Torno', 'Santan St. ', 'Zone 1', 'Purok 2', 'Barangay 2 Pob.', 'Municipality of Murcia', 'Negros Occidental', 'Teresita Bldg', ' Eatery ', 'DelaSalle St. Brgy. 2, Municipality of Murcia ', 2, ' Eatery ', ' Gustilo BLVD. Brgy 1. (LTO)', 1, '2018-06-06 00:00:00'),
+(3, '8e6a0ab63dcc760118dffc536af50ddac7fd80f0', 'Michael ', 'Abanil ', 'Galo St. ', 'Zone 4', 'Purok 3', 'Barangay 2 Pob.', 'Municipality of Murcia', 'Negros Occidental', 'O Hotel Building  ', ' Michael Vulcanizing ', ' Santan St. Brgy 2. Municipality of Murcia ', 3, ' Vulcanizing Shop ', 'Cabahug St. Brgy 2.  ', 1, '2018-05-06 00:00:00'),
+(4, '8d0c938d51ea34ae173e52cee4920abbaab0dde9', 'Tito ', 'Flores', 'Lacson St. ', 'Zone 5', 'Purok 2', 'Barangay Cabahug', 'Municipality of Murcia', 'Negros Occidental', 'Benilde', ' M\'c Insurance Corp.', ' Santan St. Brgy 2. Municipality of Murcia', 4, ' Insurance ', ' Lacosn St. Brgy. 4, Municipality of Murcia ', 1, '2018-06-11 11:37:00'),
+(5, 'a303c411440744f88babfc0c5097d9686b13f02b', 'Jenel ', 'Dequina', 'Galo St. ', 'Zonr 3', 'Purok 2', 'Barangay Luna', 'Municipality of Murcia', 'Negros Occidental', ' Jam Buildling ', ' Crave Ads Software Dev. ', ' Lacson St. corner galo st. Bacolod City ', 5, ' Software Development ', 'Lacson St. corner Rizal St. Bacolod City ', 1, '2018-06-14 10:55:18');
 
 -- --------------------------------------------------------
 
@@ -393,7 +393,7 @@ CREATE TABLE `tbl_card_holder_profile` (
   `Street` varchar(255) NOT NULL,
   `Purok` varchar(255) NOT NULL,
   `Brgy_ID` varchar(255) NOT NULL,
-  `City` varchar(255) NOT NULL DEFAULT 'Cadiz City'
+  `City` varchar(255) NOT NULL DEFAULT 'Municipality of Murcia'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -401,20 +401,20 @@ CREATE TABLE `tbl_card_holder_profile` (
 --
 
 INSERT INTO `tbl_card_holder_profile` (`ID`, `First_name`, `Middle_name`, `Last_name`, `Age`, `Gender`, `Contact_number`, `Street`, `Purok`, `Brgy_ID`, `City`) VALUES
-(1, 'Julian Diego', 'Paclibar', 'Mapa', 22, 'Male', '09257260059', 'Natalia Street', 'Zone 1', '2', 'Cadiz City'),
-(2, 'Mark', 'Valleja', 'Huelgas', 21, 'Male', '09258636824', 'Narra Street', 'Zone 1', '4', 'Cadiz City'),
-(3, 'Meltito', 'Santiago', 'Vagallon', 21, 'Male', '09176509838', 'Lacson Street', 'Zone 5', '5', 'Cadiz City'),
-(4, 'Anthony', 'Valleja', 'Huelgas', 32, 'Male', '09328753685', 'Araneta Street', 'Zone 1', '1', 'Cadiz City'),
-(5, 'Glaidel', 'Paculana', 'Guinabo', 20, 'Female', '09234536297', 'Lasalle Avenue', 'Zone 3', '3', 'Cadiz City'),
-(6, 'Paul', 'Dela Cruz', 'Faburada', 30, 'Male', '09176210234', '123', 'Zone 5', '5', 'Cadiz City'),
-(7, 'Cardo', 'Martin', 'Dalisay', 35, 'Male', '09451237654', 'Quiapo', 'Zone 5', '5', 'Cadiz City'),
-(8, 'Czarina', 'Alfonso', 'Año', 21, 'Female', '09258636824', 'Buena Park', 'Zone 1', '1', 'Cadiz City'),
-(9, 'Dominic Justine', 'Paclibar', 'Mapa', 19, 'Female', '09172321934', 'Narra', 'Zone 1', '1', 'Cadiz City'),
-(10, 'Angelika', 'Joyce', 'Alipalo', 33, 'Female', '09444433322', 'Mansilingan', 'Zone 1', '4', 'Cadiz City'),
-(11, 'Ma. Dorothy', 'Caras', 'Paclibar', 41, 'Female', '09213497123', 'Jobstreet', 'Zone 2', '2', 'Cadiz City'),
-(12, 'Maria Leonora', ' Theresa', 'Jurisprudencia', 22, 'Female', '09223334444', 'Back Street Boys', 'Zone 5', '5', 'Cadiz City'),
-(13, 'Julio Ezekiel', 'Duyo', 'Mapa', 14, 'Male', '09223809421', 'Boulevard', 'Zone 1', '2', 'Cadiz City'),
-(14, 'Elaiza Justine', 'Duyo', 'Mapa', 20, 'Female', '09257260058', 'Mambulac', 'Zone 3', '2', 'Cadiz City');
+(1, 'Julian Diego', 'Paclibar', 'Mapa', 22, 'Male', '09257260059', 'Natalia Street', 'Zone 1', '2', 'Municipality of Murcia'),
+(2, 'Mark', 'Valleja', 'Huelgas', 21, 'Male', '09258636824', 'Narra Street', 'Zone 1', '4', 'Municipality of Murcia'),
+(3, 'Meltito', 'Santiago', 'Vagallon', 21, 'Male', '09176509838', 'Lacson Street', 'Zone 5', '5', 'Municipality of Murcia'),
+(4, 'Anthony', 'Valleja', 'Huelgas', 32, 'Male', '09328753685', 'Araneta Street', 'Zone 1', '1', 'Municipality of Murcia'),
+(5, 'Glaidel', 'Paculana', 'Guinabo', 20, 'Female', '09234536297', 'Lasalle Avenue', 'Zone 3', '3', 'Municipality of Murcia'),
+(6, 'Paul', 'Dela Cruz', 'Faburada', 30, 'Male', '09176210234', '123', 'Zone 5', '5', 'Municipality of Murcia'),
+(7, 'Cardo', 'Martin', 'Dalisay', 35, 'Male', '09451237654', 'Quiapo', 'Zone 5', '5', 'Municipality of Murcia'),
+(8, 'Czarina', 'Alfonso', 'Año', 21, 'Female', '09258636824', 'Buena Park', 'Zone 1', '1', 'Municipality of Murcia'),
+(9, 'Dominic Justine', 'Paclibar', 'Mapa', 19, 'Female', '09172321934', 'Narra', 'Zone 1', '1', 'Municipality of Murcia'),
+(10, 'Angelika', 'Joyce', 'Alipalo', 33, 'Female', '09444433322', 'Mansilingan', 'Zone 1', '4', 'Municipality of Murcia'),
+(11, 'Ma. Dorothy', 'Caras', 'Paclibar', 41, 'Female', '09213497123', 'Jobstreet', 'Zone 2', '2', 'Municipality of Murcia'),
+(12, 'Maria Leonora', ' Theresa', 'Jurisprudencia', 22, 'Female', '09223334444', 'Back Street Boys', 'Zone 5', '5', 'Municipality of Murcia'),
+(13, 'Julio Ezekiel', 'Duyo', 'Mapa', 14, 'Male', '09223809421', 'Boulevard', 'Zone 1', '2', 'Municipality of Murcia'),
+(14, 'Elaiza Justine', 'Duyo', 'Mapa', 20, 'Female', '09257260058', 'Mambulac', 'Zone 3', '2', 'Municipality of Murcia');
 
 -- --------------------------------------------------------
 

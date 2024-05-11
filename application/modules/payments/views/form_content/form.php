@@ -65,7 +65,7 @@
         </div>
        
         <div class="col-sm-3">
-            <input type="text" class="form-control" data-field="r-city-municipality" placeholder="City/Municipality" value="Cadiz">
+            <input type="text" class="form-control" data-field="r-city-municipality" placeholder="City/Municipality" value="Murcia">
         </div>
         <div class="col-sm-3">
             <input type="text" class="form-control" data-field="r-province" placeholder="Province" value="Negros Occidental">

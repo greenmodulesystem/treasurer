@@ -80,6 +80,7 @@
                 $this->opsModel->paymentType    =   $this->input->post('type');                                                            
                                             
                 $this->opsModel->save_payment_cash();
+                
             }
             catch(Exception $msg){
                 echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));

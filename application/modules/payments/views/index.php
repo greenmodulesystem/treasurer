@@ -123,6 +123,7 @@ sidebar('payments',$form);
 </div>
 <?php main_footer();?>
 <script language="javascript" src="<?php echo base_url()?>assets/scripts/payments/formatter.js"></script>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <script language="javascript" src="<?php echo base_url()?>assets/scripts/payments/payments.js"></script>
 <script language="javascript" src="<?php echo base_url()?>assets/scripts/payments/stabs.js"></script>
 <script language="javascript" src="<?php echo base_url()?>assets/scripts/payments/receipts.js"></script>

@@ -32,3 +32,4 @@ header('Content-Disposition: attachment;filename="' .'Cedula-Collection-Reports'
 header('Cache-Control: max-age=0');
 $objWriter->save('php://output');            
 exit;
+?>

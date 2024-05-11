@@ -2,13 +2,16 @@
 main_header();
 sidebar('void');
 ?>
-<style>.table tbody tr:hover td, .table tbody tr:hover th {
-    background-color: #cceeff;
-}</style>
+<style>
+    .table tbody tr:hover td,
+    .table tbody tr:hover th {
+        background-color: #cceeff;
+    }
+</style>
 <div class="content-wrapper">
-   
-    <section class="content">        
-        <div class="box box-primary"><br>
+    <section class="content">
+        <div class="box box-primary">
+            <br>
             <div class="box-header">
                 <h4 class="box-title"><i class="fa fa-search"></i> Search OR Number </h4>
                 <div class="box-tools">
@@ -18,24 +21,25 @@ sidebar('void');
                             <button type="button" style="width: 70px;" id="btnSearch" class="btn btn-success input-md"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
-                </div>            
+                </div>
             </div>
             <div class="box-body"></br>
                 <table class="table table-hover">
                     <thead>
-                        <th> OR NO. </th>
+                        <th> OR NUMBER </th>
                         <th> TAXPAYER </th>
                         <th> DATE PAID </th>
+                        <th>STATUS</th> <!--Added by De la Cruz 3/24/2023 -->
                         <th> OPTION </th>
                     </thead>
                     <tbody id="grid"></tbody>
-                </table>               
+                </table>
             </div>
         </div>
     </section>
 </div>
 <div class="modal fade modal-wide" id="void_modal" data-backdrop="static" role="dialog">
-    <div class="modal-dialog">       
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -45,38 +49,39 @@ sidebar('void');
                 <div class="row">
                     <div class="col-sm-12">
                         <label>Remarks:</label>
-                        <textarea rows="2" cols="77" id="void_data"></textarea>          
-                    </div>                   
-                </div>               
+                        <textarea rows="2" cols="77" id="void_data"></textarea>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn  btn-danger btn-sm pull-left" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
                 <button type="button" class="btn  btn-success btn-sm pull-right" id="void_payor"><i class="fa fa-forward"></i> Proceed</button>
             </div>
         </div>
-        
+
     </div>
 </div>
-<?php main_footer();?>
-<script language="javascript" src="<?php echo base_url()?>assets/general_assets/voiding_receipt.js"></script>
+<?php main_footer(); ?>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/voiding_receipt.js"></script>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <script langauge="javascript">
     var ID = 0;
-    var baseUrl = '<?php echo base_url()?>';
+    var baseUrl = '<?php echo base_url() ?>';
 
     $('#btnSearch').gmSearch({
-        url     :   "<?php echo base_url() ?>void_receipt/grid",
-        search  :   "#search",
-        load_on :   "#grid"
+        url: "<?php echo base_url() ?>void_receipt/grid",
+        search: "#search",
+        load_on: "#grid"
     });
-    $(document).ready(function(){
-        $('#search').keyup(function (e) {                      
-            if (e.keyCode  === 13) {                                                          
+    $(document).ready(function() {
+        $('#search').keyup(function(e) {
+            if (e.keyCode === 13) {
                 $(document).gmSearch({
-                    url     :   "<?php echo base_url() ?>void_receipt/grid",
-                    search  :   "#search",
-                    load_on :   "#grid"
+                    url: "<?php echo base_url() ?>void_receipt/grid",
+                    search: "#search",
+                    load_on: "#grid"
                 });
             }
         });
-    });        
+    });
 </script>

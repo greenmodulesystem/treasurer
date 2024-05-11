@@ -40,6 +40,12 @@ th, td {
     var Total = 0;   
     var quantity = [];   
     var amnt = 0;
+
+    //4-14-2023 LOUIS
+    start_or = <?php echo json_encode(@$Type->Start_OR); ?>;
+    end_or = <?php echo json_encode(@$Type->End_OR); ?>;
+    var remain_receipts = 0;
+    // END
         
     $('.qnty').on('keyup', function (){             
         var value = $(this).val();
@@ -56,7 +62,12 @@ th, td {
         $('#subtotal').html(subtotals);
         $('.total_pay').html(subtotals);
         subtotal = subtotals;
-    }       
+    }
+    
+    //4-14-2023 LOUIS
+    remain_receipts = end_or - or_number + 1;
+    document.getElementById('remaining_or').value = remain_receipts;
+    // END
 
     // $('#t_or_numbers').html(or_number);     
     document.getElementById('t_or_numbers').value = or_number;

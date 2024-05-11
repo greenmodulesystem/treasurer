@@ -1,8 +1,9 @@
 <?php
-class dashboard_model extends CI_Model
+class Dashboard_model extends CI_Model
 {
     public $ID;
     public $Or_for;
+    public $ActiveId;
 
     private $table = array(
         "particular" => "tbl_particular",
@@ -10,14 +11,16 @@ class dashboard_model extends CI_Model
         "pPaid" =>  "tbl_particular_paid",
         "accnt_form"    =>  "tbl_accountable_form",
         "temporary" =>  "tbl_temporary_payment",
-        "cedula"    =>  "tbl_collection_cedula"
+        "cedula"    =>  "tbl_collection_cedula",
+        "accountable"    =>  "tbl_accountable_form",
+        
     );
 
-    public function __construct()
-    {
-        parent::__construct();
+    public function __construct(){
+        parent::__construct();        
         $this->ctodb = $this->load->database('ctodb', true);
     }
+
 
     function update_or_for()
     {
@@ -27,19 +30,19 @@ class dashboard_model extends CI_Model
         if ($this->Or_for === 'Cedula') {
             $this->check_or_cedula();
         } else {
-            $response = $this->check_or();
+            // $response = $this->check_or();
 
             try {
                 if ($this->ID != null) {
-                    if (!empty($response) || $response === '0') {
-                        $this->ctodb->where('ID', $this->ID);
-                        $this->ctodb->where('Collector_ID', $_SESSION['User_details']->ID);
-                        $this->ctodb->update($this->table['accnt_form'], $data);
+                    // if (!empty($response) || $response === '0') {
+                    $this->ctodb->where('ID', $this->ID);
+                    $this->ctodb->where('Collector_ID', $_SESSION['User_details']->ID);
+                    $this->ctodb->update($this->table['accnt_form'], $data);
 
-                        echo json_encode(array('error_message' => 'Success', 'has_error' => false));
-                    } else {
-                        echo json_encode(array('error_message' => 'There is still an OR number left', 'has_error' => true));
-                    }
+                    echo json_encode(array('error_message' => 'Success', 'has_error' => false));
+                    // } else {
+                    //     echo json_encode(array('error_message' => 'There is still an OR number left', 'has_error' => true));
+                    // }
                 } else {
                     echo json_encode(array('error_message' => 'Error Processing', 'has_error' => true));
                 }
@@ -186,7 +189,7 @@ class dashboard_model extends CI_Model
                 'acc.Active'
         );
         $this->ctodb->from($this->table['accnt_form'] . ' acc');
-        $this->ctodb->where('acc.Collector_ID', @$_SESSION['User_details']->ID);
+        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ID, 'both');
         $this->ctodb->where('acc.Done', 0, 'both');
         $query = $this->ctodb->get()->result();
         return $query;
@@ -200,7 +203,7 @@ class dashboard_model extends CI_Model
                 'acc.Active'
         );
         $this->ctodb->from($this->table['accnt_form'] . ' acc');
-        $this->ctodb->where('acc.Collector_ID', @$_SESSION['User_details']->ID);
+        $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ID, 'both');
         $this->ctodb->where('acc.Done', 0, 'both');
         $this->ctodb->where('acc.OR_for', null, 'both');
         $query = $this->ctodb->get()->result();
@@ -220,7 +223,7 @@ class dashboard_model extends CI_Model
 
             $this->ctodb->trans_start();
             $this->ctodb->where('ID', $this->ID);
-            $this->ctodb->update(TABLE['accountable'], $Data);
+            $this->ctodb->update($this->table['accountable'], $Data);
             $this->ctodb->trans_complete();
 
             if ($this->ctodb->trans_status() === FALSE) {
@@ -239,7 +242,7 @@ class dashboard_model extends CI_Model
     {
         try {
             $this->ctodb->select('ID');
-            $this->ctodb->from(TABLE['accountable']);
+            $this->ctodb->from($this->table['accountable']);
             $this->ctodb->where('OR_for', $this->Designate);
             $this->ctodb->where('Active', 1);
             $this->ctodb->where('Collector_ID', $_SESSION['User_details']->ID);
@@ -260,7 +263,7 @@ class dashboard_model extends CI_Model
             $Data = array('Active' => 0);
             $this->ctodb->trans_start();
             $this->ctodb->where('ID', $this->ActiveId);
-            $this->ctodb->update(TABLE['accountable'], $Data);
+            $this->ctodb->update($this->table['accountable'], $Data);
             $this->ctodb->trans_complete();
 
             if ($this->ctodb->trans_status() === FALSE) {

@@ -10,6 +10,9 @@ $(document).ready(function() {
         if(group == "other"){
             document.getElementById('other-disp').style.display = "block";
         }
+        else{
+            document.getElementById('other-disp').style.display = "none";
+        }
     });
 
     $(document).on('change', '.col-type-edit', function() {

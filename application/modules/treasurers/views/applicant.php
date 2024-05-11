@@ -5,7 +5,7 @@ $Bldg = ($profiles->Building_name != '') ? trim($profiles->Building_name) . ", "
 $Strt = ($profiles->Street != '') ? trim($profiles->Street) . ", " : '';
 $Prk = ($profiles->Purok != '') ? trim($profiles->Purok) . ", " : '';
 $Address1 = ucwords($Bldg) . ucwords($Strt) . ucwords($Prk);
-$Address2 = ucwords(trim($profiles->Barangay)) . ", Cadiz City";
+$Address2 = ucwords(trim($profiles->Barangay)) . ", Municipality of Murcia";
 $Payor = ucwords($profiles->Tax_payer);
 $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
 ?>
@@ -100,6 +100,7 @@ $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
 </div>
 
 <?php main_footer(); ?>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <script language="javascript" src="<?php echo base_url() ?>assets/scripts/noPostBack.js"></script>
 <script>
     var baseUrl = '<?php echo base_url() ?>';
@@ -107,7 +108,7 @@ $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
     var or_number;
     var payorName = "<?php echo $profiles->Business_name ?>";
     var address = "<?php echo $Address1 = ucwords($Bldg) . ucwords($Strt) . ucwords($Prk) ?>";
-    var address2 = "<?php echo $Address2 = ucwords(trim($profiles->Barangay)) . ", Cadiz City"; ?>";
+    var address2 = "<?php echo $Address2 = ucwords(trim($profiles->Barangay)) . ", Municipality of Murcia"; ?>";
     var finalAddress = address + address2;
 
     $(document).ready(function() {

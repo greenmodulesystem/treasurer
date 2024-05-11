@@ -36,7 +36,7 @@ echo sidebar('dashboard');
                                     ?>
                                             <td>
                                                 <select data-key="<?= $value->ID ?>" name="<?= $value->ID ?>" class="form-control input-md or_for select2" style="width: 80%; color: black;">
-                                                    <option value="" disabled selected> Select </option>
+                                                    <option value="" selected disabled hidden> Select </option>
                                                     <?php
                                                     foreach ($col_type as $key => $col) {
                                                     ?>
@@ -68,7 +68,7 @@ echo sidebar('dashboard');
                                             ?>
                                             <td>
                                                 <button data-origin="<?= @$value->OR_origin ?>" data-id="<?= $value->ID ?>" class="btn  btn-sm btn-danger cancel_form"><i class="fa fa-times"></i> Cancel </button>
-                                                <button class="btn btn-sm  btn-success activate-or" data-id="<?= $value->ID ?>" data-designate="<?= @$value->OR_for ?>"><i class="fa fa-check-square pull-left"></i> Activate </button>
+                                                <button class="btn btn-sm  btn-success activate-or" data-id="<?= $value->ID ?>" data-designate="<?= @$value->OR_for ?>"><i class="fa fa-check-square pull-left"></i> Use </button>
                                             </td>
                                         <?php
                                         } else {
@@ -85,6 +85,10 @@ echo sidebar('dashboard');
                                             <?php
                                             }
                                             ?>
+                                            <td>
+                                                <button data-origin="<?= @$value->OR_origin ?>" data-id="<?= $value->ID ?>" class="btn  btn-sm btn-default cancel_form" disabled><i class="fa fa-times"></i> Cancel </button>
+                                                <button class="btn btn-sm  btn-success activate-or" data-id="<?= $value->ID ?>" data-designate="<?= @$value->OR_for ?>"><i class="fa fa-check-square pull-left"></i> Use </button>
+                                            </td>
                                     <?php
                                         }
                                     }
@@ -101,6 +105,7 @@ echo sidebar('dashboard');
 </div>
 <?php echo main_footer(); ?>
 <script language="javascript" src="<?php echo base_url() ?>assets/general_assets/dashboard.js"></script>
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 <script src="<?php echo base_url() ?>assets/theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script>

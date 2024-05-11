@@ -26,6 +26,8 @@ $(document).on('click', '#add_data', function() {
                 if (result.has_error == false) {
                     load_form();
                     loadGrid();
+                } else{
+                    window.reload();
                 }
             }
         });
@@ -53,21 +55,63 @@ $(document).on('click', '.part-delete', function() {
 });
 
 $('#costumer_pay').on('click', function() {
+    $('.inpt-partic').each(function() {
+        var part =  $(this).data('part_id');
+        
+       if(part == ""){
+          alert("Please do not fillup the field manually. If this is a new particular, please add it first on the FEES AND CHARGES tab.");
+          window.reload();
+       }
+      });
+
     calculate_payable();
     $('#payment_modal').modal({ backdrop: 'static' });
     $('#payment_modal').modal('show');
 });
 
 $('#f10-pay').on('click', function() {
+    $('.inpt-partic').each(function() {
+        var part =  $(this).data('part_id');
+        
+       if(part == ""){
+          alert("Please do not fillup the field manually. If this is a new particular, please add it first on the FEES AND CHARGES tab.");
+          window.reload();
+       }
+      });
+
     calculate_payable();
     $('#non-cash-modal').modal({ backdrop: 'static' });
     $('#non-cash-modal').modal('show');
 });
 
 $('#mix_payment').on('click', function() {
+    $('.inpt-partic').each(function() {
+        var part =  $(this).data('part_id');
+        
+       if(part == ""){
+          alert("Please do not fillup the field manually. If this is a new particular, please add it first on the FEES AND CHARGES tab.");
+          window.reload();
+       }
+      });
+
     calculate_payable();
     $('#load-mix-payment').modal({ backdrop: 'static' });
     $('#load-mix-payment').modal('show');
+});
+
+$('#other-payment').on('click', function() {
+    $('.inpt-partic').each(function() {
+        var part =  $(this).data('part_id');
+        
+       if(part == ""){
+          alert("Please do not fillup the field manually. If this is a new particular, please add it first on the FEES AND CHARGES tab.");
+          window.reload();
+       }
+      });
+      
+    calculate_payable();
+    $('#other-payment-modal').modal({ backdrop: 'static' });
+    $('#other-payment-modal').modal('show');
 });
 
 $(document).on('keyup', function(e) {
@@ -75,15 +119,16 @@ $(document).on('keyup', function(e) {
         $('#payment_modal').modal({ backdrop: 'static' });
         $('#payment_modal').modal('show');
     }
-    // Non Cash Input
+    /** Non Cash Input */
     if (e.keyCode == 121) {
         $('#non-cash-modal').modal({ backdrop: 'static' });
         $('#non-cash-modal').modal('show');
     }
 });
 
-// Cash Payment Save
+/** Cash Payment Save */
 $(document).on('click', '#costumer_payment', function() {
+   
     var particulars = [];
     var total_gross = 0;
 
@@ -91,12 +136,12 @@ $(document).on('click', '#costumer_payment', function() {
         var obj = {
             particular: $(this).val(),
             amount: $('.amount-partic[data-key="' + $(this).data('key') + '"]').val(),
+            remarks: $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').val(),
             Part_ID: $(this).data('part_id')
         };
         particulars.push(obj);
         total_gross = total_gross += parseInt($('.amount-partic[data-key="' + $(this).data('key') + '"]').val());
     });
-
     if ($('#payor_name').val() == '' || particulars == null || $('#total_payable_gen').val() == '0') {
         alert("Please verify the data before proceeding :)");
     } else {
@@ -105,6 +150,7 @@ $(document).on('click', '#costumer_payment', function() {
             return;
         } else {
             if (total_gross <= parseInt($('#gen_cash_payment').val())) {
+                $('#costumer_payment').attr('disabled', true); //YOBHEL ADDED 3-24-23
                 $.post({
                     url: baseUrl + "general_collection/service/general_collection_service/save_all_data",
                     data: {
@@ -133,7 +179,7 @@ $(document).on('click', '#costumer_payment', function() {
                                 }
                                 data_print.push(store);
                                 var object = JSON.stringify(data_print);
-                                console.log(object);
+
                                 loadGrid();
                                 document.getElementById("payor_name").value = "";
                                 $('#payment_modal').modal("hide");
@@ -162,6 +208,7 @@ $(document).on('click', '#cheque_pmnt', function() {
         var obj = {
             particular: $(this).val(),
             amount: $('.amount-partic[data-key="' + $(this).data('key') + '"]').val(),
+            remarks: $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').val(),
             Part_ID: $(this).data('part_id')
         };
         particulars.push(obj);
@@ -178,6 +225,7 @@ $(document).on('click', '#cheque_pmnt', function() {
             return;
         } else {
             if (gross_total <= parseInt($('#c-amount').val())) {
+                $('#cheque_pmnt').attr('disabled', true); ////YOBHEL ADDED 3-24-23
                 $.post({
                     url: baseUrl + "general_collection/service/general_collection_service/save_data_with_bank",
                     data: {
@@ -225,6 +273,79 @@ $(document).on('click', '#cheque_pmnt', function() {
     }
 });
 
+/** for other payment method */
+$(document).on('click', '#other-payment-pay', function() {
+    var particulars = [];
+    var total_gross = 0;
+
+    $('.inpt-partic').each(function() {
+        var obj = {
+            particular: $(this).val(),
+            amount: $('.amount-partic[data-key="' + $(this).data('key') + '"]').val(),
+            remarks: $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').val(),
+            Part_ID: $(this).data('part_id')
+        };
+        particulars.push(obj);
+        total_gross = total_gross += parseInt($('.amount-partic[data-key="' + $(this).data('key') + '"]').val());
+    });
+    
+    if ($('#payor_name').val() == '' || particulars == null || $('#total_payable_gen').val() == '0') {
+        alert("Please verify the data before proceeding :)");
+    } else {
+        var i = confirm("Payment Confirm?");
+        if (i == false) {
+            return;
+        } else {
+            if (total_gross <= parseInt($('#other-payment-amount').val())) {
+                $('#other-payment-pay').attr('disabled', true); ////YOBHEL ADDED 3-24-23
+                $.post({
+                    url: baseUrl + "general_collection/service/general_collection_service/save_all_data",
+                    data: {
+                        Accountable_form_number: $('#or_numbers').val(),
+                        Payor: $('#payor_name').val(),
+                        Paid_by: $('#paid_by').val(),
+                        Address: $('#address').val(),
+                        Date_paid: $('#date_paid').val(),
+                        Particulars: JSON.stringify(particulars),
+                        Amounts: $('#total_payable_gen').val(),
+                        Cash: $('#other-payment-amount').val(),
+                        Other_remarks: $('#other-remarks').val()
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.has_error == false) {
+                            if (result.has_error == false) {
+                                var data_print = [];
+                                var store = {
+                                    or_number: or_number,
+                                    payor: $('#payor_name').val(),
+                                    address: $('#address').val(),
+                                    particulars: particulars,
+                                    date_paid: $('#date_paid').val(),
+                                    total: $('#total_payable_gen').val(),
+                                    bank: null,
+                                }
+                                data_print.push(store);
+                                var object = JSON.stringify(data_print);
+
+                                loadGrid();
+                                document.getElementById("payor_name").value = "";
+                                $('#payment_modal').modal("hide");
+                                window.location = baseUrl + "general_collection/print_receipt?get=" + object;
+                            } else {
+                                alert(result.error_message);
+                            }
+                        } else {
+                            alert(result.error_message);
+                        }
+                    }
+                });
+            } else {
+                alert('Please input amount greater than total');
+            }
+        }
+    }
+});
 
 // code updated feb 19 2020
 // start
@@ -263,6 +384,7 @@ $(document).on('click', '#mix-pmnt', function() {
         var obj = {
             particular: $(this).val(),
             amount: $('.amount-partic[data-key="' + $(this).data('key') + '"]').val(),
+            remarks: $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').val(),
             Part_ID: $(this).data('part_id')
         };
         particulars.push(obj);
@@ -282,6 +404,7 @@ $(document).on('click', '#mix-pmnt', function() {
             return;
         } else {
             if (gross_total <= total_two) {
+                $('#mix-pmnt').attr('disabled', true); ////YOBHEL ADDED 3-24-23
                 $.post({
                     url: baseUrl + 'general_collection/service/general_collection_service/save_data_mixed_pmnt',
                     data: {
@@ -301,7 +424,25 @@ $(document).on('click', '#mix-pmnt', function() {
                     dataType: 'json',
                     success: function(e) {
                         if (e.has_error == false) {
-                            console.log(e.error_message);
+                            var data_print = [];
+                            var store = {
+                                or_number: or_number,
+                                payor: $('#payor_name').val(),
+                                address: $('#address').val(),
+                                particulars: particulars,
+                                date_paid: $('#date_paid').val(),
+                                bank: bank,
+                                check_no: $('#mix-check-no').val(),
+                                check_date: $('#mix-cheque-date').val(),
+                                check_amount: $('#mix-cheque-amount').val(),
+                                type: "Cheque"
+                            }
+                            data_print.push(store);
+                            var object = JSON.stringify(data_print);
+                            loadGrid();
+                            document.getElementById("payor_name").value = "";
+                            $('#non-cash-modal').modal("hide");
+                            window.location = baseUrl + "general_collection/print_receipt?get=" + object;
                         }
                     }
                 });
@@ -375,30 +516,59 @@ var Data_key;
 $(document).on('keyup', '.inpt-partic', function(e) {
     if (e.keyCode === 13) {
         Data_key = $(this).data('key');
+        if($('.options:checked').val() == "single"){
+     
+            $.post({
+                url: baseUrl + 'general_collection/service/general_collection_service/search_particular',
+                data: {
+                    particular: $('.inpt-partic[data-key="' + Data_key + '"]').val()
+                },
+                dataType: 'json',
+                success: function(e) {
+                    if (e.has_error == false) {
+                        $('#load-search-particular').modal({ backdrop: 'static' });
+                        $('#load-search-particular').modal('show');
 
-        $.post({
-            url: baseUrl + 'general_collection/service/general_collection_service/search_particular',
-            data: {
-                particular: $('.inpt-partic[data-key="' + Data_key + '"]').val()
-            },
-            dataType: 'json',
-            success: function(e) {
-                if (e.has_error == false) {
-                    $('#load-search-particular').modal({ backdrop: 'static' });
-                    $('#load-search-particular').modal('show');
-
-                    Part_value = e.error_message;
-                    $('#load-particulars').html('');
-                    $.each(e.error_message, function(idx, value) {
-                        $('#load-particulars').append(
-                            '<tr> <td><button class="btn  btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm  add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> <td>' + (new Intl.NumberFormat('en-US').format(value.Amount)) + '</td> </tr>'
-                        );
-                    });
-                } else {
-                    alert(e.error_message);
+                        Part_value = e.error_message;
+                        $('#load-particulars').html('');
+                        $.each(e.error_message, function(idx, value) {
+                            if(value.Active == 1){ //Angelo 6/20/23
+                                $('#load-particulars').append(
+                                    '<tr> <td><button class="btn  btn-sm btn-primary click_to_add" data-id="' + value.Particular + '" data-amnt="' + value.Amount + '" data-part_id="' + value.ID + '"><i class="fa fa-plus-square"></i></button></td> <td> <button class="btn btn-sm  add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td> <td>' + value.Particular + '</td> <td>' + (new Intl.NumberFormat('en-US').format(value.Amount)) + '</td> </tr>'
+                                );
+                            }
+                        });
+                    } else {
+                        alert(e.error_message);
+                    }
                 }
-            }
-        });
+            });
+                  
+        } else{
+            $.post({
+                url: baseUrl + 'general_collection/service/general_collection_service/search_particular_group',
+                data: {
+                    particular: $('.inpt-partic[data-key="' + Data_key + '"]').val()
+                },
+                dataType: 'json',
+                success: function(e) {
+                    if (e.has_error == false) {
+                        $('#load-search-particular').modal({ backdrop: 'static' });
+                        $('#load-search-particular').modal('show');
+
+                        Part_value = e.error_message;
+                        $('#load-particulars').html('');
+                        $.each(e.error_message, function(idx, value) {
+                            $('#load-particulars').append(
+                                '<tr> <td></td> <td> <button class="btn btn-sm  add_by_parent" data-parent="' + value.Parent + '"><b>' + value.Parent + '</b></button> </td></tr>'
+                            );
+                        });
+                    } else {
+                        alert(e.error_message);
+                    }
+                }
+            });
+        }
     }
 });
 
@@ -410,31 +580,91 @@ $(document).on('click', '.click_to_add', function() {
     $('#load-search-particular').modal('hide');
     $('.inpt-partic[data-key="' + Data_key + '"]').val(Particular_ID);
     $('.amount-partic[data-key="' + Data_key + '"]').val(Data_amnt);
+    $('.inpt-remarks[data-key="' + Data_key + '"]').val();
     $('.inpt-partic[data-key="' + Data_key + '"]').attr('data-part_ID', part_ID);
     calculate_payable();
 });
 
+// $(document).on('click', '.add_by_parent', function() {
+//     var parent = $(this).data('parent');
+//     $.post({
+//         url: baseUrl + 'general_collection/service/general_collection_service/search_particular_parent',
+//         data: {
+//             Parent: parent
+//         },
+//         dataType: 'json',
+//         success: function(e) {
+//             if (e.has_error == false) {
+
+//                 $.each(e.error_message, function(idx, val) {
+//                     $('#load-search-particular').modal('hide');
+//                     $('.inpt-partic[data-key="' + idx + '"]').val(val.Particular);
+//                     $('.amount-partic[data-key="' + idx + '"]').val(val.Amount);
+//                     $('.inpt-remarks[data-key="' + idx + '"]').val();
+//                     $('.inpt-partic[data-key="' + idx + '"]').attr('data-part_ID', val.ID);
+//                     create_input_particular();
+//                     update_data_key();
+//                 });
+
+//             } else {
+//                 alert(e.error_message);
+//             }
+//         }
+//     });
+// });
+
+//modified karl 4/18
+// old code for get_parent ANGELO 7/19/23
+// $(document).on('click', '.add_by_parent', function() {
+//     var parent = $(this).data('parent');
+//     $.post({
+//         url: baseUrl + 'general_collection/service/general_collection_service/search_particular_parent', 
+//         data: {
+//             Parent: parent
+//         },
+//         dataType: 'json',
+//         success: function(e) {
+//             if (e.has_error == false) {
+//                 $.each(e.error_message, function(idx, val) {
+//                     $('#load-search-particular').modal('hide');
+//                     var data = {
+//                         particular: val.Particular,
+//                         amount: val.Amount,
+//                         part_id: val.ID
+//                     };
+//                     create_input_particular(data);
+//                     update_data_key();
+//                 });
+//                 console.log("adding group particular");
+//             } else {
+//                 alert(e.error_message);
+//             }
+//         }
+//     });
+// });
+//end
+
 $(document).on('click', '.add_by_parent', function() {
     var parent = $(this).data('parent');
     $.post({
-        url: baseUrl + 'general_collection/service/general_collection_service/search_particular_parent',
+        url: baseUrl + 'general_collection/service/general_collection_service/search_particular_parent', 
         data: {
             Parent: parent
         },
         dataType: 'json',
         success: function(e) {
             if (e.has_error == false) {
-
                 $.each(e.error_message, function(idx, val) {
-
                     $('#load-search-particular').modal('hide');
-                    $('.inpt-partic[data-key="' + idx + '"]').val(val.Particular);
-                    $('.amount-partic[data-key="' + idx + '"]').val(val.Amount);
-                    $('.inpt-partic[data-key="' + idx + '"]').attr('data-part_ID', val.ID);
-                    create_input_particular();
+                    var data = {
+                        particular: val.Particular,
+                        amount: val.Amount,
+                        part_id: val.ID
+                    };
+                    create_input_particular(data);
                     update_data_key();
                 });
-
+                console.log("adding group particular");
             } else {
                 alert(e.error_message);
             }
@@ -447,22 +677,36 @@ $(document).on('click', '#add-particu-inpt', function() {
     update_data_key();
 });
 
-var create_input_particular = function() {
-    $('#load-del-btn').append('<button class="btn  btn-md btn-danger delete_row" data-key="" style="margin-bottom: 5px; width: 100%;"><i class="fa fa-trash"></i></button>');
-    $('#load-input-particu').append('<input type="text" class="form-control input-md inpt-partic" data-part_ID="" data-key="" style="margin-bottom: 5px;">');
-    $('#load-amount').append('<input disabled class="form-control input-md amount-partic" data-key="" style="margin-bottom: 5px;">');
+// var create_input_particular = function() {
+//     $('#load-del-btn').append('<button class="btn  btn-md btn-danger delete_row" data-key="" style="margin-bottom: 5px; width: 100%;"><i class="fa fa-trash"></i></button>');
+//     $('#load-input-particu').append('<input type="text" class="form-control input-md inpt-partic" data-part_ID="" data-key="" style="margin-bottom: 5px;">');
+//     $('#load-amount').append('<input class="form-control input-md amount-partic" data-key="" style="margin-bottom: 5px;">');
+//     $('#part-remarks').append('<input class="form-control inpt-remarks input-md " data-key="" style="margin-bottom: 5px;">');
+// }
+
+//modified karl 4/18
+
+var create_input_particular = function(data = { particular: '', amount: '', part_id: '' }) {
+    $('#load-del-btn').append('<button class="btn btn-md btn-danger delete_row" data-key="" style="margin-bottom: 5px; width: 100%;"><i class="fa fa-trash"></i></button>');
+    $('#load-input-particu').append('<input type="text" class="form-control input-md inpt-partic" data-part_id="' + data.part_id + '" data-key="" style="margin-bottom: 5px;" value="' + data.particular + '">');
+    $('#load-amount').append('<input class="form-control input-md amount-partic" data-key="" style="margin-bottom: 5px;" value="' + data.amount + '">');
+    $('#part-remarks').append('<input class="form-control inpt-remarks input-md " data-key="" style="margin-bottom: 5px;">');
+    console.log("creating input box");
 }
+//end
 
 $(document).on('click', '.delete_row', function() {
     $('.inpt-partic[data-key="' + $(this).data('key') + '"]').remove();
     $('.delete_row[data-key="' + $(this).data('key') + '"]').remove();
     $('.amount-partic[data-key="' + $(this).data('key') + '"]').remove();
+    $('.inpt-remarks[data-key="' + $(this).data('key') + '"]').remove();
 });
 
 function update_data_key() {
     $.each(['.inpt-partic',
         '.delete_row',
-        '.amount-partic'
+        '.amount-partic',
+        '.inpt-remarks'
     ], function(idx, val) {
 
         $(val).each(function(key) {
@@ -479,6 +723,6 @@ function calculate_payable() {
 
     $('#subtotal').html(total_payable.toLocaleString("en-US"));
     $('.total_pay').html(total_payable.toFixed(2));
-    $('#total_payable_gen').val(total_payable);
+    $('#total_payable_gen').val(total_payable.toFixed(2));
     total_payable = 0;
 }

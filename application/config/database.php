@@ -76,12 +76,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' =>  '127.0.0.1',
-	'username' => 'gm',
-	'password' => 'password1234#',
-
-	/** development server database */
-	'database' => 'cadiz_licensing_testing',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => '',
+	'database' => 'sagay_licensing_testing',
 
 	/** testing cadiz server database */
 	// 'database' => 'cadiz_blis_testing',
@@ -108,13 +106,10 @@ $db['default'] = array(
 /** treasuerers collection database */
 $db['ctodb'] = array(
 	'dsn'	=> '',
-	'hostname' =>  '127.0.0.1',
-	'username' => 'gm',
-	'password' => 'password1234#',
-
-	/** development server database */
-	'database' => 'general_collection_v_two',
-
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => '',
+	'database' => "collection_2",
 	/** testing cadiz server database */
 	// 'database' => 'general_collection_testing',
 

@@ -99,6 +99,28 @@
                 $this->ctodb->join($this->table['order'].' or', 'or.ID = pv.Order_payment_ID', 'left');
                 $this->ctodb->join($this->table['particular'].' pr', 'pr.ID = pv.Particular_ID', 'left');
                 $this->ctodb->where('pv.Order_payment_ID', $this->ID);
+                $this->ctodb->group_by('pv.Order_payment_ID');
+                $this->ctodb->group_by('pv.Particular_ID');
+                $query = $this->ctodb->get()->result();                
+
+                return $query;
+            }
+            catch(Exception $msg){
+                echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+            }
+        }
+         /** get all particulars of specific client */
+         public function get_particulars_paid(){
+            try{
+                if(empty($this->ID)){
+                    throw new Exception(ERROR_PROCESSING, true);
+                }
+                $this->ctodb->select(
+                    'pv.*, '. 
+                    'pr.Particular'
+                );
+                $this->ctodb->from($this->table['payment'].' p');
+                $this->ctodb->where('p.Order_ID', $this->ID);
                 $query = $this->ctodb->get()->result();                
 
                 return $query;
@@ -175,12 +197,14 @@
             $this->ctodb->order_by('a.ID', 'asc');
             $this->ctodb->from($this->table['accnt_form'].' a');
             $this->ctodb->where('a.OR_for', $this->orFor);
-            $this->ctodb->where('a.Done', 0);        
+            $this->ctodb->where('a.Done', 0);      
+            $this->ctodb->where('a.Active', 1);          
             $this->ctodb->where('a.OR_origin', $this->Origin);
             $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ID);        
             $query = $this->ctodb->get()->row();                        
             
-            $result = $this->check_or_number_exist();                           
+            $result = $this->check_or_number_exist();                
+            // echo json_encode($result);       
             if($result !== null){                      
                 $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);                        
                 $check_last = $this->check_last_or($result->Accountable_form_number);
@@ -206,7 +230,7 @@
                 }         
             }                 
             
-            echo json_encode(array('message'=>$query, 'has_error'=>false));            
+            echo json_encode(array('message'=>$result, 'has_error'=>false));            
         }
 
         function check_or_number_exist(){
@@ -220,9 +244,13 @@
             $this->ctodb->join($this->table['accnt_form'].' acc', 'acc.OR_origin = pp.Accountable_form_origin', 'left');
             $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID);
             $this->ctodb->where('p.Collection_type', $this->orFor);
-            $this->ctodb->where('acc.OR_for', $this->orFor);                         
+            $this->ctodb->where('acc.OR_for', $this->orFor);      
+            $this->ctodb->where('acc.Active', 1);       
+            $this->ctodb->where('acc.Done', 0);                    
+            $this->ctodb->where('acc.Remittance', 0);    
+            $this->ctodb->where('acc.Collector_ID', $_SESSION['User_details']->ID); 
             $query = $this->ctodb->get()->row();
-            
+
             return $query;
         }
 

@@ -143,5 +143,17 @@ class Trust_collection_service extends CI_Controller
             echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
         }
     }
+
+    public function search_particular_group()
+    {
+        try {
+            if (!empty($this->input->post('particular', true))) {
+                $this->MTrust->Particular = $this->input->post('particular', true);
+                $this->MTrust->getParticularGroup();
+            }
+        } catch (Exception $msg) {
+            echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
 }
 ?>

@@ -22,8 +22,6 @@ class Trust_collection_Model extends CI_Model
     public $OR_For = "Trust";    
     public $paid_by;
     public $Mix_cash_amount;
-    public $StartOr;
-    public $EndOr;
     
     private $table = array(
         "particular"    => "tbl_particular",
@@ -33,7 +31,8 @@ class Trust_collection_Model extends CI_Model
         "temporary"     =>  "tbl_temporary_payment",
         "cedula"        =>  "tbl_collection_cedula",
         "bank"          =>  "tbl_banks",
-        "cheque"        => "tbl_cheque"
+        "cheque"        => "tbl_cheque",
+        "partGroup"        => "tbl_group_particulars",
     );
 
     public function __construct(){
@@ -180,6 +179,7 @@ class Trust_collection_Model extends CI_Model
                         'Accountable_form_number'   =>  ($this->Accountable_form_number == null) ? null : $this->Accountable_form_number, 
                         'Accountable_form_origin'   => '51',                      
                         'Particular_ID'             =>  ($value->Part_ID == null) ? null : $value->Part_ID,
+                        'Bus_tax_particular' => ($value->particular == null) ? null : $value->particular,
                         'Amount'                    =>  ($value->amount == null) ? null : $value->amount                                
                     );
                     array_push($data_to_insert, $data);
@@ -214,6 +214,7 @@ class Trust_collection_Model extends CI_Model
                     'Paid_by'   =>  ($this->paid_by == null) ? null : $this->paid_by,
                     'Address' => ($this->Address == null) ? null : $this->Address,
                     'Date_paid' =>  ($this->Date_paid == null) ? null : ($this->Date_paid.' '.date('H:i:s')),
+                    'Accountable_form_origin'   =>  '51',
                     'Date_created'  =>  date('Y-m-d H:i:s'),                                     
                     'Collector' =>  ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->Last_name.', '.$_SESSION['User_details']->First_name,                   
                     'Collector_ID' => ($_SESSION['User_details'] == null) ? null : $_SESSION['User_details']->ID
@@ -325,17 +326,10 @@ class Trust_collection_Model extends CI_Model
         $this->ctodb->where('a.OR_for', $this->OR_For);
         $this->ctodb->where('a.OR_for', "Trust");
         $this->ctodb->where('a.Done', 0);
-        $this->ctodb->where('a.Active', 1);
         $this->ctodb->where('a.Collector_ID', $_SESSION['User_details']->ID);
         $query = $this->ctodb->get()->row();  
-
-        if (!empty($query)) {
-            $this->StartOr  = $query->Start_OR;
-            $this->EndOr  = $query->End_OR;
-        }
         
-        $result = $this->check_or_number_exist();                   
-
+        $result = $this->check_or_number_exist();                                   
         if(!empty($result)){             
             $or_number = str_pad(($result->Accountable_form_number + 1), 7, "0000000", STR_PAD_LEFT);                        
             $check_last = $this->check_last_or($result->Accountable_form_number);
@@ -375,7 +369,8 @@ class Trust_collection_Model extends CI_Model
                 );
                 $this->ctodb->from($this->table['particular'].' p');
                 $this->ctodb->where('p.Collection_type', 'Trust');
-                $this->ctodb->like('p.Particular', $this->Particular);
+                $this->ctodb->where('p.Active', 1);
+                $this->ctodb->like('p.Particular', $this->Particular); //Angelo 7/5/23
                 $query = $this->ctodb->get()->result();
 
                 echo json_encode(array('error_message'=>$query, 'has_error'=>false));
@@ -388,25 +383,48 @@ class Trust_collection_Model extends CI_Model
         }
     }
 
-    /** get particular parents */
-    public function getParticular_parent(){
-        try{
-            if(!empty($this->Parent)){
+    /** get particular parents, COMMENTER OLD CODE ANGELO 7/20/23 */
+    // public function getParticular_parent(){
+    //     try{
+    //         if(!empty($this->Parent)){
+    //             $this->ctodb->select(
+    //                 'p.Particular, '. 
+    //                 'p.Parent, '. 
+    //                 'p.Amount, '. 
+    //                 'p.ID'
+    //             );
+    //             $this->ctodb->from($this->table['particular'].' p');                
+    //             $this->ctodb->where('p.Parent', $this->Parent);
+    //             $this->ctodb->order_by('p.Particular', 'asc'); //4/18 karl
+    //             $query = $this->ctodb->get()->result();
+
+    //             echo json_encode(array('error_message'=>$query, 'has_error'=>false));
+    //         }
+    //     }
+    //     catch(Exception $msg){
+    //         echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+    //     }
+    // }
+
+    public function getParticular_parent()
+    {
+        try {
+            if (!empty($this->Parent)) {
                 $this->ctodb->select(
-                    'p.Particular, '. 
-                    'p.Parent, '. 
-                    'p.Amount, '. 
-                    'p.ID'
+                    'p.Particular,'.
+                        'p.Amount, ' .
+                        'p.ID'
                 );
-                $this->ctodb->from($this->table['particular'].' p');                
-                $this->ctodb->where('p.Parent', $this->Parent);
+                $this->ctodb->from($this->table['partGroup'] . ' pg');
+                $this->ctodb->join($this->table['particular'] . ' p', 'p.ID=pg.Particular', 'left');
+                $this->ctodb->where('pg.Parent', $this->Parent);
+                // $this->ctodb->order_by('p.Particular', 'asc'); //4/18 karl
                 $query = $this->ctodb->get()->result();
 
-                echo json_encode(array('error_message'=>$query, 'has_error'=>false));
+                echo json_encode(array('error_message' => $query, 'has_error' => false));
             }
-        }
-        catch(Exception $msg){
-            echo json_encode(array('error_message'=>$msg->getMessage(), 'has_error'=>true));
+        } catch (Exception $msg) {
+            echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
         }
     }
 
@@ -467,10 +485,8 @@ class Trust_collection_Model extends CI_Model
         $this->ctodb->from($this->table['pPaid'].' pp');
         $this->ctodb->join($this->table['particular'].' p','p.ID = pp.Particular_ID', 'left');    
         $this->ctodb->join($this->table['payment'].' pm', 'pm.Accountable_form_number = pp.Accountable_form_number', 'left');   
-        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID);   
-        $this->ctodb->where('pm.Accountable_form_number >=', $this->StartOr);
-        $this->ctodb->where('pm.Accountable_form_number <=', $this->EndOr); 
-        $this->ctodb->where('p.Collection_type', "Trust");
+        $this->ctodb->where('pm.Collector_ID', $_SESSION['User_details']->ID, 'both');    
+        // $this->ctodb->where('p.Collection_type', "Trust"); // Commented Angelo 7/21/23
         $query = $this->ctodb->get()->row();
         
         return $query;
@@ -533,6 +549,48 @@ class Trust_collection_Model extends CI_Model
         
         return $query;      
     }
-    
+
+    public function getParticularGroup()
+    {
+        try {
+            if (!empty($this->Particular)) {
+                $this->ctodb->select(
+                    'pp.Particular, ' .          
+                        'p.Parent, ' .
+                        'p.ID,'
+                );
+                $this->ctodb->from($this->table['partGroup'] . ' p');
+                $this->ctodb->join($this->table['particular'] . ' pp', 'pp.ID=p.Particular', 'left');
+                $this->ctodb->like('p.Parent', $this->Particular, 'both');
+                $this->ctodb->order_by('P.Parent', 'asc');
+                $this->ctodb->group_by('P.Parent', 'asc');
+                $query = $this->ctodb->get()->result();
+
+                if (empty($query)) {
+                    // $this->get_particular_parent();
+                } else {
+                    echo json_encode(array('error_message' => $query, 'has_error' => false));
+                }
+            } else {
+                echo json_encode(array('error_message' => 'Error Processing', 'has_error' => true));
+            }
+        } catch (Exception $msg) {
+            echo json_encode(array('error_message' => $msg->getMessage(), 'has_error' => true));
+        }
+    }
+
+     public function get_particulars_for_selected_group()
+    {
+        try {
+            $this->ctodb->select('*');
+            $this->ctodb->from($this->table['partGroup']);
+            $this->db->where('Parent', $this->Parent);
+            $query = $this->ctodb->get()->result();
+
+            return $query;
+        } catch (exception $msg) {
+            echo json_encode(array('error_message' => 'Processing Request', 'has_error' => true));
+        }
+    }
 }
 ?>

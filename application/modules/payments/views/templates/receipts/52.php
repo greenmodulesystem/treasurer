@@ -29,7 +29,7 @@ foreach ($details->particulars as $key => $value) {
     <input type="text" class="form-input" id="sex" value="<?=$details->Sex?>">
     <input type="text" class="form-input" id="age" value="<?=$details->Age?>">
     <input type="text" class="form-input" id="ownership" value="<?=$details->Ownership_no?>">
-    <input type="text" class="form-input" id="city-1" value="Cadiz">
+    <input type="text" class="form-input" id="city-1" value="Murcia">
     <input type="text" class="form-input" id="province-3" value="Negros Occidental">
     <input type="text" class="form-input" id="date-m-d-1" value="<?=date('F d',strtotime($details->Date_paid));?>">
     <input type="text" class="form-input" id="date-y-1" value="<?=date('y',strtotime($details->Date_paid));?>">

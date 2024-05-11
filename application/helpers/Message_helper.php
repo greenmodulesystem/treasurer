@@ -12,6 +12,7 @@ define('CONFIRM_RENEWAL', 'Submit this application?');
 define('NO_CRYPTO', 'No Cryptographically Secure Random Function Available.');
 define('ERROR_API_KEY', 'Error validating security key.');
 define('ERROR_PROCESSING', 'Error in processing');
+define('WRONG_USER', 'Wrong User');
 
 define('DEFAULT_PASSWORD','Do not use the default password. Please create new password.');
 define('NOT_MATCH','Your password does not match. Please try again.');

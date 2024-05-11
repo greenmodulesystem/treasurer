@@ -12,7 +12,7 @@ foreach ($details->particulars as $key => $value) {
 <div id="form-print" style="background-image: url('<?php echo base_url()?>assets/img/accountable_forms/53.jpg')">
     <?php if($details->Cancelled === '0'):?>
     <input type="text" class="form-input" id="province-1" value="Negros Occidental">
-    <input type="text" class="form-input" id="city" value="Cadiz">
+    <input type="text" class="form-input" id="city" value="Murcia">
     <input type="text" class="form-input" id="date-m-d" value="<?=date('F d',strtotime($details->Date_paid));?>">
     <input type="text" class="form-input" id="date-y" value="<?=date('y',strtotime($details->Date_paid));?>">
     <input type="text" class="form-input" id="payor" value="<?=$details->Payor?>"> 

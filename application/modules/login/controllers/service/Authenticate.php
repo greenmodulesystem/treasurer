@@ -26,8 +26,10 @@ class Authenticate extends CI_Controller
             $this->load->model('login/Users_model', 'model');
             if ($this->model->logout() == true)
             {
-                redirect(base_url());
-                exit();
+                // redirect(base_url());
+                // exit();
+                //added karl 5/2
+                echo json_encode(array('error_message' => "logout", 'has_error' => false));
             }
         }
         catch(Exception $ex)

@@ -33,9 +33,13 @@ class void_receipt extends CI_Controller
         try{
             $this->MVoid->tokenNumber = $this->input->get('token', true);
             $this->MVoid->Date =$this->input->get('date', true);
+            $this->MVoid->OR=$this->input->get('OR', true);
             $result = $this->MVoid->get_or_data();
+            $account = $this->MVoid->get_accnt_type();
+            // echo json_encode($this->MVoid->get_accnt_type());
             if(!empty($result)){
                 $this->data['result'] = $result;
+                $this->data['account'] = $account;
                 $this->data['content'] = "update_receipt";
             }else{
                 $this->data['content'] = "not_found/not_found";
@@ -53,6 +57,7 @@ class void_receipt extends CI_Controller
         try{
             $this->MVoid->Number = $Token;
             $this->data['result'] = $this->MVoid->get_particulars();
+            $this->data['result_all'] = $this->MVoid->get_all_particulars();
             $this->data['content'] = "grid/load_particulars";
             $this->load->view('layout', $this->data);
         }
@@ -60,6 +65,24 @@ class void_receipt extends CI_Controller
 		{ 			
 			echo json_encode(array('error_message' => $ex->getMessage(), 'has_error' => true));
 		} 
+    }
+    
+    public function print_receipt()
+    {
+        if (!empty($this->input->get('get', true))) {
+            // var_dump($this->input->get('get', true));
+            @$data = json_decode( $this->input->get('get', true))[0];
+            // var_dump($data);
+            if (@$data->bank === null) {
+                @$data->check_no = null;
+                @$data->check_no = null;
+                @$data->check_date = null;
+                @$data->check_amount = null;
+            }
+            $this->data['Data'] = $data;
+            $this->data['content'] = "print_receipt";
+            $this->load->view('layout', $this->data);
+        }
     }
 }
 ?>

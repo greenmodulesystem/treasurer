@@ -78,7 +78,7 @@ sidebar('individual');
 </div>
 
 <?php main_footer();?>
-
+<script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <script language="javascript" src="<?php echo base_url()?>assets/cto_assets/js/handlers/treasurer_handler.js"></script>
 <script src="<?php echo base_url() ?>assets/theme/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script language="javascript" src="<?php echo base_url()?>assets/scripts/noPostBack.js"></script>

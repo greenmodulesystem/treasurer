@@ -57,11 +57,11 @@ class Treasurers extends CI_Controller
         $this->data['Type'] = $this->genModel->get_or_type();
         $this->genModel->Origin = @$this->data['Type']->OR_origin;
         if (!empty($this->data['Type'])) {
-            $validity = $this->genModel->check_validity($this->data['Type']->Accountable_form_number);
+            @$validity = $this->genModel->check_validity($this->data['Type']->Accountable_form_number);
             // $same = $this->genModel->check_same_or($this->data['Type']->Accountable_form_number);
         }
         if (!empty($this->data['Type'])) {
-            if (!empty($validity) || $this->data['Type']->Accountable_form_number === '') {
+            if (!empty(@$validity) || @$this->data['Type']->Accountable_form_number === '') {
                 $this->data['check_validity'] = 1;
             } else {
                 $this->data['check_validity'] = 0;
@@ -448,6 +448,7 @@ class Treasurers extends CI_Controller
     public function view_history($ID, $OR)
     {
         $this->data['content'] = "view_history";
+        $this->data['check_status'] = $this->MVoid->status($OR);
         $this->data['data'] = $this->MPayments->receipt($OR);
         $this->data['items'] = $this->MPayments->receipt_items($OR);
         $this->data['app_ID'] = $this->MProfiles->get_App_ID($ID);
@@ -461,6 +462,7 @@ class Treasurers extends CI_Controller
     public function void_history($ID, $OR)
     {
         $this->data['content'] = "void_history";
+        $this->data['check_status'] = $this->MVoid->status($OR);
         $this->data['data'] = $this->MVoid->receipt($OR);
         $this->data['items'] = $this->MVoid->receipt_items($OR);
         $this->data['app_ID'] = $this->MProfiles->get_App_ID($ID);
@@ -539,6 +541,13 @@ class Treasurers extends CI_Controller
             "Credits" => $_POST['Credits'],
             "Remarks" => $_POST['Remarks'] == '' ? null : $_POST['Remarks'],
         );
+
+        // START added these item 2/22/23 ANGELO
+        $this->MPayments->Check_number = $this->input->post('Check_number', true);
+        $this->MPayments->Bank_name = $this->input->post('Bank_name', true);
+        $this->MPayments->Check_date = date('Y-m-d', strtotime($_POST['Check_date']));
+        $this->MPayments->Check_amount = $this->input->post('Check_amount', true);
+        // END
 
         $this->MPayments->payorAddress = $this->input->post('payorAddress', true);
         $this->MPayments->Payor_name = $this->input->post('payorName', true);
@@ -633,8 +642,9 @@ class Treasurers extends CI_Controller
         );
 
         $this->MVoid->clone_data($data);
-        $this->MVoid->clone_items($_POST['items']);
+        // $this->MVoid->clone_items($_POST['items']);
         $this->MVoid->void_receipt($_POST['OR_number'], $cyc_ID);
+        $this->MVoid->void_receipt_collection($_POST['OR_number']); //ANGELO 10/9/23
     }
 
     public function authenticate()
