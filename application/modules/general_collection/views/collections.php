@@ -50,7 +50,7 @@ echo sidebar('general_collection');
                                     <label>Paid By:</label>
                                     <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md search_paid_by" id="paid_by" placeholder="Paid By">
                                     <label>Address:</label>
-                                    <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md search_address" id="address" value="Municipality of Murcia" placeholder="Address">
+                                    <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md search_address" id="address" value="City of Sagay" placeholder="Address">
                                     <!-- <input type="hidden" disabled class="form-control input-md date_paids" id="date_paid"> -->
                                 </div>
                                 <div class="col-md-4" style="color: black">

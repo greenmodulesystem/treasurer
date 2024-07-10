@@ -231,14 +231,14 @@ echo sidebar('rpt');
                                             <img class="phil-seal-logo" style="width:100px;" src="<?php echo base_url() ?>assets/img/phil-seal.png" alt="">
                                         </td>
                                         <td class="border" width="350">
-                                            <div class="small-text hiddenItem">MUNICIPALITY/ PROVINCE</div>
+                                            <div class="small-text hiddenItem">CITY/ PROVINCE</div>
                                             <span id=p-province>Negros Occidental</span>
                                             <!-- <input type="text" class="form-control single-entry input-sm " data-field="province" placeholder="Enter municipality/province" value="Negros Occidental" readonly> -->
                                         </td>
                                         <td class="border">
-                                            <div class="small-text hiddenItem">MUNICIPALITY</div>
-                                            <span id=p-city>Municipality of Murcia</span>
-                                            <!-- <input type="text" class="form-control single-entry input-sm " data-field="city" placeholder="Enter city" value="Municipality of Murcia" readonly> -->
+                                            <div class="small-text hiddenItem">CITY</div>
+                                            <span id=p-city>City of Sagay</span>
+                                            <!-- <input type="text" class="form-control single-entry input-sm " data-field="city" placeholder="Enter city" value="City of Sagay" readonly> -->
                                         </td>
                                         <td class="border">
                                             <div class="small-text hiddenItem">DATE</div>
@@ -508,8 +508,8 @@ echo sidebar('rpt');
                                         </td>
                                         <td class="">
                                             <div class="small-text" style="visibility:hidden">CITY</div>
-                                            <span id=p-city>Municipality of Murcia</span>
-                                            <!-- <input type="text" class="form-control single-entry input-sm " data-field="city" placeholder="Enter city" value="Municipality of Murcia" readonly> -->
+                                            <span id=p-city>City of Sagay</span>
+                                            <!-- <input type="text" class="form-control single-entry input-sm " data-field="city" placeholder="Enter city" value="City of Sagay" readonly> -->
                                         </td>
                                         <td class="">
                                             <div class="small-text" style="visibility:hidden">DATE</div>

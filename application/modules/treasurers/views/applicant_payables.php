@@ -225,7 +225,7 @@ if($assessment == null){ ?>
         <td class="text-left" colspan="3"><b><input id="Receipt_date" class="md text-center"
                 value="<?=date('F d, Y')?>" style="width:150px;border-style:none;"></b>
             <span class="pull-right"><b>Collector :&ensp;<?=$user->First_name." ".$user->Middle_name[0].
-                ". ".$user->Last_name.", Municipal Treasurer"?></b>
+                ". ".$user->Last_name.", City Treasurer"?></b>
             </span>
         </td>
         <td style="border-left:2px solid gray;vertical-align:middle" class="text-right"

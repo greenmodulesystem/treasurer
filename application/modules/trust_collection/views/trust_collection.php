@@ -37,7 +37,7 @@
                                         <label>Paid By:</label>
                                         <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md trust_search_paid_by" id="trust_paid_by" placeholder="Paid By">
                                         <label>Address:</label>
-                                        <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md trust_search_address" id="trust_address"  value="Municipality of Murcia" placeholder="Adddress">                                  
+                                        <input type="text" onkeydown="upperCaseF(this)" class="form-control input-md trust_search_address" id="trust_address"  value="City of Sagay" placeholder="Adddress">                                  
                                         <input type="hidden" class="form-control input-md trust_date_paids" id="trust_date_paid" value="<?=date('Y-m-d')?>">
                                     </div>                                                                                         
                                 </div>                  

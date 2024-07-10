@@ -5,7 +5,7 @@ $Bldg = ($profiles->Building_name != '') ? trim($profiles->Building_name) . ", "
 $Strt = ($profiles->Street != '') ? trim($profiles->Street) . ", " : '';
 $Prk = ($profiles->Purok != '') ? trim($profiles->Purok) . ", " : '';
 $Address1 = ucwords($Bldg) . ucwords($Strt) . ucwords($Prk);
-$Address2 = ucwords(trim($profiles->Barangay)) . ", Municipality of Murcia";
+$Address2 = ucwords(trim($profiles->Barangay)) . ", City of Sagay";
 $Payor = ucwords($profiles->Tax_payer);
 $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
 ?>
@@ -99,6 +99,21 @@ $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
     </section>
 </div>
 
+<div class="modal fade" id="no-printing" tabindex="-1" role="dialog" aria-labelledby="no-printing-lbl" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="no-printing-lbl">CANNOT PRINT RECEIPT</h5>
+            </div>
+            <div class="modal-body">
+                <p>THE PARTICULARS IN THIS RECEIPT EXCEED THE MAXIMUM LIMIT POSSIBLE FOR PRINTING. KINDLY PROCEED TO MANUALLY CREATE THE RECEIPT. THIS PAGE WILL AUTOMATICALLY REFRESH AFTER 30 SECONDS.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OKAY</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?php main_footer(); ?>
 <script language="javascript" src="<?php echo base_url() ?>assets/general_assets/idle_signout.js"></script> <!-- KARL ALOB 3/24 -->
 <script language="javascript" src="<?php echo base_url() ?>assets/scripts/noPostBack.js"></script>
@@ -108,7 +123,7 @@ $Number = $profiles->Mob_num != '' ? $profiles->Mob_num : $profiles->Tel_num;
     var or_number;
     var payorName = "<?php echo $profiles->Business_name ?>";
     var address = "<?php echo $Address1 = ucwords($Bldg) . ucwords($Strt) . ucwords($Prk) ?>";
-    var address2 = "<?php echo $Address2 = ucwords(trim($profiles->Barangay)) . ", Municipality of Murcia"; ?>";
+    var address2 = "<?php echo $Address2 = ucwords(trim($profiles->Barangay)) . ", City of Sagay"; ?>";
     var finalAddress = address + address2;
 
     $(document).ready(function() {

@@ -7,7 +7,7 @@ echo main_header();
     $Strt = ('a' != '') ? trim('aaaaa').", " : '';
     $Prk = ('a' != '') ? trim('aaaaa').", " : '';
     $Address1 = 'aaaaa';
-    $Address2 = trim('aaaaa').", Municipality of Murcia";
+    $Address2 = trim('aaaaa').", City of Sagay";
     // $Payor = ucwords('aaaaa');
     // $Payor = 'aaaaa'." ('aaaaa)";
     $Total = 0;        

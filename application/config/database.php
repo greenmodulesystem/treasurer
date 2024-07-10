@@ -77,16 +77,9 @@ $query_builder = TRUE;
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'sagay_licensing_testing',
-
-	/** testing cadiz server database */
-	// 'database' => 'cadiz_blis_testing',
-
-	/** production cadiz server database */
-	// 'database' => 'cadiz_licensing_testing',
-
+	'username' => 'admin',
+	'password' => 'Wvh3r5123',
+	'database' => "sagay_licensing",
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -107,8 +100,10 @@ $db['default'] = array(
 $db['ctodb'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
+	// 'username' => 'root',
+	// 'password' => '',
+	'username' => 'admin',
+	'password' => 'Wvh3r5123',
 	'database' => "collection_2",
 	/** testing cadiz server database */
 	// 'database' => 'general_collection_testing',

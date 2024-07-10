@@ -50,7 +50,7 @@ $total_non_cash_col = 0;
                                     <p align="center" class="header-report">REPORT OF COLLECTION AND DEPOSIT</p>
                                 </tr>
                                 <tr>
-                                    <p align="center" class="header-city-of">MUNICIPALITY OF MURCIA</p>
+                                    <p align="center" class="header-city-of">City of Sagay</p>
                                 </tr>
                                 <tr>
                                     <td>&nbsp;</td>

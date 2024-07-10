@@ -7,7 +7,7 @@ $Bldg = ('a' != '') ? trim('aaaaa') . ", " : '';
 $Strt = ('a' != '') ? trim('aaaaa') . ", " : '';
 $Prk = ('a' != '') ? trim('aaaaa') . ", " : '';
 $Address1 = 'aaaaa';
-$Address2 = trim('aaaaa') . ", Municipality of Murcia";
+$Address2 = trim('aaaaa') . ", City of Sagay";
 $Total = 0;
 $Paymode = 'aaaaa' == '' ? 'CASH' : ('aaaaa' >= 'aaaaa' ? 'CHECK' : 'CASH/CHECK');
 ?>

@@ -13,6 +13,7 @@ $Total = 0;
 $Paymode = $receipt['Check_amount'] == '' ? 'CASH' : ($receipt['Check_amount'] >= $receipt['Amount_paid'] ? 'CHECK' : 'CASH/CHECK');
 @$count = count($items);
 $coldiv = $count>=10? intdiv($count,2) : '';
+// var_dump($coldiv);
 $cnt = $count;
 @$count = 10;
 ?>
@@ -40,7 +41,7 @@ $cnt = $count;
             <?php foreach ($items as $k => $item) {
                 if (@$k == 0) {
                     echo '<div class="testid">';
-                } elseif (@$k == $coldiv-2) {
+                } elseif (@$k == $coldiv) {
                     echo '</div>
                     <div class="testid">';
                 } ?>
@@ -73,7 +74,7 @@ $cnt = $count;
 
 <script type="text/javascript">
     var total = <?php echo $Total ?>;
-
+    var count = <?=@$cnt?>;
     $(document).ready(function() {
         $('#Numwords').text(number2text(total));
     });

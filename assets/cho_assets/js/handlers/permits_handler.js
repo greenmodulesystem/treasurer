@@ -189,7 +189,7 @@ $(document).ready(function() {
 function format(d) {
     return '<table class="table table-bordered" style="display:block;text-align:left;">' +
         '<tr>' +
-        '<td>Address : ' + d[7] + ', ' + d[8] + ', ' + d[9] + ', ' + d[10] + ', Municipality of Murcia' + '</td>' +
+        '<td>Address : ' + d[7] + ', ' + d[8] + ', ' + d[9] + ', ' + d[10] + ', City of Sagay' + '</td>' +
         '</tr>' +
         '</table>';
 }

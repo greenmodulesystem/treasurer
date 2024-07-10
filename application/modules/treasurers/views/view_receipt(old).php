@@ -4,7 +4,7 @@
     $Strt = ($profiles->Street != '') ? trim($profiles->Street).", " : '';
     $Prk = ($profiles->Purok != '') ? trim($profiles->Purok).", " : '';
     $Address1 = $Bldg.$Strt.$Prk;
-    $Address2 = trim($profiles->Barangay).", Municipality of Murcia";
+    $Address2 = trim($profiles->Barangay).", City of Sagay";
     $Payor = ucwords($profiles->Tax_payer);
     $Payor = $profiles->Tax_payer." (".$profiles->Business_name.")";
     $Total = 0;
